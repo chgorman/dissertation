@@ -1,0 +1,68 @@
+\section{2D \CV{} Interpolation Matrix: $2n+1$ Columns}
+\label{sec:CV_2D_2n}
+
+In this section we work through the matrix factorization
+of for interpolating on the tensor product of \CV{}
+matrices given by
+%
+\begin{equation}
+    \min_{\overline{V}a=f} \norm{\overline{D}_{s}a}_{2},
+\end{equation}
+%
+where
+%
+\begin{align}
+    \overline{V} &= V^{y}\otimes V^{x} \nonumber\\
+    \overline{D}_{s} &= D_{s}^{y} \otimes D_{s}^{x}.
+\end{align}
+%
+We assume that $V^{x}\in\R^{n\times(2n+1)}$ and $V^{y}\in\R^{m\times(2m+1)}$.
+If we let
+%
+\begin{align}
+    \overline{C} &= C^{y} \otimes C^{x} \nonumber\\
+    \overline{D}_{s} &= D_{s}^{y} \otimes D_{s}^{x} \nonumber\\
+    \overline{G} &= G^{y} \otimes G^{x},
+\end{align}
+%
+we see
+%
+\begin{align}
+    \overline{C}^{-1}\overline{V}
+        &= \parens{C^{y}}^{-1}V^{y} \otimes \parens{C^{x}}^{-1}V^{x}
+            \nonumber\\
+        &= W^{y} \otimes W^{x} \nonumber\\
+        &= \overline{W}.
+\end{align}
+
+Thus, we see
+%
+\begin{equation}
+    \overline{W} \overline{D}_{s}^{-1} \overline{G}
+        = \begin{bmatrix} Y^{y} & 0 \end{bmatrix} \otimes
+            \begin{bmatrix} Y^{x} & 0 \end{bmatrix}
+\end{equation}
+%
+is the $LQ$ factorization after a permutation of the columns.
+We let
+%
+\begin{equation}
+    I = \bigcup_{k=1}^{m}
+        \brackets{\parens{k-1}\parens{2n+1}+1\!:\!\parens{k-1}\parens{2n+1}+n},
+\end{equation}
+%
+so that
+%
+\begin{equation}
+    \parens{Y^{y}\otimes Y^{x}}y\parens{I} = f,
+\end{equation}
+%
+where we initialize the rest of $y$ to zeros.
+At this point, we compute
+%
+\begin{equation}
+    a = \overline{D}_{s}^{-1}\overline{G}y.
+\end{equation}
+
+
+

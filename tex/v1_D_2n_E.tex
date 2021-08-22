@@ -1,0 +1,269 @@
+\section{1D \CV{} Derivative Matrix: $2n+1$ Columns with Point Interpolation;
+    First Factorization}
+\label{sec:CV_D_1D_2n_E_Point}
+
+In this section we compute the resulting LQ factorization for the
+interpolation problem
+%
+\begin{equation}
+    \begin{cases}
+        p'(z_{k}^{n}) = f'(z_{k}^{n}), &\quad k\in\braces{1,\cdots,n} \\
+        p(0) = f(0)
+    \end{cases}.
+\end{equation}
+%
+Ensuring equality at $p(0) = f(0)$ gives the MSN approximation the
+correct constant term.
+If we denote the linear interpolation requirement by $A$, then
+we have
+%
+\begin{equation}
+    \begin{bmatrix}
+        A \\ UWD \end{bmatrix} D_{s}^{-1}G
+     = \begin{bmatrix}
+        1 & 0 & 0 \\ 0 & \Gamma & 0 \end{bmatrix},
+\end{equation}
+%
+where $G$ is from Eq.~\eqref{eq:vand_D_Givens}
+and we remember $Ge_{1} = e_{1}$.
+This is the LQ factorization.
+
+
+
+
+\section{1D \CV{} Derivative Matrix: $2n+1$ Columns with Endpoint Interpolation;
+    First Factorization}
+\label{sec:CV_D_1D_2n_E_F2}
+
+In this section we compute the solution when interpolating
+derivatives on Chebyshev nodes and function values on the endpoints:
+%
+\begin{equation}
+    \begin{cases}
+        p'(z_{k}^{n}) = f'(z_{k}^{n}), &\quad k\in\braces{1,\cdots,n} \\
+        p(z) = f(z), &\quad z\in\braces{-1,1}
+    \end{cases}.
+\end{equation}
+%
+We will use tools from Sec.~\ref{sec:CV_D_1D_2n_F2}.
+When $n$ is even, we see
+%
+\begin{align}
+    &\begin{bmatrix} UWD \\ \overline{A} \end{bmatrix}D_{s}^{-1}G\Pi
+        = \nonumber\\
+    &\begin{bmatrix}
+            \gamma_{2} & \\
+            & \gamma_{3} & \\
+            & & & \\
+            &   &   & \ddots \\
+            & & & & \gamma_{n} & \\
+            & & & & & \gamma_{n+1} & \\
+            \alpha_{2} & & \alpha_{4} & \cdots & \alpha_{n} & &
+                \alpha_{n+2} & & \cdots & \alpha_{2n} & & \\
+            & \alpha_{3} & & \cdots & & \alpha_{n+1} &
+                & \alpha_{n+3} & \cdots & & \alpha_{2n+1} & \alpha_{1} \\
+            \end{bmatrix},
+\end{align}
+%
+where $\overline{A} = C_{1}^{-1}A$ with definitions coming from 
+Eqs.~\eqref{eq:vand_pm1} and \eqref{eq:vand_pm1_C}.
+We must then compute 2 Householder reflectors by setting
+%
+\begin{align}
+    v_{1}^{*} &= \begin{bmatrix} \alpha_{n+2} & 0 & \alpha_{n+4} & \cdots &
+                \alpha_{2n} & 0 & 0 \end{bmatrix} \nonumber\\
+    v_{2}^{*} &= \begin{bmatrix} 0 & \alpha_{n+3} & 0 & \cdots &
+                0 & \alpha_{2n+1} & \alpha_{1} \end{bmatrix} \nonumber\\
+    u_{1} &= \frac{1}{\norm{v_{1} - \norm{v_{1}}_{2}e_{1}}_{2}}
+                \parens{v_{1} - \norm{v_{1}}_{2}e_{1}} \nonumber\\
+    u_{2} &= \frac{1}{\norm{v_{2} - \norm{v_{2}}_{2}e_{2}}_{2}}
+                \parens{v_{2} - \norm{v_{2}}_{2}e_{2}}.
+\end{align}
+%
+From here, we let
+%
+\begin{align}
+    \widehat{P}_{1} &= I_{n+1} - 2u_{1}u_{1}^{*} \nonumber\\
+    \widehat{P}_{2} &= I_{n+1} - 2u_{2}u_{2}^{*} \nonumber\\
+    \widehat{P} &= \widehat{P}_{1}\widehat{P}_{2} \nonumber\\
+        &= I_{n+1} - 2\begin{bmatrix} u_{1} & u_{2} \end{bmatrix}
+                \begin{bmatrix} u_{1} & u_{2} \end{bmatrix}^{*} \nonumber\\
+    P &= \begin{bmatrix} I_{n} & 0 \\ 0 & \widehat{P} \end{bmatrix},
+\end{align}
+%
+so that
+%
+\begin{equation}
+    \label{eq:CV_D_1D_2n_E_F2_L_even}
+    \begin{bmatrix} UWD \\ \overline{A} \end{bmatrix}D_{s}^{-1}G\Pi P
+        = \begin{bmatrix}
+            \gamma_{2} & \\
+            & \gamma_{3} & \\
+            & & \gamma_{4} & \\
+            &   &   & \ddots \\
+            & & & & \gamma_{n} & \\
+            & & & & & \gamma_{n+1} & \\
+            \alpha_{2} & 0 & \alpha_{4} & \cdots & \alpha_{n} & 0 &
+                \norm{v_{1}}_{2} \\
+            0 & \alpha_{3} & 0 & \cdots & 0 & \alpha_{n+1} &
+                0 & \norm{v_{2}}_{2} \\
+            \end{bmatrix}.
+\end{equation}
+
+When $n$ is odd, we let
+%
+\begin{equation}
+    \overline{A} = C_{0}^{-1}A
+\end{equation}
+%
+so that
+%
+\begin{equation}
+    \label{eq:CV_D_1D_2n_E_F2_L_odd}
+    \begin{bmatrix} UWD \\ \overline{A} \end{bmatrix}D_{s}^{-1}G\Pi
+        = \begin{bmatrix}
+            \gamma_{2} & \\
+            & \gamma_{3} & \\
+            & & \gamma_{4} & \\
+            &   &   & \ddots \\
+            & & & & \gamma_{n} & \\
+            & & & & & \gamma_{n+1} & \\
+            & \alpha_{3} & & \cdots & \alpha_{n} &
+                & \alpha_{n+2} & & \cdots & & \alpha_{2n+1} & \alpha_{1} \\
+            \alpha_{2} & & \alpha_{4} & \cdots & & \alpha_{n+1} & &
+                \alpha_{n+3} & \cdots & \alpha_{2n} & & \\
+            \end{bmatrix}.
+\end{equation}
+%
+We set
+%
+\begin{align}
+    v_{1}^{*} &= \begin{bmatrix} \alpha_{n+2} & 0 & \cdots &
+                0 & \alpha_{2n+1} & \alpha_{1} \end{bmatrix} \nonumber\\
+    v_{2}^{*} &= \begin{bmatrix} 0 & \alpha_{n+3} & 0 & \cdots & 0 &
+                \alpha_{2n} & 0 & 0 \end{bmatrix}
+\end{align}
+%
+and proceed as before.
+
+
+
+\section{1D \CV{} Derivative Matrix: $2n+1$ Columns with Endpoint Interpolation;
+    Second Factorization}
+\label{sec:CV_D_1D_2n_E_F1}
+
+In this section we compute the LQ factorization from last section using
+the second factorization of the $V'$;
+the endpoint function values are included as before
+and begin by assuming $n$ is even.
+
+We know that $C^{-1}V'D_{s}^{-1}GH$ essentially reduces our matrix to
+lower triangular form, and the circular downshift permutation $\Pi$ 
+puts the significant portion into lower triangular form.
+Thus, after these applications, we arrive at the matrix
+%
+\begin{align}
+    &\begin{bmatrix} \widehat{D}WD \\ \overline{A} \end{bmatrix}D_{s}^{-1}GH\Pi
+        = \nonumber\\
+    &\begin{bmatrix}
+            * & \\
+            * & * & \\
+            * & * & * & \\
+            \vdots &   &   & \ddots \\
+            * & * & * & \cdots & * & \\
+            * & * & * & \cdots & * & * & \\
+            \alpha_{2} & & \alpha_{4} & \cdots & \alpha_{n} & &
+                \alpha_{n+2} & & \cdots & \alpha_{2n} & & \\
+            & \alpha_{3} & & \cdots & & \alpha_{n+1} &
+                & \alpha_{n+3} & \cdots & & \alpha_{2n+1} & \alpha_{1} \\
+            \end{bmatrix}.
+\end{align}
+%
+The last two rows can be computed quickly by evaluating
+$\overline{A}D_{s}^{-1}GH\Pi$.
+
+All we have left is to compute 2 Householder reflectors, setting
+%
+\begin{align}
+    v_{1}^{*} &= \begin{bmatrix} \alpha_{n+2} & 0 & \alpha_{n+4} & \cdots &
+                \alpha_{2n} & 0 & 0 \end{bmatrix} \nonumber\\
+    v_{2}^{*} &= \begin{bmatrix} 0 & \alpha_{n+3} & 0 & \cdots &
+                0 & \alpha_{2n+1} & \alpha_{1} \end{bmatrix} \nonumber\\
+    u_{1} &= \frac{1}{\norm{v_{1} - \norm{v_{1}}_{2}e_{1}}_{2}}
+                \parens{v_{1} - \norm{v_{1}}_{2}e_{1}} \nonumber\\
+    u_{2} &= \frac{1}{\norm{v_{2} - \norm{v_{2}}_{2}e_{2}}_{2}}
+                \parens{v_{2} - \norm{v_{2}}_{2}e_{2}}.
+\end{align}
+%
+From here, we let
+%
+\begin{align}
+    \widehat{P}_{1} &= I_{n+1} - 2u_{1}u_{1}^{*} \nonumber\\
+    \widehat{P}_{2} &= I_{n+1} - 2u_{2}u_{2}^{*} \nonumber\\
+    \widehat{P} &= \widehat{P}_{1}\widehat{P}_{2} \nonumber\\
+        &= I_{n+1} - 2\begin{bmatrix} u_{1} & u_{2} \end{bmatrix}
+                \begin{bmatrix} u_{1} & u_{2} \end{bmatrix}^{*} \nonumber\\
+    P &= \begin{bmatrix} I_{n} & 0 \\ 0 & \widehat{P} \end{bmatrix}.
+\end{align}
+
+\noindent
+Putting this together, we have
+%
+\begin{equation}
+    \label{eq:CV_D_1D_2n_E_F1_L_even}
+    \begin{bmatrix} \widehat{D}WD \\ \overline{A}\end{bmatrix}D_{s}^{-1}GH\Pi P
+        = \begin{bmatrix}
+            * & \\
+            * & * & \\
+            * & * & * & \\
+            \vdots &   &   & \ddots \\
+            * & * & * & \cdots & * & \\
+            * & * & * & \cdots & * & * & \\
+            \alpha_{2} & 0 & \alpha_{4} & \cdots & \alpha_{n} & 0 &
+                \norm{v_{1}}_{2} \\
+            0 & \alpha_{3} & 0 & \cdots & 0 & \alpha_{n+1} &
+                0 & \norm{v_{2}}_{2} \\
+            \end{bmatrix},
+\end{equation}
+%
+where we have only kept the nonzero terms. The inverse of this triangular
+matrix can be computed quickly.
+
+When $n$ is odd, we let
+%
+\begin{equation}
+    \overline{A} = C_{0}^{-1}A.
+\end{equation}
+%
+We then find
+%
+\begin{align}
+    &\begin{bmatrix} \widehat{D}WD \\ \overline{A} \end{bmatrix}D_{s}^{-1}GH\Pi
+        = \nonumber\\
+    &\begin{bmatrix}
+            * & \\
+            * & * & \\
+            * & * & * & \\
+            \vdots &   &   & \ddots \\
+            * & * & * & \cdots & * & \\
+            * & * & * & \cdots & * & * & \\
+            & \alpha_{3} & & \cdots & \alpha_{n} &
+                & \alpha_{n+2} & & \cdots & & \alpha_{2n+1} & \alpha_{1} \\
+            \alpha_{2} & & \alpha_{4} & \cdots & & \alpha_{n+1} & &
+                \alpha_{n+3} & \cdots & \alpha_{2n} & & \\
+            \end{bmatrix}.
+    \label{eq:CV_D_1D_2n_E_F1_L_odd}
+\end{align}
+%
+Setting
+%
+\begin{align}
+    v_{1}^{*} &= \begin{bmatrix} \alpha_{n+2} & 0 & \cdots &
+                0 & \alpha_{2n+1} & \alpha_{1} \end{bmatrix} \nonumber\\
+    v_{2}^{*} &= \begin{bmatrix} 0 & \alpha_{n+3} & 0 & \cdots & 0 &
+                \alpha_{2n} & 0 & 0 \end{bmatrix},
+\end{align}
+%
+we proceed as before to arrive at the LQ factorization.
+
+

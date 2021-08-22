@@ -1,0 +1,175 @@
+\section{\CV{} Matrix Properties}
+\label{sec:CV_mat}
+
+Recalling our definitions of the Chebyshev polynomials $T_{k}$
+from Sec.~\ref{ssec:kar_cheby},
+we define the infinite \CV{} matrix $V_{\infty}$ by
+%
+\begin{equation}
+    \brackets{V_{\infty}}_{ij}
+        = T_{j-1}\parens{z_{i}^{n}},\quad i\in\braces{1,\cdots,n}
+    \quad j\in\N.
+\end{equation}
+%
+Any other \CV{} matrix $V$ will contain
+a finite number of columns of $V_{\infty}$.
+Furthermore, we let
+%
+\begin{equation}
+\label{eq:C_def}
+    C_{ij} = T_{j-1}\parens{z_{i}^{n}},\quad i,j\in\braces{1,\cdots,n};
+\end{equation}
+%
+that is, $C$ is just the first $n\times n$ block of $V_{\infty}$.
+This $C$ corresponds to our choice of DCT, discussed in Sec.~\ref{ssec:kar_dct}.
+We show
+%
+\begin{align}
+    C^{*}V_{\infty} &= F\begin{bmatrix}
+    I & 0 & -\Lambda & 0 & \Lambda & 0 & -\Lambda & 0 & \cdots \\
+    \end{bmatrix} \nonumber\\
+     &= FW_{\infty},
+\end{align}
+%
+where $I$ is the $n\times n$ identity matrix, $0$ is a column of zeros,
+%
+\begin{equation}
+    F = \frac{n}{2}\diag\parens{2, 1, 1, \cdots, 1},
+\end{equation}
+%
+and
+%
+\begin{equation}
+    \Lambda = \begin{bmatrix}
+    & & & & 1 & & & & \\
+    & & & 1 & & 1 & & & \\
+    & & \iddots & & & & \ddots & & \\
+    & 1 & & & & & & 1 & \\
+    1 & & & & & & & & 1 \\
+    \end{bmatrix},
+\end{equation}
+%
+an $n\times 2n-1$ matrix. We see that the zero columns of $W_{\infty}$
+are located at $n$, $3n$, $5n$, \dots, and that the
+first row of $W$ has $\pm1$ located at column $0$, $2n$, $4n$, \dots.
+Explicitly, we have
+%
+\begin{align}
+    \brackets{W_{\infty}}_{k,k+4(\ell-1)n} &= 1,
+        \quad k\in\braces{1,\cdots,n}, \quad \ell\in\N \nonumber\\
+    \brackets{W_{\infty}}_{k,(4\ell-2)n+2-k} &= -1,
+        \quad k\in\braces{2,\cdots,n}, \quad \ell\in\N \nonumber\\
+    \brackets{W_{\infty}}_{k,k+(4\ell-2)n} &= -1,\quad k\in\braces{1,\cdots,n},
+        \quad \ell\in\N \nonumber\\
+    \brackets{W_{\infty}}_{k,4\ell n+2-k} &= 1,
+        \quad k\in\braces{2,\cdots,n}, \quad \ell\in\N.
+\end{align}
+
+We prove this.
+First, we have
+%
+\begin{align}
+    \brackets{C^{*}V_{\infty}}_{i+1,j+1}
+        &= \sum_{k=1}^{n} T_{i}\parens{z_{k}^{n}}
+        T_{j}\parens{z_{k}^{n}} \nonumber\\
+     &= \sum_{k=1}^{n}
+        \cos\brackets{\frac{i\pi}{n}\parens{n - k + \frac{1}{2}}}
+        \cos\brackets{\frac{j\pi}{n}\parens{n - k + \frac{1}{2}}}
+        \nonumber \\
+     &= \frac{1}{2}\sum_{k=1}^{n}\braces{
+            \cos\brackets{\frac{i + j}{n}\pi\parens{n - k + \frac{1}{2}}}
+            + \cos\brackets{\frac{i - j}{n}\pi\parens{n - k + \frac{1}{2}}}
+        } \nonumber \\
+     &= \frac{1}{2}\sum_{k=0}^{n-1}\braces{
+            \cos\brackets{\frac{i + j}{2n}\pi\parens{2k + 1}}
+            + \cos\brackets{\frac{i - j}{2n}\pi\parens{2k + 1}}
+        },
+\end{align}
+%
+where the reductions are standard product-to-sum trigonometric identities
+and reversing the sum. As we can see, we are finished if we can sum
+%
+\begin{equation}
+    \sum_{k=0}^{n-1} \cos\brackets{\frac{\alpha\pi}{2n}\parens{2k + 1}}.
+\end{equation}
+
+If $\alpha\in\braces{0,\pm4\pi,\pm8\pi,\cdots}$ the above
+sum is $n$, while if $\alpha\in\braces{\pm2\pi,\pm6\pi,\pm10\pi,\cdots}$,
+the sum is $-n$. We show if $\alpha$ is any other integer
+then the previous sum is $0$.
+To see this, we complexify the situation.
+Letting
+%
+\begin{align}
+\xi &= \exp\brackets{i\frac{\alpha\pi}{n}} \nonumber\\
+\eta &= \exp\brackets{i\frac{\alpha\pi}{2n}},
+\end{align}
+%
+so that $\xi$ is the primitive $n$th root of unity and $\eta$ is
+the primitive $2n$th root of unity, we see
+%
+\begin{equation}
+\cos\brackets{\frac{\alpha\pi}{2n}\parens{2k + 1}} = \Re\parens{\xi^{k}\eta}.
+\end{equation}
+
+Therefore, it follows
+%
+\begin{align}
+    \sum_{k=0}^{n-1}\xi^{k}\eta &= \eta\frac{1 - \xi^{n}}{1 - \xi} \nonumber\\
+     &= \frac{1 - \parens{-1}^{\alpha}}{\eta^{-1} - \xi\eta^{-1}} \nonumber\\
+     &= \frac{1}{2i}\frac{\parens{-1}^{\alpha} - 1}{
+                \sin\parens{\frac{\alpha\pi}{2n}}}.
+\end{align}
+%
+This is purely imaginary when $\alpha\ne 2n\gamma$
+for $\gamma\in\Z$, so we have proven
+%
+\begin{equation}
+\sum_{k=0}^{n-1} \cos\brackets{\frac{\alpha\pi}{2n}\parens{2k + 1}}
+ = \begin{cases}
+    n &\quad \alpha = 4n\gamma, \quad \gamma\in\Z \\
+    -n &\quad \alpha = 4n\gamma + 2, \quad \gamma\in\Z \\
+    0 &\quad\text{otherwise}
+\end{cases}.
+\end{equation}
+%
+From here, we see when $i,j\in\braces{0,1,\cdots,n-1}$, we have
+%
+\begin{equation}
+\brackets{C^{*}V}_{ij} = \begin{cases}
+    n &\quad i = j = 0 \\
+    \frac{n}{2} &\quad i = j \ne 0 \\
+    0 &\quad \text{otherwise}
+\end{cases}.
+\end{equation}
+%
+Furthermore, we see with $i,j\in\braces{1,2,\cdots,n-1}$, we have
+%
+\begin{equation}
+\brackets{C^{*}V_{\infty}}_{i,n+j} = \begin{cases}
+    -\frac{n}{2} &\quad i = n - j \\
+    0 &\quad \text{otherwise}
+\end{cases}.
+\end{equation}
+%
+The properties
+%
+\begin{align}
+T_{j + 2n}\parens{z_{k}^{n}} &= -T_{j}\parens{z_{k}^{n}} \nonumber \\ 
+T_{j + 4n}\parens{z_{k}^{n}} &= T_{j}\parens{z_{k}^{n}}
+\end{align}
+%
+follow from the definitions.
+Taken together, we have the desired result.
+
+When we have $2n+1$ columns, we see
+%
+\begin{equation}
+    W = \begin{bmatrix}
+            1 &   &   &   &   &   &   &   &   & -1 \\
+              & 1 &   &   &   &   &   &   & -1& \\
+             & &\ddots&   &   &   &  &\iddots&& \\
+              &   &   &   & 1 & 0 & -1&   &   & \\
+        \end{bmatrix}.
+\end{equation}
+

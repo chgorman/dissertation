@@ -1,0 +1,25 @@
+\begin{algorithm}[p]
+\caption{Randomized Block Low-Rank Approximation (YGL)
+    \cite[Algorithm 2]{yu2018efficient}}
+\label{alg:rand_low_rank_YGL}
+\begin{algorithmic}[1]
+\Function{randQB\_b\_YGL}{$A$,$\eps$,$d$}
+\State $Q = [\,]$; $B = [\,]$
+\State $E = \norm{A}_{F}^{2}$
+    \For {$k=1,2,3,\cdots$}
+        \State $\Omega_{k} = \texttt{rand}(n,d)$
+        \State $Q_{k} = \texttt{qr}(A\Omega_{k} - Q(B\Omega_{k}))$
+        \State $Q_{k} = \texttt{qr}(Q_{k} -Q (Q^{*}Q_{k}))$
+            \label{alg_line:rand_YGL_GS}
+        \State $B_{k} = Q_{k}^{*}A$
+        \State $Q = \begin{bmatrix} Q & Q_{k} \end{bmatrix}$
+        \State $B = \begin{bmatrix} B^{*} & B_{k}^{*} \end{bmatrix}^{*}$
+        \State $E = E - \norm{B_{k}}_{F}^{2}$
+        \If {$E < \eps^{2}$}
+            \State \textbf{stop}
+        \EndIf
+    \EndFor
+\State \Return $Q$, $B$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

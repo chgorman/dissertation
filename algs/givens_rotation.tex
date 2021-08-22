@@ -1,0 +1,32 @@
+\begin{algorithm}
+\caption{Givens Rotation}
+\label{alg:givens}
+\begin{algorithmic}[1]
+\Function{givens}{$\alpha$,$\beta$}
+\Comment{Numerically stable way to compute Givens rotations}
+    \If{$\abs{\alpha}\ge\abs{\beta}$}
+        \If{$\alpha=0$}
+            \State $c=1$
+            \State $s = 0$
+        \ElsIf{$\beta=0$}
+            \State $c = \sign(\alpha)$
+            \State $s = 0$
+        \Else
+            \State $\tau = -\frac{\beta}{\alpha}$
+            \State $c = \sign(\alpha)/\sqrt{1 + \tau^{2}}$
+            \State $s = c\tau$
+        \EndIf
+    \Else
+        \If{$\alpha = 0$}
+            \State $s = -\sign(\beta)$
+            \State $c = 0$
+        \Else
+            \State $\tau = -\frac{\alpha}{\beta}$
+            \State $s = -\sign(\beta)/\sqrt{1 + \tau^{2}}$
+            \State $c = s\tau$
+        \EndIf
+    \EndIf
+\State \Return $c$, $s$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

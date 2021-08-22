@@ -1,0 +1,349 @@
+\section{Proof of 1D Interpolation for polynomials of degree $2n$ with
+    Endpoint Interpolation}
+\label{sec:cvip_interp_1D_bdy}
+
+In this section, we add interpolation conditions at $1$ and $-1$.
+After an IDCT and a set of Givens rotations,
+the same from Sec.~\ref{sec:cvip_interp_1D}, we obtain the matrix
+%
+\begin{equation}
+    \setcounter{MaxMatrixCols}{20}
+    \begin{bmatrix}
+        y_{1} & \\
+        & y_{2} & \\
+        & & \ddots & \\
+        & & & y_{n-2} \\
+        & & & & y_{n-1} \\
+        & & & & & y_{n} \\
+        \alpha_{1} & & \cdots & & \alpha_{n-1} & & \beta_{n+1} & & \beta_{n-1}
+            & & \cdots & & \beta_{1} \\
+        & \alpha_{2} & & \alpha_{n-2} & & \alpha_{n} &
+            & \beta_{n} & & \beta_{n-2} & & \beta_{2} \\
+    \end{bmatrix}.
+\end{equation}
+%
+Here,
+%
+\begin{align}
+    y_{k} &= \frac{1}{c_{k}k^{s}} \nonumber\\
+    \alpha_{k} &= c_{k}k^{-s} \brackets{1-\tau_{k}^{2}} \nonumber\\
+    \beta_{k} &= 2s_{k}k^{-s} \quad k\in\braces{1,\cdots,n} \nonumber\\
+    \beta_{n+1} &= \parens{n+1}^{-s}.
+\end{align}
+%
+We are assuming $n$ is even; similar results will hold when $n$ is odd.
+From here, we get the easy bound
+%
+\begin{equation}
+    \abs{\beta_{k}} \le \frac{2}{n^{s}}.
+\end{equation}
+%
+After a pair of Householder reflectors
+%
+\begin{equation}
+    H = \begin{bmatrix} I_{n} & \\ & I_{n+1} - 2VT^{-1}V^{*} \end{bmatrix}
+\end{equation}
+%
+with
+%
+\begin{align}
+    V^{*} &= \begin{bmatrix}
+        \beta_{n+1} & & \cdots & & \beta_{3} & & \beta_{1} \\
+        & \beta_{n} & & \beta_{4} & & \beta_{2} \\
+    \end{bmatrix} \nonumber\\
+    T &= \begin{bmatrix} \ell_{1}^{2} & \\ & \ell_{2}^{2} \end{bmatrix}
+        \nonumber\\
+    \ell_{1}^{2} &= \beta_{1}^{2} + \beta_{3}^{2} + \cdots + \beta_{n-1}^{2}
+            + \beta_{n+1}^{2} \nonumber\\
+    \ell_{2}^{2} &= \beta_{2}^{2} + \beta_{4}^{2} + \cdots + \beta_{n}^{2},
+\end{align}
+%
+we have
+%
+\begin{equation}
+    \begin{bmatrix}
+        y_{1} & \\
+        & y_{2} & \\
+        & & \ddots & \\
+        & & & y_{n-2} \\
+        & & & & y_{n-1} \\
+        & & & & & y_{n} \\
+        \alpha_{1} & & \cdots & & \alpha_{n-1} & & \ell_{1} \\
+        & \alpha_{2} & & \alpha_{n-2} & & \alpha_{n} & & \ell_{2}
+    \end{bmatrix}
+        = \begin{bmatrix} Y & 0 \\ \widehat{A} & \widehat{L} \end{bmatrix}.
+\end{equation}
+
+We know
+%
+\begin{equation}
+    \begin{bmatrix} Y & \\ \widehat{A} & \widehat{L} \end{bmatrix}^{-1}
+    \begin{bmatrix} \hat{f} \\ \tilde{f} \end{bmatrix} = 
+    \begin{bmatrix} Y^{-1}\hat{f} \\
+        \widehat{L}^{-1}(\tilde{f} - \widehat{A}Y^{-1}\hat{f})
+    \end{bmatrix}
+\end{equation}
+%
+so by setting
+%
+\begin{align}
+    \hat{g} &= \tilde{f} - \widehat{A}Y^{-1}\hat{f} \nonumber\\
+    \hat{h} &= \widehat{L}^{-1}\hat{g},
+\end{align}
+%
+we determine the coefficients of the MSN approximation to be
+%
+\begin{align}
+    \tilde{a} &= D_{s}^{-1}G^{*}H^{*}
+        \begin{bmatrix} Y^{-1}\hat{f} \\ \hat{h} \\ 0
+        \end{bmatrix} \nonumber\\
+    &= D_{s}^{-1}G^{*}\begin{bmatrix} Y^{-1}\hat{f} \\ 0 \\ 0
+        \end{bmatrix}
+    + D_{s}^{-1}G^{*}H^{*} \begin{bmatrix} 0 \\ \hat{h} \\ 0
+        \end{bmatrix} \nonumber\\
+    &= \tilde{a}_{1} + \tilde{a}_{2}.
+\end{align}
+%
+Naturally $\tilde{a}_{1}$ are the coefficients we computed from
+Sec.~\ref{sec:cvip_interp_1D}.
+Because of this, we will compute the bound
+%
+\begin{equation}
+    \norm{a_{c}-\tilde{a}}_{p,1} \le \norm{a_{c}-\tilde{a}_{1}}_{p,1}
+        + \norm{\tilde{a}_{2}}_{p,1}.
+\end{equation}
+%
+and only focus on $\norm{\tilde{a}_{2}}_{p,1}$.
+First, though, we prove some bounds necessary for the rest of the
+calculations.
+
+We begin by seeking bounds on $\hat{h}_{i}$ by looking at $\hat{g}_{i}$.
+We know
+%
+\begin{align}
+    \hat{g}_{1} &= \sum_{\substack{k=1\\ k\text{ odd}}}^{n}
+        \parens{1-\alpha_{k}y_{k}^{-1}}a_{k-1} -
+        \sum_{\substack{k=1\\ k\text{ odd}}}^{n}
+        \alpha_{k}y_{k}^{-1}\eps_{k} + \sum_{k=0}^{\infty} a_{n+2k}
+            \nonumber\\
+    \hat{g}_{2} &= \sum_{\substack{k=1\\ k\text{ even}}}^{n}
+        \parens{1-\alpha_{k}y_{k}^{-1}}a_{k-1} -
+        \sum_{\substack{k=1\\ k\text{ even}}}^{n}
+        \alpha_{k}y_{k}^{-1}\eps_{k} + \sum_{k=0}^{\infty} a_{n+1+2k}.
+\end{align}
+%
+Now, we have
+%
+\begin{align}
+    \alpha_{k}y_{k}^{-1} &= c_{k}^{2}-s_{k}^{2} \nonumber\\
+    1 - \alpha_{k}y_{k}^{-1} &= 2s_{k}^{2}
+\end{align}
+%
+so that
+%
+\begin{align}
+    \abs{\hat{g}_{1}} + \abs{\hat{g}_{2}}
+        &\le 2\sum_{k=1}^{n}s_{k}^{2}\abs{a_{k-1}}
+            + 2\sum_{k=n}^{\infty} \abs{a_{k}} \nonumber\\
+    &\le \frac{C_{s}\norm{a}_{s}}{n^{s-\frac{1}{2}}}.
+    \label{eq:cvip_1D_bdy_g_hat_sum_bound}
+\end{align}
+%
+Additionally, we have
+%
+\begin{align}
+    \ell_{1}^{2}, \ell_{2}^{2} &\ge \sum_{k=1}^{\frac{n}{2}} \parens{n+2k}^{-2s}
+        \nonumber\\
+    &\ge \frac{1}{4}\brackets{\frac{1-2^{-2s+1}}{2s-1}}\frac{1}{n^{2s-1}}
+        \nonumber\\
+    &\ge \begin{cases}
+                \frac{C_{s}}{n^{2s-1}} &s>\frac{1}{2} \\
+                \frac{1}{16sn^{2s-1}} &s\ge1 \\
+        \end{cases}.
+    \label{eq:cvip_1D_bdy_ell_sum_bound}
+\end{align}
+%
+We give a specific constant when $s\ge1$ because of the simple form.
+The second inequality comes from Eq.~\eqref{eq:bound_xp_12}.
+This bound implies
+%
+\begin{equation}
+    \ell_{1}^{-1},\ell_{2}^{-1} \le 
+        \begin{cases}
+            C_{s}n^{s-\frac{1}{2}} &s>\frac{1}{2} \\
+            4\sqrt{s}n^{s-\frac{1}{2}} &s\ge1
+        \end{cases},
+\end{equation}
+%
+which, combined with Eq.~\eqref{eq:cvip_1D_bdy_g_hat_sum_bound}
+and the fact
+%
+\begin{align}
+    \hat{h}_{1} &= \ell_{1}^{-1}\hat{g}_{1} \nonumber\\
+    \hat{h}_{2} &= \ell_{2}^{-1}\hat{g}_{2},
+\end{align}
+%
+gives us
+%
+\begin{equation}
+    |\hat{h}_{1}| + |\hat{h}_{2}| \le C_{s}\norm{a}_{s}.
+    \label{eq:cvip_interp_1D_bdy_h_bound}
+\end{equation}
+
+If
+%
+\begin{equation}
+    \tilde{h} = \begin{bmatrix} \hat{h} \\ 0 \end{bmatrix},
+\end{equation}
+%
+where we have $n-1$ zeros, then we see
+%
+\begin{align}
+    H^{*}\begin{bmatrix} 0 \\ \tilde{h} \end{bmatrix}
+        &= \begin{bmatrix} I & \\ & I - 2VT^{-1}V^{*} \end{bmatrix}
+        \begin{bmatrix} 0 \\ \tilde{h} \end{bmatrix} \nonumber\\
+    &= \begin{bmatrix} 0 \\ \tilde{h} \end{bmatrix} -
+        \begin{bmatrix} 0 \\ 2VT^{-1}V^{*}\tilde{h} \end{bmatrix}.
+\end{align}
+%
+We only need to bound
+%
+\begin{equation}
+    \norm{\tilde{a}_{2}}_{p,1} \le \norm{D_{s}^{-1}G^{*}
+        \begin{bmatrix} 0 \\ \tilde{h}\end{bmatrix}}_{p,1}
+    + 2\norm{D_{s}^{-1}G^{*}
+        \begin{bmatrix} 0 \\ VT^{-1}V^{*}\tilde{h}\end{bmatrix}}_{p,1}.
+\end{equation}
+
+Looking at the first term, we see
+%
+\begin{equation}
+    D_{s}^{-1}G^{*}\begin{bmatrix} 0 \\ \tilde{h} \end{bmatrix}
+    = \begin{bmatrix} 0 \\ \vdots \\ 0 \\ -n^{-s}s_{n}\hat{h}_{2} \\ 
+        \parens{n+1}^{-s}\hat{h}_{1} \\ \parens{n+2}^{-s}c_{n}\hat{h}_{2} \\
+        0 \\ \vdots \\ 0 \end{bmatrix},
+\end{equation}
+%
+so it follows
+%
+\begin{equation}
+    \norm{D_{s}^{-1}G^{*}\begin{bmatrix} 0 \\ \tilde{h} \end{bmatrix}}_{p,1}
+        \le \frac{2}{n^{s}}\brackets{ |\hat{h}_{1}| + |\hat{h}_{2}|}.
+\end{equation}
+%
+Similarly, we set
+%
+\begin{align}
+    VT^{-1}V^{*}\tilde{h} &= q \nonumber\\
+        &= \begin{bmatrix} q_{n+1} & q_{n} & \cdots & q_{2} & q_{1}
+            \end{bmatrix}^{*},
+\end{align}
+%
+with
+%
+\begin{equation}
+    q_{k} = \ell_{i}^{-2}\beta_{i}\hat{h}_{i}\beta_{n+2-k}.
+\end{equation}
+%
+In the previous equation, $i$ is $1$ if $k$ is odd
+and $i$ is $2$ if $k$ is even.
+From here, given the previous bounds, we see
+%
+\begin{align}
+    \abs{q_{k}} &\le C_{s}n^{2s-1}\cdot \frac{2}{n^{s}}
+        \cdot \widetilde{C}_{s}\norm{a}_{s}
+            \cdot \frac{2}{n^{s}} \nonumber\\
+    &\le \frac{C_{s}\norm{a}_{s}}{n}.
+    \label{eq:cvip_interp_1D_bdy_qk_bound}
+\end{align}
+%
+This ordering makes the next computation easier:
+%
+\begin{align}
+    D_{s}^{-1}G^{*} \begin{bmatrix} 0 \\ q \end{bmatrix}
+        = \begin{bmatrix} -s_{1}1^{-s}q_{1} \\ \vdots \\ -s_{n}n^{-s}q_{n} \\
+        (n+1)^{-s}q_{n+1} \\ c_{n}(n+2)^{-s}q_{n} \\ \vdots \\
+        c_{1}(2n+1)^{-s}q_{1} \end{bmatrix}.
+\end{align}
+%
+Naturally, we have
+%
+\begin{equation}
+    \norm{D_{s}^{-1}G^{*} \begin{bmatrix} 0 \\ q \end{bmatrix}}_{p,1}
+        \le \frac{2}{n^{s}}\sum_{k=1}^{n+1}\abs{q_{k}}.
+\end{equation}
+%
+Now, from Eq.~\eqref{eq:cvip_interp_1D_bdy_qk_bound}, it is easy to see
+%
+\begin{equation}
+    \sum_{k=1}^{n+1} \abs{q_{k}} \le C_{s}\norm{a}_{s}.
+\end{equation}
+%
+All of these results we combine together to arrive at
+%
+\begin{equation}
+    \norm{\tilde{a}_{2}}_{p,1} \le \frac{C_{s}\norm{a}_{s}}{n^{s}}.
+\end{equation}
+
+All of this implies
+%
+\begin{equation}
+    \norm{f - p_{n}}_{\infty,[-1,1]}
+        \le \frac{C_{s}\norm{a}_{s}}{n^{s-\frac{1}{2}}}
+\end{equation}
+%
+where $\frac{1}{2} < s \le \sigma$. 
+
+
+
+From the work above, we can easily compute bounds on the condition number
+$\kappa(L)$.
+We assume $\begin{bmatrix}a & b\end{bmatrix}^{*}$ is a unit vector.
+First, we see
+%
+\begin{align}
+    \norm{\begin{bmatrix} Y & \\ \widehat{A} & \widehat{L} \end{bmatrix}
+        \begin{bmatrix}a\\b\end{bmatrix}}_{2}^{2}
+        &= \norm{Ya}_{2}^{2} + ||\widehat{A}a + \widehat{L}b||_{2}^{2}
+            \nonumber\\
+        &\le 2 + \norm{\begin{bmatrix}
+            2\braces{1^{-s}+3^{-s}+\cdots+(n-1)^{-s}}+\frac{4}{n^{1/2}} \\
+            2\braces{2^{-s} + 4^{-s} + \cdots + n^{-s}} + \frac{4}{n^{1/2}}
+            \end{bmatrix}}_{2}^{2} \nonumber\\
+        &\le \begin{cases}
+            64\brackets{\ln n}^{2} &s\ge1 \\
+            256 &s\ge2
+        \end{cases}.
+\end{align}
+%
+In the above inequality, we note two different bounds on norm because
+it is independent of $n$; we note the logarithmic bound
+holds for large $n$. We note $\norm{L}_{2}\ge1$.
+Additionally, 
+%
+\begin{align}
+    \norm{\begin{bmatrix} Y & \\ \widehat{A} & \widehat{L} \end{bmatrix}^{-1}
+        \begin{bmatrix}a\\b\end{bmatrix}}_{2}^{2}
+    &= ||Y^{-1}a||_{2}^{2} + ||\widehat{L}^{-1}(b-\widehat{A}Y^{-1}a)||_{2}^{2}
+        \nonumber\\
+    &\le 2n^{2s} + 128sn^{2s+1} \nonumber\\
+    &\le 256sn^{2s+1}.
+\end{align}
+%
+We find $||L^{-1}||_{2} \ge n^{s}/2$.
+It follows
+%
+\begin{equation}
+    \frac{1}{2}n^{s}\le \kappa(L) \le
+        \begin{cases}
+            128\sqrt{s}n^{s+\frac{1}{2}}\ln n &s\ge1 \\
+            256\sqrt{s}n^{s+\frac{1}{2}} &s\ge2
+        \end{cases}.
+\end{equation}
+%
+Thus, we have $\kappa(L) = \Omega(n^{s})$,
+$\kappa(L)=O_{s}(n^{s+\frac{1}{2}}\ln n)$ for $s\ge1$,
+and $\kappa(L) = O_{s}(n^{s+\frac{1}{2}})$ for $s\ge2$.
+
+
+

@@ -1,0 +1,177 @@
+\section{Proof of Norm Convergence for 1D Interpolation of polynomials
+    of degree $2n$}
+\label{sec:cvip_interp_1D_norm}
+
+In this section we determine when our MSN approximation controlling the
+$s$th derivative will converge to the true solution in $\norm{\cdot}_{\tau}$
+when $\norm{a}_{\sigma}<\infty$.
+We will be assuming throughout that $\sigma>\frac{1}{2}$
+and $s>\frac{1}{2}$ as this simplifies some of the assumptions.
+We will discuss the situation when $\sigma\in[0,\frac{1}{2}]$ at
+the end of this section.
+
+If $\tilde{a}$ are the coefficients of the $2n$ MSN solution controlling
+the $s$ derivative, then we see
+%
+\begin{align}
+    \norm{a-\tilde{a}}_{\tau}^{2} &= \norm{a-a_{c}}_{\tau}^{2}
+        + \norm{\tilde{a}-a_{c}}_{\tau}^{2} \nonumber\\
+    &= \sum_{k=2n+1}^{\infty} \parens{1+k}^{2\tau}a_{k}^{2}
+        + \norm{\tilde{a}-a_{c}}_{\tau}^{2} \nonumber\\
+    &\le \norm{\tilde{a}-a_{c}}_{\tau}^{2}
+        + \frac{\norm{a}_{\sigma}^{2}}{2\sigma-2\tau-1}
+        \frac{1}{(2n)^{2\sigma-2\tau-1}}.
+\end{align}
+%
+As before, $a_{c}$ is the true solution chopped to degree $2n$.
+Thus, we only need to look at bounding $\norm{\tilde{a}-a_{c}}_{\tau}$.
+Furthermore, the above inequality shows we must have $\tau<\sigma-\frac{1}{2}$.
+
+Before getting into the main details, we will need to use the bound
+%
+\begin{align}
+    \sum_{k=1}^{n}\abs{\eps_{k}}^{2}
+        &\le \parens{\max_{j} \abs{\eps_{j}}}
+            \sum_{k=1}^{n}\abs{\eps_{k}} \nonumber\\
+    &\le \brackets{\sum_{k=1}^{n}\abs{\eps_{k}}}^{2} \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}^{2}}{2\sigma-1}\frac{1}{n^{2\sigma-1}},
+\end{align}
+%
+where $\eps_{k}$ is defined in Eq.~\eqref{eq:cvip_idct_fhat}
+and we have the useful bound
+%
+\begin{equation}
+    \sum_{k=1}^{n} \abs{\eps_{k}} \le
+        \frac{1}{\sqrt{2\sigma-1}}\frac{\norm{a}_{\sigma}}{
+        n^{\sigma-\frac{1}{2}}}
+\end{equation}
+%
+from Eq.~\eqref{eq:cvip_eps_sum}.
+This bound is just the fact
+$\norm{x}_{2}^{2} \le \norm{x}_{1}\norm{x}_{\infty}$.
+It turns out this bound is the only time that we must have
+$\sigma>\frac{1}{2}$.
+
+We know
+%
+\begin{align}
+    \norm{\tilde{a}-a_{c}}_{\tau}^{2}
+        &= \sum_{k=1}^{n}k^{2\tau}(a_{k-1} - c_{k}^{2}\hat{f}_{k})^{2}
+            + \parens{1+n}^{2\tau}a_{n}^{2} \nonumber\\
+            &\quad + \sum_{k=n+1}^{2n}\parens{1+k}^{2\tau}(a_{k}
+                -s_{2n+1-k}^{2}\hat{f}_{2n+1-k})^{2}.
+\end{align}
+%
+We will begin by looking at the first sum and then the remaining terms.
+
+From our previous work, we know
+%
+\begin{equation}
+    \parens{a_{k-1}-c_{k}^{2}\hat{f}_{k}}^{2}
+        \le 2\parens{s_{k}^{4}a_{k-1}^{2} + \abs{\eps_{k}}^{2}}.
+\end{equation}
+%
+The following summation bound is clear:
+%
+\begin{align}
+    \sum_{k=1}^{n}k^{2\tau}s_{k}^{4}a_{k-1}^{2}
+        &\le \frac{\norm{a}_{\sigma}^{2}}{n^{4s}}
+        \sum_{k=1}^{n}k^{2\tau+4s-2\sigma} \nonumber\\
+        &\le \frac{2\norm{a}_{\sigma}^{2}}{2\tau+4s-2\sigma+1}
+        \frac{1}{n^{2\sigma-2\tau-1}}.
+    \label{eq:cvip_norm_conv_s_constraint_example_bound}
+\end{align}
+%
+The sum that we bound has the form as given in Eq.~\eqref{eq:bound_xp_01};
+we are only reproducing the bound when $2\tau+4s-2\sigma>-1$ for
+simplicity, as the other cases are similar and there is still decay in $n$:
+$O(n^{-4s}\ln n)$ or $O(n^{-4s})$.
+Additionally, We also have the bound
+%
+\begin{align}
+    \sum_{k=1}^{n}k^{2\tau}\abs{\eps_{k}}^{2}
+        &\le n^{2\tau}\sum_{k=1}^{n}\abs{\eps_{k}}^{2} \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}^{2}}{2\sigma-1}\frac{1}{
+        n^{2\sigma-2\tau-1}}.
+\end{align}
+
+We now look at
+%
+\begin{align}
+    &\parens{1+n}^{2\tau}a_{n}^{2}
+        + \sum_{k=n+1}^{2n}\parens{1+k}^{2\tau}(a_{k}
+                -s_{2n+1-k}^{2}\hat{f}_{2n+1-k})^{2} \nonumber\\
+    &\quad\le 2\sum_{k=n}^{2n}\parens{1+k}^{2\tau}a_{k}^{2}
+        + 2\sum_{k=1}^{n}\parens{2n+2-k}^{2\tau}s_{k}^{4}\hat{f}_{k}^{2}.
+\end{align}
+%
+It is clear that the first sum reduces to
+%
+\begin{align}
+    \sum_{k=n}^{2n}\parens{1+k}^{2\tau}a_{k}^{2}
+        &\le \norm{a}_{\sigma}^{2}\sum_{k=1}^{n+1}[n+k]^{2\tau-2\sigma}
+        \nonumber\\
+    &\le \frac{2\norm{a}_{\sigma}^{2}}{2\sigma-2\tau-1}\frac{1}{
+        n^{2\sigma-2\tau-1}},
+\end{align}
+%
+where we are using the bound form Eq.~\eqref{eq:ubound_xp_12_pneg}.
+In the second sum, we see
+%
+\begin{align}
+    \sum_{k=1}^{n}\parens{2n+2-k}^{2\tau}s_{k}^{4}\hat{f}_{k}^{2}
+        &\le \parens{2n+1}^{2\tau}\sum_{k=1}^{n}s_{k}^{4}\hat{f}_{k}^{2}
+        \nonumber\\
+    &\le 2\parens{2n+1}^{2\tau}\sum_{k=1}^{n}s_{k}^{4}\parens{
+        a_{k}^{2}+\abs{\eps_{k}}^{2}}.
+\end{align}
+%
+The first portion of the sum simplifies as follows:
+%
+\begin{align}
+    \sum_{k=1}^{n}s_{k}^{4}a_{k}^{2} &\le \frac{\norm{a}_{\sigma}^{2}}{n^{4s}}
+        \sum_{k=1}^{n}k^{4s-2\sigma} \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}^{2}}{4s-2\sigma+1}\frac{1}{n^{2\sigma-1}}.
+\end{align}
+%
+Similarly, we have
+%
+\begin{align}
+    \sum_{k=1}^{n}s_{k}^{4}\abs{\eps_{k}}^{2}
+        &\le \sum_{k=1}^{n}\abs{\eps_{k}}^{2} \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}^{2}}{2\sigma-1}\frac{1}{n^{2\sigma-1}}.
+\end{align}
+%
+If we combine these inequalities, we find
+%
+\begin{equation}
+    \sum_{k=1}^{n}\parens{2n+2-k}^{2\tau}s_{k}^{4}\hat{f}_{k}^{2}
+        \le \frac{C_{\tau,\sigma,s}\norm{a}_{\sigma}^{2}}{n^{2\sigma-2\tau-1}}.
+\end{equation}
+
+Taken together, we have
+%
+\begin{align}
+    \norm{a-\tilde{a}}_{\tau}^{2} &= \norm{a-a_{c}}_{\tau}^{2}
+        + \norm{\tilde{a}-a_{c}}_{\tau}^{2} \nonumber\\
+    &\le \frac{C_{s,\sigma,\tau}\norm{a}_{\sigma}^{2}}{n^{2\sigma-2\tau-1}},
+\end{align}
+%
+with the restrictions $\sigma>\frac{1}{2}$ and $\tau<\sigma-\frac{1}{2}$.
+
+As we can see, the only instance where we require $\sigma>\frac{1}{2}$
+occurs in bounding $\sum_{k=1}^{n}\abs{\eps_{k}}^{2}$.
+When proving convergence in the original MSN interpolation
+papers~\cite{msnInterp,msnBirkhoff},
+dyadic sums were used in order to determine a sufficient interpolation degree
+to ensure bounded derivative norm.
+The interpolation examples in Chapter~\ref{chap:func_interp}
+show that even when the function is discontinuous, we obtain
+convergence to the underlying solution where the function in continuous.
+This suggests that the convergence in norm results may be extended
+to the case when $\sigma\in\brackets{0,\frac{1}{2}}$ (e.g.~when
+the function is integrable but not continuous) but the proof of this
+may require careful analysis due to the possibly non-absolutely
+converging terms $\eps_{k}$; this will be looked at in future work.
+It is well-known conditionally convergent series are challenging
+to work with~\cite{baby_rudin,knopp_series}.

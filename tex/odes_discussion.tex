@@ -1,0 +1,61 @@
+\section{Discussion of ODE Solvers and Extending Fast MSN Methods to PDEs}
+\label{sec:odes_discussion}
+
+In this chapter we looked at the potential of using the MSN
+method to solve ordinary differential equations.
+Due to the nature of the \CV{} matrices, there is much structure
+that can be exploited for a fast solver.
+
+Much of this work, though, could also apply in the situation where
+we decide to not use MSN and form a square system; as mentioned before,
+this is used in Chebfun~\cite{driscoll2014chebfun}, with some
+of the algorithm details
+in~\cite{driscoll2015rectangular,aurentz2017block,xu2015explicit}.
+While Chebfun uses Chebyshev polynomial extrema instead of Chebyshev
+polynomial roots, similar results should hold.
+In particular, similar conditioning results should hold
+as well as the low-rank off-diagonal blocks.
+From~\cite[Appendix A]{ExpODEs}, it appears Chebfun uses slow, dense
+algorithms for computing higher and higher approximations given
+an ODE, as it is stated that ``the work involved \dots is proportional to
+the cube of the number of grid points.''
+The difficulty with large systems is specifically
+mentioned~\cite[Pages 306--307]{ExpODEs}; this would be less challenging
+by taking advantage of the structured system.
+To be sure, structured solvers require more effort~\cite{randomHSSLBL},
+but the speedup is worth the additional cost.
+One additional feature of Chebfun is its ability to compute eigenfunctions.
+Future work will investigate if MSN could compute this as well,
+an interesting question because MSN is inherently nonsquare while
+eigenvalues only make sense in a square system.
+
+A recent article~\cite{shen2016fast} talks about using
+randomized sampling to speed up the computation of fast direct
+solvers for second order ODEs, although the results can be generalized
+and extended.
+They note that even though steep gradients exist, it is possible that
+the off-diagonal blocks still have a low-rank property.
+This leads to compression with errors that can made made small
+by setting a sufficiently small tolerance.
+This suggests that, given the expansion in Eq.~\eqref{eq:odes_systems_coefs},
+it may be possible to perform similar compression
+directly using the coefficients themselves; how this could
+be done systematically is not clear, though.
+Using randomized sampling to compute a structured factorization
+of a matrix is similar to the work in~\cite{randomHSSLBL},
+which we discuss in Chapter~\ref{chap:random}.
+
+Previous work has shown that the MSN method can solve 2D PDEs
+well~\cite{msnPDE}; the difficulty arises in storing the matrices.
+This is especially important in 3D, as the flop cost for slow
+algorithms is $O(n^{9})$ for an $n^{3}$ tensor grid with
+$O(n^{6})$ memory units required to hold the matrices themselves;
+this is impractical if not impossible for any reasonable $n$.
+Extending the results here to solving PDEs may give rise to fast,
+high-order methods for PDEs.
+In the constant coefficient case, the tensor product nature
+may allow us to form the normal equations and invert them quickly,
+similar to the fast LQ factorization discussed here.
+The variable coefficient will be more challenging, although
+there is potential to see if the structures here
+carry over in certain situations in 2D and 3D.

@@ -1,0 +1,95 @@
+\section{Rotations and Structured Factorizations}
+\label{sec:rotations}
+
+Householder reflectors and Givens rotations are
+standard orthogonal matrices which allow us to selectively
+zero entries of a matrix.
+Both will be important
+in our matrix factorizations, for our fast algorithms require
+us to compute the LQ factorization of Chebyshev-Vandermonde matrices.
+
+\subsection{Householder Reflectors}
+One special type of orthogonal matrix is a Householder reflector.
+Given distinct nonzero $x$ and $y$ with the same length
+(that is, $x\ne y$ and $\norm{x}_{2} = \norm{y}_{2} > 0$), we wish to find an
+orthogonal matrix $P$ such that $Px = y$.
+There is a reflection which does this: we set $v = x - y$ and choose
+%
+\begin{equation}
+    P = I - \frac{2}{v^{*}v}vv^{*}.
+\end{equation}
+%
+With this choice, we see
+%
+\begin{align}
+    Px  &= x - \frac{2v^{*}x}{v^{*}v}v \nonumber\\
+        &= x - \frac{2\parens{x^{*}x - x^{*}y}}{x^{*}x - 2x^{*}y + y^{*}y}
+            \parens{x - y} \nonumber\\
+        &= x - \frac{x^{*}x - 2x^{*}y + y^{*}y}{x^{*}x - 2x^{*}y + y^{*}y}
+            \parens{x - y} \nonumber\\
+        &= y
+\end{align}
+%
+From the line 2 to line 3, we are using the fact that
+$\norm{x}_{2} = \norm{y}_{2}$.
+The previous work also holds when
+$x,y\in\C^{n}\setminus\braces{0}$.
+
+We frequently want to choose a vector parallel to $e_{1}$,
+allowing us to zero most of the entries of $x$.
+In this case, we choose $v = x - \norm{x}_{2}e_{1}$.
+One difficulty when $v$ is computed numerically is
+the catastrophic cancellation that can occur in $v_{1}$.
+Care must be taken in order to ensure this does not happen;
+see Alg.~\ref{alg:unit_house}, which has been modified
+from the version in~\cite[Alg.~5.1.1]{gvl4}.
+
+\input{algs/unit_house.tex}
+
+Matrix-vector products involving Householder reflector $P$ can be
+computed quickly by taking advantage of its structure; it can
+be computed and applied in $O(n)$ flops.
+This implies that a small, constant number of reflectors
+can be applied with total cost $O(n)$.
+Also, in practice we never need to explicitly store $P$, only $v$.
+In this work, we will be assuming that our reflection vector
+$v$ has unit length.
+
+
+
+\subsection{Givens Rotations}
+We make use of Givens rotations, so we review them and their
+ability to selectively zero entries of a matrix. This is important
+because our matrices are structured.
+A Givens rotation $G$ is the identity matrix with a rank-2 correction:
+%
+\begin{equation}
+    G\parens{\brackets{i,j},\brackets{i,j}}
+        = \begin{bmatrix} c & s \\ -s & c \end{bmatrix}.
+\end{equation}
+%
+Here, $c = \cos\theta$ and $s = \sin\theta$ for some $\theta$.
+We do not need to determine $\theta$ explicitly in practice,
+for we require
+%
+\begin{equation}
+    \begin{bmatrix}\alpha & \beta \end{bmatrix}
+    \begin{bmatrix} c & s \\ -s & c \end{bmatrix}
+        = \begin{bmatrix} r & 0 \end{bmatrix}.
+    \label{eq:givens_def}
+\end{equation}
+%
+Thus, we are finished if we can write $c$ and $s$ in terms of
+$\alpha$ and $\beta$.
+This is easy, though, and a numerically stable
+way to compute $c$ and $s$ is given in Alg.~\ref{alg:givens}.
+Our convention here differs from others
+(such as \cite[Alg.~5.1.3]{gvl4} or \cite{bindel2002computing})
+by the fact that we ensure $r = \sqrt{\alpha^{2}+\beta^{2}}$
+in Eq.~\eqref{eq:givens_def}.
+The total cost for computing a Givens rotation and
+applying it to a vector is $O(1)$.
+This allows us to compute and apply $O(n)$ Givens rotations for $O(n)$
+total cost.
+
+\input{algs/givens_rotation.tex}

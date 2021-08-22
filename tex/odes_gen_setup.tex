@@ -1,0 +1,21 @@
+\section{General Setup for Linear ODEs}
+\label{sec:ODE_general_setup}
+
+The general form for our linear ODE is given by
+%
+\begin{align}
+    A(x)u'(x) + B(x)u(x) &= F(x), \quad x\in\brackets{-1,1}  \nonumber\\
+    Lu &= G.
+    \label{eq:ODE_gen}
+\end{align}
+%
+Here, we are looking for a solution $u:\brackets{-1,1}\to\R^{m}$ with continuous
+$A,B:[-1,1]\to\R^{m\times m}$, continuous $F:\brackets{-1,1}\to\R^{m}$,
+and a linear operator $L$.
+Throughout this chapter we will assume Eq.~\eqref{eq:ODE_gen}
+has a unique solution.
+
+By making some assumptions on $A$ and $B$, we are able to arrive
+at fast algorithms. We will first look at the scalar case
+before moving toward the general case of systems of linear ODEs.
+

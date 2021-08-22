@@ -1,0 +1,208 @@
+\section{Stopping Criteria}
+\label{sec:rand_stop_crit}
+
+The unitary invariance of the 2-norm combined with it being
+the definition of the operator (matrix) norm makes it
+desirable to bound $\norm{(I-QQ^{*})A}_{2}$.
+The main challenge of the 2-norm stems from the computational
+complexity required to compute it exactly.
+Because of this, the F-norm is the next norm that we may wish
+to bound, and it is easy to compute if we have explicit access to the matrix
+in question; furthermore, it trivially bounds the 2-norm.
+If $A$ is large or implicitly defined, $\norm{A}_{F}$ may still be expensive
+to compute.
+Additionally, the exact norm is frequently not required so much as
+an accurate approximation of it.
+We will be making comparisons with algorithms
+in~\cite{martinsson2016randomized,yu2018efficient}, so we reproduce
+their blocked versions here.
+Alg.~\ref{alg:rand_low_rank_MV}
+is from~\cite[Figure 2]{martinsson2016randomized} (the MV Algorithm,
+named after the authors)
+and Alg.~\ref{alg:rand_low_rank_YGL}
+is from~\cite[Algorithm 2]{yu2018efficient} (the YGL Algorithm,
+named after the authors).
+Algs.~\ref{alg:rand_low_rank_MV} and \ref{alg:rand_low_rank_YGL} originally
+used $Q = \texttt{orth}(A)$ to compute the orthonormal basis
+of a matrix $A$; this work uses the function \texttt{qr} in our notation
+because it is an unpivoted QR factorization,
+and our new stopping criterion will require both $Q$ and $R$ factors
+of the unpivoted QR factorization.
+A variation of iterated Gram-Schmidt orthogonalization can be found in
+Line~\ref{alg_line:rand_MV_GS}  of Alg.~\ref{alg:rand_low_rank_MV}  and
+Line~\ref{alg_line:rand_YGL_GS} of Alg.~\ref{alg:rand_low_rank_YGL}
+to help $Q$ retaining numerical orthogonality.
+It is explicitly stated in~\cite[Remark 5]{martinsson2016randomized}
+that the fact $R$ is not used in the \texttt{qr} routine
+(original \texttt{orth}).
+From our work here, we see the $R$ factor helps ensure we do
+not take too many random samples by noting when the $R$-values become small.
+Even so, no pivoting is required.
+
+
+\input{algs/random_MV_alg.tex}
+\input{algs/random_YGL_alg.tex}
+
+One stopping criterion is based on the following lemma~\cite{RandomReview2011}:
+
+\begin{lem}[HMT Error Bound;
+    Lemma 4.1 in~\cite{RandomReview2011}]
+\label{thm:rand_hmt_bound}
+Let $B\in\R^{m\times n}$. Fix a positive integer $d$ and $\alpha>1$.
+Draw an independent family of standard Gaussian vectors
+$\braces{\omega_{k}}_{k=1}^{d}$.
+Then
+%
+\begin{equation}
+    \norm{B}_{2} \le \alpha\sqrt{\frac{2}{\pi}}\max_{k=1,\cdots,d}
+        \norm{B\omega_{k}}_{2}
+    \label{eq:rand_hmt_bound}
+\end{equation}
+%
+with probability $1-\alpha^{-d}$.
+\end{lem}
+
+\noindent
+The reference to ``HMT'' comes from the first letters of
+the authors' last names in~\cite{RandomReview2011}
+and is used in~\cite[Alg.~4.2]{RandomReview2011}
+(Adaptive Randomized Range Finder).
+Here, $\alpha$ can be viewed as a trade-off parameter: larger values
+ensure a smaller probability of failure.
+It turns out, though, this overestimation is significant; this will
+be shown for a number of matrices in Sec.~\ref{sec:rand_exp}.
+We can find no references to randomized lower bounds of $\norm{B}_{2}$;
+this would be helpful in producing an order-of-magnitude estimate
+or estimates relating to the variance or other moments of the random variable.
+This method is used in~\cite{liu2016parallel,xi2014fast,saibaba2016randomized}
+as a stopping criterion for adaptive randomized algorithms
+for structured matrices
+(the same situation where this work was originally developed).
+
+The authors in \cite{martinsson2016randomized} note the drawback of
+Lem.~\ref{thm:rand_hmt_bound} of this over estimation and instead
+use the explicit bound $\norm{A}<\eps$ in Alg.~\ref{alg:rand_low_rank_MV},
+where we note $A$ is updated every time after having known
+information subtracted out during each iteration.
+The authors said that $\norm{A}_{2}$ could be used but noted
+that $\norm{A}_{F}$ may be preferred for its easy computation.
+One drawback (noted in~\cite{yu2018efficient}) is that this requires 
+access to a dense copy of $A$.
+This is problematic with regards to memory because we may
+want to keep an unmodified version of the original matrix; furthermore,
+if $A$ is originally sparse, it will immediately become dense
+after subtracting the first approximation,
+greatly increasing memory requirements.
+
+This resulted in the development of the stopping criterion
+in~\cite{yu2018efficient}.
+Instead of storing a dense matrix with the unused information
+of $A$ to keep track of the error, it is possible to compute
+the error just based on the difference in F-norm.
+This is made explicit in the next theorem, which we call
+the ``YGL Error Bound'' because of the first letters
+of the authors' last names.
+Calling this an error bound is slightly misleading because the
+error is exact, not bounded, but a better title escapes us at this time.
+
+\begin{thm}[YGL Error Bound;
+    Theorem 1.1 in~\cite{yu2018efficient}]
+\label{thm:rand_ygl_bound}
+Let $A\in\R^{m\times n}$ and $Q\in\R^{n\times k}$ be orthogonal.
+If $B = Q^{*}A$ then
+%
+\begin{equation}
+    \norm{A - QB}_{F}^{2} = \norm{A}_{F}^{2} - \norm{B}_{F}^{2}.
+    \label{eq:rand_ygl_bound}
+\end{equation}
+\end{thm}
+
+\noindent
+If one builds up $Q$ in blocks, then we can compute the true F-norm error
+provided $\norm{A}_{F}$ is already known.
+Because this value only needs to be computed once, it may not 
+be too expensive;
+however, this only works if the matrix is explicitly, not implicitly, defined.
+Additionally, Thm.~\ref{thm:rand_ygl_bound} is only useful
+for relative tolerances down to $O(\sqrt{\epsm})$,
+where $\epsm$ is machine precision,
+as noted in~\cite[Theorem 3]{yu2018efficient}.
+It is possible, using techniques such as compensated
+summation~\cite[Chapter 4]{HighamASNA}, that these limitations may be
+lifted, but this would be difficult in the parallel setting.
+This may be the first explicit reference to a relative error bound
+in the literature, though we seek to remove the relative tolerance restrictions.
+
+
+
+\section{Previous Probabilistic Bounds}
+
+We now present results from~\cite{gu2015subspace}, although
+looser bounds from~\cite{RandomReview2011} may be more well-known.
+The important portions of the bounds will be emphasized here;
+the original paper should be referenced for the full results and proofs.
+
+\begin{thm}[Average 2-Norm and F-Norm Error;
+    Theorem 5.7 in~\cite{gu2015subspace}]
+\label{thm:rand_ave_2_F_norm_err_gu}
+Let $\Omega$ be a Gaussian random matrix with $k+p$ columns for
+$p\ge2$, $S = (AA^{*})^{q}A\Omega$, and $Q = \texttt{qr}(S)$.
+Then
+%
+\begin{align}
+    \E\norm{A-QQ^{*}A}_{2} &\le
+        \sqrt{\sigma_{k+1}^{2} + C(A,k,p,q)} \nonumber\\
+    \E\norm{A-QQ^{*}A}_{F} &\le
+        \sqrt{\parens{\sum_{j=k+1}^{n}\sigma_{j}^{2}} + D(A,k,p,q)}
+\end{align}
+%
+Here, $C$ and $D$ are constants which decay exponentially as $q$ increases.
+\end{thm}
+
+\noindent
+The above theorem states the expected value of the error is close to optimal.
+Similar results hold for upper tail bounds:
+
+\begin{thm}[Probability Tail Bounds in 2-Norm and F-Norm;
+    Theorem 5.8 in~\cite{gu2015subspace}]
+Let the assumptions of Thm.~\ref{thm:rand_ave_2_F_norm_err_gu} hold.
+Then if $0<\Delta\ll1$,
+%
+\begin{align}
+    \norm{A-QQ^{*}A}_{2} &\le
+        \sqrt{\sigma_{k+1}^{2} + C(A,k,p,q,\Delta)} \nonumber\\
+    \norm{A-QQ^{*}A}_{F} &\le
+        \sqrt{\parens{\sum_{j=k+1}^{n}\sigma_{j}^{2}} + D(A,k,p,q,\Delta)}
+\end{align}
+%
+hold for probability $1-\Delta$.
+$C$ and $D$ are constants which decay exponentially as $q$ increases.
+\end{thm}
+
+\noindent
+Additionally, \cite[Theorem 5.6]{gu2015subspace} bounds deviations
+of the singular values of $QQ^{*}A$ from the singular values of $A$.
+
+These are useful results and help explain why randomized methods
+perform better than expected if one looks at similar
+bounds in~\cite{RandomReview2011}.
+The downside is that in practice they are not helpful because
+we must know the singular values.
+
+In these theorems, $q$ refers to the possibility of using
+power iteration in order to increase the quality of the approximation;
+this is a well-known technique in randomized numerical linear
+algebra~\cite{RandomReview2011,yu2018efficient,
+martinsson2016randomized} and helps ensure the larger singular values
+and corresponding singular vectors are matched more
+closely~\cite{gu2015subspace,saibaba2019randomized}.
+Power iteration is not mentioned in~\cite{randomHSSLBL}
+because it is not clear how to use it in
+randomized HSS construction without greatly increasing the
+overall computational cost; it is likely this also holds in general
+for the randomized construction of structured matrices
+because we do not have explicit access to matrix subblocks.
+This lead to the desire for an accurate method to determine
+low-rank approximations which could be used with small relative
+tolerances (for example, tolerances as small as
+$10^{-5}$ in single precision and $10^{-14}$ in double precision).

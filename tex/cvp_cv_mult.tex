@@ -1,0 +1,66 @@
+\section{Multiplication of Chebyshev Polynomials}
+\label{sec:CV_mult}
+
+To allow for variable coefficient differential equations,
+we will need to multiply functions in terms of the Chebyshev basis.
+Using standard trigonometric multiplication results, we see
+%
+\begin{align}
+    T_{n}(\cos\theta)T_{m}(\cos\theta) &= \cos n\theta \cos m\theta
+        \nonumber\\
+    &= \frac{1}{2}\braces{\cos\brackets{\parens{n+m}\theta} + \cos\brackets{
+        \parens{n-m}\theta}},
+\end{align}
+%
+from which it follows
+%
+\begin{equation}
+    T_{m}T_{n} = \frac{1}{2}\parens{T_{m+n} + T_{\abs{m-n}}}.
+\end{equation}
+
+For $m\ge1$, we let
+%
+\begin{equation}
+    M_{m} = \begin{bmatrix}
+        & & & & \frac{1}{2} \\
+        & & & \frac{1}{2} & & \frac{1}{2} \\
+        & & \iddots & & & & \ddots \\
+        & \frac{1}{2} & & & & & & \frac{1}{2} \\
+        1 & & & & & & & & \frac{1}{2} \\
+        & \frac{1}{2} & & & & & & & & \frac{1}{2} \\
+        & & \ddots & & & & & & & & \ddots \\
+    \end{bmatrix}.
+\end{equation}
+%
+The primary bands are located on
+the $m$th subdiagonal and superdiagonal, so that
+$1$ is in the $m+1$ row and the $\frac{1}{2}$ in
+the first row is in the $m+1$ column.
+Explicitly, for $m\ne0$ we have
+%
+\begin{align}
+    \brackets{M_{m}}_{m+1,1} &= 1 \nonumber\\
+    \brackets{M_{m}}_{m+k,k} &= \frac{1}{2},\quad k\in\braces{2,3,\cdots}
+         \nonumber\\
+    \brackets{M_{m}}_{k,m+k} &= \frac{1}{2},\quad k\in\braces{2,3,\cdots}
+         \nonumber\\
+    \brackets{M_{m}}_{k,m+2-k} &= \frac{1}{2}, \quad k\in\braces{1,2,\cdots,m}.
+\end{align}
+%
+All other entries are 0.
+Therefore
+%
+\begin{equation}
+    \diag(T_{m}(z^{n}))V_{\infty} = V_{\infty}M_{m},
+\end{equation}
+%
+where
+%
+\begin{equation}
+    T_{m}(z^{n}) = \begin{bmatrix}
+        T_{m}(z_{1}^{n}) \\ T_{m}(z_{2}^{n}) \\ \vdots \\ T_{m}(z_{n}^{n})
+    \end{bmatrix}.
+\end{equation}
+%
+When $V$ is finite, we chop $M_{m}$ to the appropriate size.
+

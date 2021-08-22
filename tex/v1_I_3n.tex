@@ -1,0 +1,95 @@
+\section{1D \CV{} Interpolation Matrix: $3n+1$ Columns}
+\label{sec:CV_1D_3n}
+
+If we use $3n+1$ Chebyshev polynomials for interpolation
+(up to degree $3n$), then we must compute the LQ factorization
+of the following matrix:
+%
+\begin{align}
+    &WD_{s}^{-1} = \nonumber\\
+    &\begin{bmatrix}
+            1^{-s} & & & & & & -(2n+1)^{-s} & \\
+                   & \ddots & & & & \iddots & & \ddots & \\
+      & & n^{-2} & 0 & -(n+2)^{-s} & & & & -(3n)^{-s} & 0 \\
+        \end{bmatrix}.
+\end{align}
+%
+By using disjoint Givens rotations, the correct rotation matrix is
+%
+\begin{equation}
+    G = G_{1}G_{2},
+\end{equation}
+%
+where
+
+\begin{equation}
+    G_{1} = \begin{bmatrix}
+        c_{1} & & & & & & & & s_{1} \\
+        & c_{2} & & & & & & s_{2} & \\
+        & & \ddots & & & & \iddots & & \\
+        & & & c_{n} & & s_{n} & & & & \\
+        & & & & 1 & & & & \\
+        & & & -s_{n} & & c_{n} & & & & \\
+        & & \iddots & & & & \ddots & & \\
+        & -s_{2} & & & & & & c_{2} & \\
+        -s_{1} & & & & & & & & c_{1} \\
+        & & & & & & & & & 1 \\ 
+        & & & & & & & & & & \ddots \\ 
+        & & & & & & & & & & & 1 \\ 
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    G_{2} = \begin{bmatrix}
+        1 & & & & 0 & & 0 & \\
+        & \chi_{2} & & & & & & \sigma_{2} & \\
+        & & \ddots & & & & & & \ddots & \\
+        & & & \chi_{n} & & & & & & \chi_{n} & \\
+        0 & & & & 1 & & & & & & 0 \\
+        & & & & & \ddots & \\
+        0 & & & & & & 1 & & & & 0 \\
+        & -\sigma_{2} & & & & & & \chi_{2} & \\
+        & & \ddots & & & & & & \ddots & \\
+        & & & -\sigma_{n} & & & & & & \chi_{n} & \\
+        & & & & 0 & & 0 & & & & 1 \\
+    \end{bmatrix}.
+\end{equation}
+
+\noindent
+Here, we define
+%
+\begin{align}
+    \tau_{k} &= \parens{\frac{k}{2n+2-k}}^{s} \nonumber\\
+    c_{k} &= \frac{1}{\sqrt{1 + \tau_{k}^{2}}} \nonumber\\
+    s_{k} &= \tau_{k}c_{k} \nonumber\\
+    \xi_{k} &= \parens{\frac{k}{2n+k}}^{s}c_{k} \nonumber\\
+    \mu_{k} &= \frac{1}{\sqrt{1 + \xi_{k}^{2}}} \nonumber\\
+    \nu_{k} &= \xi_{k}\mu_{k}.
+\end{align}
+
+In this case, we see
+%
+\begin{equation}
+    WD_{s}^{-1}G = \begin{bmatrix} Y & 0 \end{bmatrix},
+\end{equation}
+%
+where $Y$ is diagonal with entries
+%
+\begin{align}
+    y_{1} &= \sqrt{1^{-2s} + (2n+1)^{-2s}} \nonumber\\
+            &= \sqrt{1 + \parens{\frac{1}{2n+1}}^{2s}} \nonumber\\
+    y_{k} &= \sqrt{k^{-2s} + (2n+2-k)^{-2s} + (2n+k)^{-2s}}
+                \nonumber\\
+            &= k^{-s}\sqrt{1 + \parens{\frac{k}{2n+2-k}}^{2s}\brackets{
+                1 + \parens{\frac{2n+2-k}{2n+k}}^{2s}}}
+        &\quad k\in\braces{2,\cdots,n}.
+\end{align}
+%
+This is a numerically stable was to compute the entries.
+
+We can include endpoints in our interpolation by adding two Householder
+reflectors like we did in Sec.~\ref{sec:CV_1D_2n};
+we omit the details.
+
+
+

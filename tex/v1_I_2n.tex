@@ -1,0 +1,123 @@
+\section{1D \CV{} Interpolation Matrix: $2n+1$ Columns}
+\label{sec:CV_1D_2n}
+
+We take $V$ to be our \CV{} matrix with $2n+1$ columns.
+Recalling that we need to compute the minimum norm solution of
+%
+\begin{equation}
+    VD_{s}^{-1}x = f.
+\end{equation}
+%
+$D_{s}$ is a diagonal scaling matrix which we use
+to bound the $s$th derivative; it was defined in
+Eq.~\eqref{eq:kar_ds_def}.
+From here, we see
+%
+\begin{align}
+    C^{-1}VD_{s}^{-1} &= WD_{s}^{-1} \nonumber\\
+        &= \begin{bmatrix}
+            1^{-s} & & & & & & & & & -\parens{2n+1}^{-s} \\
+            & 2^{-s} & & & & & & & -\parens{2n}^{-s} & \\
+            & & \ddots & & & & & \iddots & & \\
+            & & & & n^{-s} & 0 & -\parens{n+2}^{-s} & & & \\
+        \end{bmatrix}.
+\end{align}
+
+We need to convert this matrix into a lower triangular matrix via rotations,
+and we use Givens rotations to zero the nonzero components.
+Specifically, we require the Givens rotation $G_{k}$ to have
+%
+\begin{equation}
+    G_{k}\parens{\brackets{k,2n+2-k},\brackets{k,2n+2-k}} = 
+        \begin{bmatrix} c_{k} & s_{k} \\ -s_{k} & c_{k} \end{bmatrix}.
+\end{equation}
+%
+In practice, we can compute 
+%
+\begin{align}
+    \tau_{k} &= \parens{\frac{k}{2n+2-k}}^{s} \nonumber\\
+    c_{k} &= \frac{1}{\sqrt{1 + \tau_{k}^{2}}} \nonumber\\
+    s_{k} &= \tau_{k}c_{k}
+    \label{eq:v1_I_2n_Givens_cs_def}
+\end{align}
+%
+stably using Alg.~\ref{alg:givens}.
+All of these Givens rotations are
+disjoint and we set $G = G_{1}G_{2}\cdots G_{n}$, with
+%
+\begin{equation}
+    G = \begin{bmatrix}
+        c_{1} &       &        &       &      &       &        &       & s_{1}\\
+              & c_{2} &        &       &      &       &        & s_{2} &      \\
+              &       & \ddots &       &      &       & \iddots&       &      \\
+              &       &        & c_{n} &      & s_{n} &        &       &      \\
+              &       &        &       &    1 &       &        &       &      \\
+              &       &        & -s_{n}&      & c_{n} &        &       &      \\
+              &       & \iddots&       &      &       & \ddots &       &      \\
+              &-s_{2} &        &       &      &       &        & c_{2} &      \\
+        -s_{1}&       &        &       &      &       &        &       & c_{1}\\
+        \end{bmatrix}.
+    \label{eq:vand_I_Givens}
+\end{equation}
+
+Then, we find
+%
+\begin{equation}
+    WD_{s}^{-1}G = \begin{bmatrix} Y & 0 \end{bmatrix},
+\end{equation}
+%
+where
+%
+\begin{align}
+    Y &= \diag\parens{y_{1},\cdots,y_{n}} \nonumber\\
+    y_{k} &= k^{-s}\sqrt{1 + \parens{\frac{k}{2n+2-k}}^{2s}} \nonumber\\
+    &= \frac{1}{c_{k}k^{s}}.
+    \label{eq:v1_I_2n_Givens_y_def}
+\end{align}
+%
+This is the desired LQ factorization, and we can now use
+Alg.~\ref{alg:general_lq_solution} to solve this system quickly.
+As we can see, we are making small changes to the DCT coefficients.
+
+
+
+\section{Endpoint Interpolation}
+\label{sec:CV_1D_Endpoints}
+
+While most of the factorizations involve the Chebyshev nodes, we will
+at times include the endpoints $\pm1$. If we want to interpolate
+function values at $f(-1) = f_{0}$ and $f(1) = f_{n+1}$, then the
+coefficients $a$ must satisfy
+%
+\begin{align}
+    Aa &= \begin{bmatrix} 1 & -1 & 1 & -1 & \cdots & -1 & 1 \\
+            1 & 1 & 1 & 1 & \cdots & 1 & 1 \end{bmatrix}
+            \begin{bmatrix} a_{0} \\ a_{1} \\ a_{2} \\ a_{3} \\ \vdots \\
+                a_{2n-1} \\ a_{2n} \end{bmatrix} \nonumber\\
+        &= \begin{bmatrix} f_{0} \\ f_{n+1} \end{bmatrix}.
+        \label{eq:vand_pm1}
+\end{align}
+%
+We define
+%
+\begin{align}
+    C_{0} &= \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \nonumber\\
+    C_{1} &= \begin{bmatrix} -1 & 1 \\ 1 & 1 \end{bmatrix}.
+    \label{eq:vand_pm1_C}
+\end{align}
+%
+With these definitions, we see
+%
+\begin{align}
+    C_{0}^{-1}A &= \begin{bmatrix} 1 & 0 & 1 & 0 & \cdots & 0 & 1 \\
+            0 & 1 & 0 & 1 & \cdots & 1 & 0 \end{bmatrix} \nonumber\\
+    C_{1}^{-1}A &= \begin{bmatrix} 0 & 1 & 0 & 1 & \cdots & 1 & 0 \\
+            1 & 0 & 1 & 0 & \cdots & 0 & 1 \end{bmatrix}.
+\end{align}
+%
+We will prefer one of these matrices ($C_{0}$ or $C_{1}$) over the
+other depending on the context. The distinction depends on whether
+$n$ is even or odd.
+
+
+

@@ -1,0 +1,15 @@
+\section{Results for Fast MSN Interpolation in 2D for Rough Functions}
+\label{sec:rough_2D_sim}
+
+We now look at interpolation results of rough functions in 2D.
+We will attempt to interpolate the following functions:
+%
+\begin{align}
+    J(x,y) &= H(y-\sin(\pi x)) + H(y-x^{2}) \nonumber\\
+    S(x,y,\alpha) &= G(y-\sin(\pi x),\alpha) + G(y-x^{2},\alpha).
+\end{align}
+%
+Both $J$ and $S$ are challenging functions to interpolate,
+as both have difficulties along the curves $y=\sin\pi x$ and $y=x^{2}$:
+$J$ is discontinuous along those curves while $S(\cdot,\cdot,\alpha)$
+has infinite derivatives.

@@ -1,0 +1,37 @@
+\documentclass[advisors,pretty,prettymath]{ucsbthesis}
+
+\input{tex/preamble.tex}
+
+\begin{document}
+
+%%% Begin Front Matter
+\frontmatter
+
+\include{tex/front_matter}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\listofalgorithms
+\addtocontents{loa}{\def\string\figurename{Algorithm}}
+\cleardoublepage
+
+%%% Begin Main Matter
+\mainmatter
+\include{tex/introduction}
+\include{tex/kronecker_and_rot}
+\include{tex/cv_properties}
+\include{tex/vand_interp_1D}
+\include{tex/vand_interp_higher}
+\include{tex/func_interp}
+\include{tex/vand_interp_conv}
+\include{tex/odes}
+\include{tex/random}
+\include{tex/conclusion}
+
+%%% Begin Back Matter
+\backmatter
+
+\printbibliography
+
+\end{document}

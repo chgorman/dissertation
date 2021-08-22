@@ -1,0 +1,83 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Table of Upper Bounds for 2-Norm estimates
+
+\begin{table}
+\begin{center}
+\begin{tabular}{cc|c|c|c|c|c|c|c|c|c|}
+\cline{3-11}
+& & \multicolumn{3}{|c|}{\textbf{1E-9}} &
+\multicolumn{3}{|c|}{\textbf{1E-12}} & \multicolumn{3}{|c|}{\textbf{1E-15}} \\
+\cline{3-11}
+& & $p$ & M & S & $p$ & M & S & $p$ & M & S \\
+\hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Matrix A1}} & \textbf{2} &
+    30 & 5.11 & 0.53 & 40 & 5.23 & 0.52 & 50 & 5.32 & 0.52 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} &\textbf{5} &
+    13 & 11.8 & 1.4 & 18 & 12.2 & 1.4 & 22 & 12.4 & 1.3 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} &\textbf{10} &
+    9 & 22.9 & 2.8  & 12 & 23.5 & 2.8  & 15 & 24.1 & 2.7 \\
+\hline
+\hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Matrix A2}} & \textbf{2} &
+    30 & 3.73 & 0.71 & 40 & 3.90 & 0.69 & 50 & 4.03 & 0.68 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{5} &
+    13 & 8.02 & 1.93 & 18 & 8.52 & 1.86 & 22 & 8.85 & 1.82 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{10} &
+    9 & 14.8 & 4.0  & 12 & 15.8 & 3.9  & 15 & 16.5 & 3.8 \\
+\hline
+\hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Matrix E1}} & \textbf{2} &
+    30 & 4.11 & 0.64 & 40 & 4.26 & 0.63 & 50 & 4.38 & 0.62 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{5} &
+    13 & 9.14  & 1.72  & 18 & 9.58  & 1.68  & 22 & 9.86  & 1.66 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{10} &
+    9 & 17.2 & 3.6   & 12 & 18.0  & 3.5  & 15 & 18.7 & 3.4 \\
+\hline
+\hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Matrix E2}} & \textbf{2} &
+    30 & 3.81 & 0.70 & 40 & 3.98 & 0.68 & 50 & 4.10 & 0.67 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{5} &
+    13 & 8.27  & 1.90  & 18 & 8.78  & 1.83  & 22 & 9.07  & 1.79 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{10} &
+    9 & 15.3 & 3.94   & 12 & 16.3  & 3.84  & 15 & 17.0 & 3.74 \\
+\hline
+\hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Matrix S}} & \textbf{2} &
+    30 & 10.1 & 0.6 & 40 & 10.2 & 0.6 & 50 & 10.3 & 0.6 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{5} &
+    13 & 24.1  & 1.6  & 18 & 24.5  & 1.6  & 22 & 24.8  & 1.5 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{10} &
+    9 & 47.0 & 3.5   & 12 & 47.9  & 3.3  & 15 & 48.5 & 3.2 \\
+\hline
+\hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Matrix D}} & \textbf{2} &
+    30 & 7.36 & 0.64 & 40 & 7.51 & 0.61 & 50 & 7.61 & 0.60 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{5} &
+    13 & 17.2  & 1.8  & 18 & 17.7  & 1.7  & 22 & 18.0  & 1.6 \\
+\cline{2-11}
+\multicolumn{1}{|c|}{} & \textbf{10} &
+    9 & 33.3 & 3.7   & 12 & 34.2  & 3.6  & 15 & 34.8 & 3.5 \\
+\hline
+\end{tabular}
+\end{center}
+\caption[HMT 2-Norm Upper Bounds]{
+Upper bound of $||A||_{2}$ based on
+ Lemma~\ref{thm:rand_hmt_bound} (HMT) for different
+failure probabilities (columns) and $\alpha$ (rows).
+$p$ is the smallest integer for which $\alpha^{-p}\le 10^{-\ell}$.
+We performed 10,000 trials and computed the mean (M) and standard deviation
+(S). The correct values are $||A||_{2}\approx1$.
+}
+\label{tab:hmt_norm_ubound_mat}
+\end{table}

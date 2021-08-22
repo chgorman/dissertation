@@ -1,0 +1,115 @@
+\section{Randomized Low-Rank Approximation}
+\label{sec:rand_lra}
+
+In recent years there has been growing interest in using randomization
+to speed up conventional numerical linear algebra techniques;
+one standard reference is~\cite{RandomReview2011}.
+The main idea is that we would like to compute
+accurate factorizations like pivoted QR or the SVD on low-rank matrices.
+These factorizations usually have  flop counts of
+$O(mnr)$ and $O(mn^{2})$, respectively,
+but the data transfer required makes these computations expensive,
+especially when matrices are so large as to not fit in fast memory.
+Thus, it is impractical to use standard dense algorithms with
+large communication costs on distributed memory machines.
+By looking at random samplings of the range, the desire is
+to build up an approximation of the matrix until reaching
+a predetermined approximation tolerance.
+Once a sufficient number of random samples have been computed,
+we perform a pivoted QR or SVD on this smaller dense
+matrix, leading to a smaller overall cost.
+The random samplings are computed using matrix-matrix multiplication,
+which can be efficiently computed on modern hardware.
+Although these multiplications may be a significant portion
+of the overall flop count, the total time
+spent performing multiplication is small.
+Thus, the goal is to determine when enough samples have been computed
+to ensure an accurate approximation of the matrix.
+The standard algorithm for building a low-rank approximation
+is found in Alg.~\ref{alg:rand_low_rank}, with the primary
+arguments being the block size $d$ and \texttt{stopping\_criterion},
+a function which determines when we have a good enough approximation
+of the range of $A$; similar blocked algorithms can be found
+in~\cite{yu2018efficient,martinsson2016randomized} and are reproduced below.
+In Line~\ref{alg_line:rand_Gen_GS} of Alg.~\ref{alg:rand_low_rank},
+we perform iterated Gram-Schmidt orthogonalization for numerical stability,
+as it helps ensure $Q$ is \emph{numerically} orthogonal to machine
+precision, especially in the blocked case~\cite{bjorck1994GS,stewart2008}.
+This may not always be necessary, for \cite{stewart2008} notes
+this would only be required should the column norms decrease by a significant
+factor; even so, algorithmically it is easier, though more expensive,
+to always perform iterated GS.
+Additionally, although \texttt{rand} could produce any kind of random
+matrices, our analysis requires us to use Gaussian random variables.
+See Table~\ref{tab:rand_helper_funcs} for a list of helper functions
+for the algorithms in this chapter.
+We denote the pivoted QR factorization as \texttt{rrqr}
+and it stops when $\abs{R_{k,k}}<\epsa$ or
+$\abs{R_{k,k}} < \epsr\abs{R_{1,1}}$.
+
+\input{tables/rand_helper_funcs.tex}
+
+These algorithms frequently use a QB approximation of $A$.
+Here $Q$ is an approximate orthonormal basis for the range of $A$
+with $B = Q^{*}A$; that is
+%
+\begin{align}
+    A &\approx Q(Q^{*}A) \nonumber\\
+    &= QB.
+\end{align}
+%
+Knowing when $\norm{A - QB}$ is small is our primary concern,
+and the particular choice of norm is important.
+This chapter will investigate when this happens,
+propose a new method, and compare it with existing stopping criteria.
+The stopping criterion presented here has focused on developing
+a \emph{relative} stopping criterion.
+This is particularly useful as it may be more convenient
+to specify a relative error tolerance over an absolute tolerance.
+Furthermore, we would like this method to work in the case
+we do not have explicit access to the matrix.
+Theorem 4.2 in~\cite{vogel2016superfast} says that if $H$ is a
+structured $N\times N$ matrix and $\widetilde{H}$ is $H$
+with off-diagonal blocks truncated
+to tolerance $\epsr$, then
+%
+\begin{equation}
+    ||H - \widetilde{H}||_{F} \le C(N,L)\epsr\norm{H}_{F}.
+\end{equation}
+%
+Thus, it makes sense to seek an accurate relative stopping criterion.
+Once a sufficient number of random samples have been computed,
+we perform a pivoted QR factorization
+(such as QR with Column Pivoting, although the Strong RRQR
+from~\cite{gu1996efficient} would be better) on these samples
+in order to obtain a high-quality $Q$ for a better QB approximation.
+While this last step may not be necessary and was not included
+in~\cite{yu2018efficient,martinsson2016randomized},
+this would be an easy step to add and was desired in
+the original setting where this stopping criterion was
+developed~\cite{randomHSSLBL}.
+
+\input{algs/random_low-rank_build.tex}
+
+We recall the Eckhart-Young theorem~\cite[Theorem~1.1]{gu2015subspace},
+which gives optimal low-rank approximation bounds in the 2-norm and F-norm:
+
+\begin{thm}[Eckhart-Young Theorem]
+If $A_{k}$ is the matrix $A$ chopped to $k$ singular values,
+then we have the following bounds on approximations of $A$:
+%
+\begin{align}
+    \min_{\text{rank}(B)\le k}\norm{A-B}_{2} &= \norm{A-A_{k}}_{2} \nonumber\\
+        &= \sigma_{k+1} \nonumber\\
+    \min_{\text{rank}(B)\le k}\norm{A-B}_{F} &= \norm{A-A_{k}}_{F} \nonumber\\
+        &= \sqrt{\sum_{j=k+1}^{\min(m,n)}\sigma_{j}^{2}}.
+\end{align}
+\end{thm}
+
+\noindent
+In practice, we hope to be able to determine approximations
+with near-optimal ranks within a specified tolerance
+with smaller overall computation time.
+Thus, we are looking at the fixed-precision low-rank approximation problem.
+
+

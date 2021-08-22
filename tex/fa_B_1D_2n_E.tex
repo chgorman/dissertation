@@ -1,0 +1,67 @@
+\subsection{1D Birkhoff Interpolation on Chebyshev Nodes
+and Endpoints with $2n$ Degree; First Factorization}
+\label{ssec:fa_B_1D_2n_E_1}
+
+In this section we present a fast algorithm for 1D interpolation
+on the Chebyshev nodes using polynomials up to degree $2n$.
+This is based on the $LQ$ factorization from Sec.~\ref{ssec:CV_D_1D_2n_E_F1}.
+
+If we set
+%
+\begin{align}
+    \begin{bmatrix} L & 0 \end{bmatrix}
+        &= \begin{bmatrix} WD \\ \overline{A} \end{bmatrix} D_{s}^{-1}GH\Pi
+        \nonumber\\
+    \widehat{C} &= \begin{cases} C_{1} \quad n\text{ even} \\
+        C_{0}\quad n\text{ odd} \end{cases},
+\end{align}
+%
+noting that $L$ is the $n+2\times n+2$ lower triangular matrix
+from Eqs.~\eqref{eq:CV_D_1D_2n_E_F1_L_even} or
+\eqref{eq:CV_D_1D_2n_E_F1_L_odd}.
+The algorithm is quite straight-forward:
+%
+\begin{align}
+    y\parens{1\!:\!n+2} &= L^{-1}\begin{bmatrix} C^{-1}f \\ \widehat{C}^{-1}f
+        \end{bmatrix} \nonumber\\
+    a &= D_{s}^{-1}GH\Pi y.
+\end{align}
+%
+%An efficient memory usage, one would only need one vector
+%$y$ (initialized to zero) of length $2n+1$
+%and the rest of the operations could overwrite the vector.
+
+
+
+\subsection{1D Birkhoff Interpolation on Chebyshev Nodes
+and Endpoints with $2n$ Degree; Second Factorization}
+\label{ssec:fa_B_1D_2n_E_2}
+
+In this section we present a fast algorithm for 1D interpolation
+on the Chebyshev nodes using polynomials up to degree $2n$.
+This is based on the $LQ$ factorization from Sec.~\ref{ssec:CV_D_1D_2n_E_F2}.
+
+We set
+%
+\begin{align}
+    \begin{bmatrix} L & 0 \end{bmatrix}
+        &= \begin{bmatrix} UWD \\ \overline{A} \end{bmatrix} D_{s}^{-1}G\Pi
+        \nonumber\\
+    \widehat{C} &= \begin{cases} C_{1} \quad n\text{ even} \\
+        C_{0}\quad n\text{ odd} \end{cases},
+\end{align}
+%
+noting that $L$ is the $n+2\times n+2$ lower triangular matrix
+from Eqs.~\eqref{eq:CV_D_1D_2n_E_F2_L_even} or
+\eqref{eq:CV_D_1D_2n_E_F2_L_odd}.
+The algorithm is quite straight-forward:
+%
+\begin{align}
+    y\parens{1\!:\!n+2} &= L^{-1}\begin{bmatrix} UC^{-1}f \\ \widehat{C}^{-1}f
+        \end{bmatrix} \nonumber\\
+    a &= D_{s}^{-1}G\Pi y.
+\end{align}
+%
+%An efficient memory usage, one would only need one vector
+%$y$ (initialized to zero) of length $2n+1$
+%and the rest of the operations could overwrite the vector.

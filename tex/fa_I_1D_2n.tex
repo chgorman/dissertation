@@ -1,0 +1,29 @@
+\subsection{1D Interpolation on Chebyshev Nodes with $2n$ Degree}
+\label{ssec:fa_I_1D_2n}
+
+In this section we present a fast algorithm for 1D interpolation
+on the Chebyshev nodes using polynomials up to degree $2n$.
+This is based on the $LQ$ factorization from Sec.~\ref{ssec:CV_1D_2n}.
+
+We have the following equation
+%
+\begin{equation}
+    \min_{Va=f}\norm{D_{s}a}_{2}.
+\end{equation}
+%
+Here, $V$ is the \CV{} matrix, $f$ is vector of function values 
+with $f_{k} = f\parens{z_{k}^{n}}$, where $z_{k}^{n}$ is the $k$th
+Chebyshev node as defined in Eq.~\eqref{eq:v_CV_CVnodes}.
+The algorithm is quite simple:
+%
+\begin{align}
+    y\parens{1\!:\!n} &= Y^{-1}C^{-1}f \nonumber\\
+    a &= D_{s}^{-1}Gy.
+\end{align}
+%
+An efficient memory usage, one would only need one vector
+$y$ (initialized to zero) of length $2n+1$
+and the rest of the operations could overwrite the vector.
+
+
+

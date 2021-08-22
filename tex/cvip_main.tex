@@ -1,0 +1,60 @@
+\section{Main Idea}
+\label{sec:cvip_main}
+
+In this chapter we will compute error bounds for the MSN method.
+In \cite{msnInterp}, Chandrasekaran et~al.~showed the MSN
+solution was guaranteed to converge to the underlying solution
+based on a compactness argument by showing the polynomial
+approximations had bounded derivative in combination with the
+interpolation conditions and the Arzel\`{a}-Ascoli theorem.
+We take a different route by carefully looking at the
+linear system and solving for the interpolation coefficients,
+which is possible due to its structured nature.
+
+Given
+%
+\begin{equation}
+    f(x) = \sum_{k=0}^{\infty} a_{k}T_{k}(x),
+\end{equation}
+%
+we know
+%
+\begin{align}
+    \norm{f}_{\infty,[-1,1]} &\le \sum_{k=0}^{\infty} \abs{a_{k}} \nonumber\\
+        &\equiv \norm{a}_{p,1},
+\end{align}
+%
+where we obtain equality of norm at $x=0$ and $a_{k}$ all the same sign.
+Naturally, $\norm{a}_{p,1}$ is the 1-norm of the sequence of coefficients.
+We find
+%
+\begin{align}
+    \sum_{k=N}^{\infty} \abs{a_{k}}
+        &\le \sqrt{\sum_{k=N}^{\infty} \parens{k+1}^{-2s}}\norm{a}_{s}
+        \nonumber\\
+    &\le \frac{1}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{N^{s-\frac{1}{2}}}.
+    \label{eq:cvip_main_large_bound}
+\end{align}
+%
+If $a_{c}$ are the true coefficients chopped to $N$ and $\tilde{a}$
+are the coefficients of a polynomial approximation $p_{N}$ of degree $N$,
+then we see
+%
+\begin{align}
+    \norm{f-p_{N}}_{\infty,[-1,1]} &\le \norm{a-\tilde{a}}_{p,1} \nonumber\\
+        &= \norm{a_{c}-\tilde{a}}_{p,1} + \norm{a-a_{c}}_{p,1} \nonumber\\
+    &\le \norm{a_{c}-\tilde{a}}_{p,1}
+        + \frac{C_{s}\norm{a}_{s}}{N^{s-\frac{1}{2}}}.
+\end{align}
+%
+Because of this, for our MSN approximation $p_{n}$,
+the best asymptotic error we can have is
+%
+\begin{equation}
+    \norm{f-p_{n}}_{\infty,[-1,1]}
+        \le \frac{C_{s}\norm{a}_{s}}{n^{s-\frac{1}{2}}}
+\end{equation}
+%
+using this method.
+Therefore, we will focus on bounding $\norm{a_{c}-\tilde{a}}_{p,1}$.
+

@@ -1,0 +1,135 @@
+\section{Linear Combinations of \CV{} Matrices}
+\label{sec:CV_lin_comb}
+
+In this section, we look at matrices which arise from
+combining differentiation and multiplication by Chebyshev polynomials.
+This arises when solving differential equations in Chapter~\ref{chap:fast_ode}.
+
+Due to the better structure which arose in Sec.~\ref{sec:CV_diff},
+we left-multiply all of our \CV{} matrices with $U$.
+Thus, when $W$ has $2n+1$ columns we have
+%
+\begin{equation}
+    2UW = \begin{bmatrix}
+        2 &   & - &   &   &   &   &   &   &   &   &   & + &   & -2 \\
+          & + &   & - &   &   &   &   &   &   &   & + &   & - & \\ 
+          &   & + &   & - &   &   &   &   &   & + &   & - &   & \\
+          &   &  & &\ddots&   &   &   & & &\iddots&   &   &   & \\
+          &   &   &   & + &   & - & 0 & + &   & - &   &   &   & \\
+          &   &   &   &   & + &   & 0 &   & - &   &   &   &   & \\
+          &   &   &   &   &   & + & 0 & - &   &   &   &   &   & \\
+    \end{bmatrix},
+    \label{eq:CV_UW_mat}
+\end{equation}
+%
+where ``$+$'' stands for $+1$ and ``$-$'' stands for $-1$.
+It is on the $UW$ matrix in Eq.~\eqref{eq:CV_UW_mat} and $UWD$ matrix
+in Eq.~\eqref{eq:CV_UWD_mat} that we multiply by $M_{m}$.
+Because $M_{0} = I$, we do not need to worry about that case.
+
+From the examples below, it is clear we can easily precompute
+the exact form needed for any of the necessary linear combinations
+that we will need to take.
+
+\subsection{Multiplication and Derivative \CV{} Matrices}
+
+Because $UWD$ has only 1 ``diagonal'', we start with looking
+at the structure of $UWDM_{m}$ as it is simpler.
+In Eq.~\eqref{eq:cvp_UWDMm_1}, we see the $UWDM_{m}(:,1:n+1)$,
+essentially the first half of the matrix.
+The explicit $0$ in the first row is located in column $m+1$,
+while the $2m$ in the first column is located in row $m$.
+In Eq.~\eqref{eq:cvp_UWDMm_1}, we see the $UWDM_{m}(:,n+1:2n+1)$,
+the second half of the matrix.
+The $2n$ in the first column (column $n+1$ of the actual matrix)
+occurs in row $n-m$, while the $n$ in the last row
+occurs in column $n+m+1$.
+
+\begin{sidewaysfigure}
+\begin{align}
+    &(2UWDM_{m})(:,1:n+1) = \nonumber\\
+    &\begin{bmatrix}
+          &   &   &   & 1 & 0 & 1 &   &   &   &   &   &   &   &   \\
+          &   &   & 2 &   &   &   & 2 &   &   &   &   &   &   &   \\
+          & &\iddots& &   &   &  & &\ddots&   &   &   &   &   &   \\
+          &m-1&   &   &   &   &   &   &   &m-1&   &   &   &   &   \\
+        2m&   &   &   &   &   &   &   &   &   & m &   &   &   &   \\
+          &m+1&   &   &   &   &   &   &   &   &   &m+1&   &   &   \\
+          & &\ddots&  &   &   &   &   &   &   &   &  &\ddots& &   \\
+          &   & &n-k-1&   &   &   &   &   &   &   &   & &n-k-1&   \\
+          &   &   &   &n-k&   &   &   &   &   &   &   &   &   & 2n\\
+          &   &   &   & &n-k+1&   &   &   &   &   &   & &n+k-1&   \\
+          &   &   &   & & &\ddots &   &   &   &   &   &\iddots &  &   \\
+          &   &   &   &   &   &   &n-2&   &   &   &n+2&   &   &   &   \\
+          &   &   &   &   &   &   &   &n-1&   &n+1&   &   &   &   &   \\
+          &   &   &   &   &   &   &   &   & n &   &   &   &   &   &   \\
+    \end{bmatrix}
+    \label{eq:cvp_UWDMm_1}
+\end{align}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}
+\begin{align}
+    &(2UWDM_{m})(:,n+1,2n+1) = \nonumber\\
+    &\begin{bmatrix}
+        &     &   &      &    &      &       &2n-1 &   &     &   &      & \\
+        &     &   &      &    &      &\iddots&     &   &     &   &      & \\
+        &     &   &      &    &2n-m+1&       &     &   &     &   &      & \\
+        &     &   &      &2n-m&      &       &     &   &     &   &      &2n-m\\
+        &     &   &2n-m-1&    &      &       &     &   &     &   &2n-m-1&   \\
+        & &\iddots&      &    &      &       &     &   & &\iddots&      &   \\
+        &n+m+1&   &      &    &      &       &     &   &n+m+1&   &      &   \\
+      2n&     &   &      &    &      &       &     &n+m&     &   &      &   \\
+        &n-m+1&   &      &    &      &       &n+m-1&   &     &   &      &   \\
+        & &\ddots &      &    &      &\iddots&     &   &     &   &      &   \\
+        &     &   & n-1  &    & n+1  &       &     &   &     &   &      &   \\
+        &     &   &      &  n &      &       &     &   &     &   &      &   \\
+    \end{bmatrix}
+    \label{eq:cvp_UWDMm_2}
+\end{align}
+\end{sidewaysfigure}
+
+
+
+\subsection{Multiplication and Interpolation \CV{} Matrices}
+
+We now focus on computing $UWM_{m}$, which is more difficult because
+$UW$ has two bands.
+We compute the first two matrices to understand the explicit structure.
+As above, ``$+$'' stands for $+1$ and ``$-$'' stands for $-1$.
+
+\begin{align}
+    &4UWM_{1} = \nonumber\\
+    &\begin{bmatrix}
+        & + &   & - &   &   &   &   &   &   &   &   &   &   &   & + &   & - &\\ 
+      2 &   &   &   & - &   &   &   &   &   &   &   &   &   & + &   &   &   &-\\
+        & + &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & - &\\ 
+        &   & + &   &   &   & - &   &   &   &   &   & + &   &   &   & - &   &\\ 
+        &   &   & + &&\ddots&   & - &   &   &   & +&&\iddots&   & - &   &   &\\ 
+        &   &   &   & + &   &   &   & - &   & + &   &   &   & - &   &   &   &\\ 
+        &   &   &   &   &   &   &   &   & 0 &   &   &   &   &   &   &   &   &\\ 
+        &   &   &   &   &   & + &   & + & 0 & - &   & - &   &   &   &   &   &\\ 
+        &   &   &   &   &   &   & + &   & 0 &   & - &   &   &   &   &   &   &\\ 
+    \end{bmatrix} 
+    %\label{eq:CV_UW_mat}
+\end{align}
+
+\begin{align}
+    &4UWM_{2} = \nonumber\\
+    &\begin{bmatrix}
+-2 & &2& &-&   &   &   & & &   & & &   & + &   &-2 &   & + \\
+   & & &+& &   &   &   & & &   & & &   &   & - &   & + &   \\
+ 2 & &-& &+&   & - &   & & &   & &+&   & - &   & + &   & - \\
+   &+& &-& &   &   & - & & &   &+& &   &   & + &   & - &   \\
+  &&+&&-&\ddots& + &   &-& & + & &-&\iddots&+& & - &   &   \\
+   & & &+& &   &   & + & &0&   &-& &   &   & - &   &   &   \\
+   & & & &+&   & - &   &2&0&-2 & &+&   & - &   &   &   &   \\
+   & & & & &   &   &   & &0&   & & &   &   &   &   &   &   \\
+   & & & & &   & + &   &-&0& + & &-&   &   &   &   &   &   \\
+    \end{bmatrix}                                
+    %\label{eq:CV_UW_mat}
+\end{align}
+
+
+
+

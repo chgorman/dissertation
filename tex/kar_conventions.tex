@@ -1,0 +1,412 @@
+\section{Notation and Conventions}
+\label{sec:kar_conventions}
+
+In this section, we present most of the notation conventions we will
+use throughout this dissertation.
+Probability theory is only used in Chapter~\ref{chap:random},
+so we will not discuss the specifics until then.
+
+\subsection{Order Notation and Constant Convention}
+
+Throughout this dissertation, we will be using constants such as $A$, $B$,
+$C$ that are absolute.
+They may be used in the same set of equations
+even though their value changes between inequalities.
+If the constant is not absolute but depends on a variable (say $s$),
+then we will write $C_{s}$ or $C(s)$.
+
+We review Big O notation; one reference is~\cite[Chapter 9]{Knuth_Concrete}.
+We assume $f,g:[0,\infty)\to[0,\infty)$ and write
+
+\begin{equation}
+    f(x) = O(g(x))
+\end{equation}
+
+\noindent
+when
+
+\begin{equation}
+    f(x) \le C g(x),\quad C>0, \quad x\ge N.
+\end{equation}
+
+\noindent
+Thus, $f$ is asymptotically bounded above by $g$.
+Similarly,
+
+\begin{equation}
+    f(x) = \Omega(g(x))
+\end{equation}
+
+\noindent
+when
+
+\begin{equation}
+    f(x) \ge C g(x),\quad C>0, \quad x\ge N.
+\end{equation}
+
+\noindent
+Naturally, $f$ is asymptotically bounded below by $g$.
+Finally,
+
+\begin{equation}
+    f(x) = \Theta(g(x))
+\end{equation}
+
+\noindent
+when
+
+\begin{equation}
+    f(x) = O(g(x)) \quad\text{and}\quad f(x) = \Omega(g(x)),
+\end{equation}
+
+\noindent
+so that $f$ is asymptotically bounded above and below by $g$.
+
+
+
+\subsection{Chebyshev Polynomials}
+\label{ssec:kar_cheby}
+
+The $n$th Chebyshev polynomial $T_{n}$ is defined as
+
+\begin{equation}
+    T_{n}(x) \equiv \cos\brackets{n\arccos x},\quad x\in\brackets{-1,1}.
+\end{equation}
+
+\noindent
+We will show the following recurrence relation holds, which is
+useful because of the restrictions in the previous definition:
+
+\begin{align}
+    T_{0}(x) &= 1 \nonumber\\
+    T_{1}(x) &= x \nonumber\\
+    T_{n+1}(x) &= 2xT_{n}(x) - T_{n-1}(x).
+    \label{eq:cheby_rec_rel}
+\end{align}
+
+\noindent
+From the definition, it is clear that
+
+\begin{equation}
+    T_{n}(\cos\theta) = \cos n\theta
+    \label{eq:cheby_cosine_property}
+\end{equation}
+
+\noindent
+and
+
+\begin{align}
+    \max_{x\in\brackets{-1,1}} \abs{T_{n}(x)} &= T_{n}(1) \nonumber\\
+    & = 1.
+\end{align}
+
+\noindent
+We recall the roots $\braces{z_{k}^{n}}$ of $T_{n}$:
+
+\begin{equation}
+    z_{k}^{n} = \cos\brackets{\frac{\pi}{n}\parens{n-k+\frac{1}{2}}},
+        \quad k\in\braces{1,\cdots,n}.
+\end{equation}
+
+\noindent
+With this convention, we are numbering the Chebyshev roots from
+negative to positive.
+
+We now prove the recurrence relation of Eq.~\eqref{eq:cheby_rec_rel}.
+First, we have equality for $T_{0}$ and $T_{1}$.
+We have the following property for multiplying cosine functions:
+
+\begin{equation}
+    \cos\theta\cos\vphi = \frac{1}{2}\brackets{\cos\parens{\theta+\vphi}
+        + \cos\parens{\theta-\vphi}},
+    \label{eq:cosine_multiplication_prop}
+\end{equation}
+
+\noindent
+from which it follows
+
+\begin{equation}
+    \cos n\theta \cos\theta = \frac{1}{2}\brackets{
+        \cos\parens{n+1}\theta + \cos\parens{n-1}\theta}.
+\end{equation}
+
+\noindent
+This equation along with Eq.~\eqref{eq:cheby_cosine_property}
+gives us
+
+\begin{equation}
+    T_{n}(x)T_{1}(x) = \frac{1}{2}\brackets{T_{n+1}(x) + T_{n-1}(x)}
+\end{equation}
+
+\noindent
+when $n\ge1$; rearranging and noting $T_{1}(x) = x$
+gives us the desired recurrence relation,
+making it clear that $T_{n}$ is a polynomial.
+
+
+
+\subsection{Function Spaces}
+
+In this work we will primarily deal with the Sobolev spaces. If
+$g:\brackets{-\pi,\pi}\to\C$ is periodic and integrable, then we can define
+Fourier coefficients
+
+\begin{equation}
+    a_{k} = \frac{1}{2\pi}\int_{-\pi}^{\pi} g(\theta)e^{-ik\theta}d\theta.
+\end{equation}
+
+\noindent
+Under mild smoothness assumptions, it is well known that we have equality of
+the function and its Fourier series:
+
+\begin{equation}
+    g(\theta) = \sum_{k\in\Z} a_{k}e^{ik\theta}.
+\end{equation}
+
+\noindent
+From here, we define the Sobolev $s$-norm of $g$ to be
+
+\begin{equation}
+    \norm{g}_{s}^{2} \equiv
+        \sum_{k\in\Z}\parens{1+\abs{k}}^{2s}\abs{a_{k}}^{2},
+\end{equation}
+
+\noindent
+and the Sobolev space
+
+\begin{equation}
+    H_{s} \equiv \braces{g\mid \norm{g}_{s}<\infty}.
+\end{equation}
+
+Even so, the focus here will be on $[-1,1]$ because we wish to approximate
+non-periodic functions.
+To do so, we look at $f:\brackets{-1,1}\to\R$ and
+have the Chebyshev series expansion
+
+\begin{equation}
+    f(x) = \sum_{k=0}^{\infty} b_{k}T_{k}(x),
+\end{equation}
+
+\noindent
+where
+
+\begin{samepage}
+\begin{align}
+    b_{k} &= \frac{2}{\pi} \int_{-1}^{1}\frac{f(x)T_{k}(x)}{\sqrt{1-x^{2}}}dx
+        \nonumber\\
+    &= \frac{2}{\pi} \int_{0}^{\pi} f(\cos\theta)\cos k\theta d\theta.
+\end{align}
+\end{samepage}
+
+\noindent
+After a change of coordinates, we obtain the Fourier series:
+
+\begin{equation}
+    f(\cos\theta) = \sum_{k=0}^{\infty} b_{k}\cos k\theta.
+\end{equation}
+
+\noindent
+Thus, we similarly define the Sobolev $s$-norm in this case:
+
+\begin{equation}
+    \norm{f}_{s}^{2} \equiv
+        \sum_{k=0}^{\infty} \parens{1+k}^{2s}\abs{b_{k}}^{2}.
+\end{equation}
+
+\noindent
+We will sometimes write $\norm{a}_{s}$ or $\norm{b}_{s}$
+in place of $\norm{f}_{s}$ or $\norm{g}_{s}$.
+The importance of $H_{s}$ comes from the fact our algorithms minimize
+$\norm{\cdot}_{s}$ in the appropriate space of polynomials.
+
+We will focus on the case when $s>\frac{1}{2}$, because then
+$H_{s} \subseteq C$.
+Similarly, for $s>m+\frac{1}{2}$, we have $H_{s} \subseteq C^{m}$.
+Finally, we also have $C^{m,\alpha}\subseteq H_{s}$ for
+$s<m+\alpha+\frac{1}{2}$, where $C^{m,\alpha}$ is the space of $m$
+continuously differentiable functions whose $m$th derivative is
+$\alpha$-H\"{o}lder continuous.
+These results are not difficult to show but we postpone their proof until
+Sec.~\ref{sec:cvip_sobolev}.
+
+
+
+\subsection{Matrix Notation and Norm Definitions}
+
+Throughout this work, we use notation similar to that in~\cite{gvl4}.
+Given a matrix $A\in\R^{m\times n}$,
+we let $A_{i,j}$ (or $A_{ij}$, $a_{i,j}$, and $a_{ij}$) denote the entry
+of $A$ at the $i$th row and $j$th column.
+For index sets
+$I = \begin{bmatrix} i_{1} & i_{2} & \cdots & i_{r}\end{bmatrix}$ and
+$J = \begin{bmatrix} j_{1} & j_{2} & \cdots & j_{s}\end{bmatrix}$,
+we have the matrix subblock
+
+\begin{equation}
+    A(I,J) = \begin{bmatrix}
+        A_{i_{1},j_{1}} & A_{i_{1},j_{2}} & \cdots & A_{i_{1},j_{s}} \\
+        A_{i_{2},j_{1}} & A_{i_{2},j_{2}} & \cdots & A_{i_{2},j_{s}} \\
+            \vdots      &     \vdots      & \ddots &     \vdots      \\
+        A_{i_{r},j_{1}} & A_{i_{r},j_{2}} & \cdots & A_{i_{r},j_{s}} \\
+    \end{bmatrix}.
+\end{equation}
+
+\noindent
+At times we may write $A_{I,J}$ instead of $A(I,J)$.
+Similarly, $A(I,:)$ denotes the submatrix of $A$ with rows in $I$
+while $A(:,J)$ denotes the submatrix of $A$ with columns in $J$.
+Even though we will focus on real-valued matrices in this work,
+our notation also carries over to complex-valued matrices.
+We let $A^{T}$ and $A^{*}$ denote the transpose and conjugate transpose
+of $A$, respectively.
+Additionally, we define
+
+\begin{equation}
+    \abs{A}_{ij} \equiv \abs{A_{ij}};
+\end{equation}
+
+\noindent
+that is, $\abs{A}$ is matrix we obtain when taking the absolute value of
+each element in $A$.
+
+Given a vector $x\in\R^{n}$, we let $E$ be the
+permutation which inverts the entries on $x$; that is,
+
+\begin{equation}
+    Ex = \begin{bmatrix} x_{n} \\ x_{n-1} \\ \vdots \\ x_{2} \\ x_{1}
+        \end{bmatrix}.
+\end{equation}
+
+\noindent
+Clearly, this implies $E$ has $1$'s on the antidiagonal and zeros
+everywhere else:
+
+\begin{equation}
+    E = \begin{bmatrix}
+        & & & & 1 \\
+        & & & 1 & \\
+        & & \iddots & & \\
+        & 1 & & & \\
+        1 & & & & \\
+    \end{bmatrix}.
+\end{equation}
+
+\noindent
+We will also let $\Pi$ denote the circular downshift permutation
+when right multiplication is performed:
+
+\begin{equation}
+    \Pi x = \begin{bmatrix} x_{n} \\ x_{1} \\ \vdots \\ x_{n-2} \\ x_{n-1}
+        \end{bmatrix}.
+\end{equation}
+
+\noindent
+Thus, we have
+
+\begin{equation}
+    \Pi = \begin{bmatrix}
+        0 &   &   &   &   &   1 \\
+        1 & 0 &   &   &   &   \\
+          & 1 & 0 &   &   &   \\
+          &   & &\ddots & &   \\
+          &   &   & 1 & 0 &   \\
+          &   &   &   & 1 & 0 \\
+    \end{bmatrix}.
+\end{equation}
+
+\noindent
+We also have the following relation for left mulitplication:
+
+\begin{equation}
+    \begin{bmatrix} v_{1} & v_{2} & \cdots & v_{n-1} & v_{n} \end{bmatrix}\Pi
+        = \begin{bmatrix} v_{2} & v_{3} & \cdots & v_{n} & v_{1} \end{bmatrix}.
+\end{equation}
+
+Furthermore, we will make frequent use of $D_{s}$, the diagonal scaling
+matrix that arise in MSN interpolation.
+In particular, we let
+
+\begin{equation}
+    D_{s} = \diag\parens{1^{s},2^{s},\cdots,M^{s}}.
+    \label{eq:kar_ds_def}
+\end{equation}
+
+\noindent
+The specific size of $D_{s}$ will be context dependent
+but will always have this form.
+There is nothing which requires $s$ to be a (positive) integer,
+but we will usually assume this to be the case.
+
+A general vector or matrix norm will be denoted by $\norm{\cdot}$.
+Given $x\in\R^{n}$, the vector $p$-norms are defined as
+
+\begin{equation}
+    \norm{x}_{p} \equiv \begin{cases}
+        \parens{\sum_{k=1}^{n} \abs{x_{k}}^{p}}^{1/p},\quad &p\in[1,\infty) \\
+        \max_{k=1,\cdots,n} \abs{x_{k}},\quad &p=\infty
+    \end{cases}.
+\end{equation}
+
+\noindent
+For $A\in\R^{m\times n}$, the corresponding induced matrix $p$-norms are
+
+\begin{equation}
+    \norm{A}_{p} \equiv \sup_{\norm{x}_{p}=1} \norm{Ax}_{p}.
+\end{equation}
+
+\noindent
+Throughout this dissertation we will primarily be using the matrix $2$-norm.
+Even so, there may be times when we use the Frobenius norm, which we sometimes
+call the F-norm:
+
+\begin{equation}
+    \norm{A}_{F} \equiv \sqrt{\sum_{k=1}^{m}\sum_{j=1}^{n} \abs{A_{ij}}^{2}}.
+\end{equation}
+
+In Chapter~\ref{chap:random} only, we will use the
+Schatten $p$-norms~\cite[Chapter 4]{bhatia2013matrix}:
+
+\begin{equation}
+    \norm{A}_{s,p} \equiv \begin{cases}
+        \parens{\sum_{k=1}^{\min(m,n)}\sigma_{k}^{p}}^{1/p},\quad
+            &p\in[1,\infty) \\
+        \sigma_{1},\quad &p=\infty
+    \end{cases}.
+    \label{eq:kar_schatten_def}
+\end{equation}
+
+\noindent
+Here, $\sigma_{1}\ge\sigma_{2}\ge\cdots\ge\sigma_{\min(m,n)}\ge0$
+are the singular values of $A$.
+From this definition, it is clear $\norm{A}_{s,\infty} = \norm{A}_{2}$
+and $\norm{A}_{s,2} = \norm{A}_{F}$.
+
+Although there are many different norms used throughout this dissertation,
+the particular norm should be clear from context.
+
+
+
+\subsection{DCT Convention}
+\label{ssec:kar_dct}
+
+All of the code for this dissertation was written in Julia~\cite{julialang},
+Version 0.5.
+If $C_{II}$ is Julia's $n\times n$ DCT (the unitary version of DCT-II),
+then we require
+
+\begin{equation}
+    C^{-1} = DC_{II}E,
+\end{equation}
+
+\noindent
+where
+
+\begin{equation}
+    D = \frac{1}{\sqrt{n}}\diag\parens{1,\sqrt{2},\cdots,\sqrt{2}}.
+\end{equation}
+
+\noindent
+This will also be discussed later in Chapter~\ref{chap:CV_Prop}.
+
+
+

@@ -1,0 +1,22 @@
+\subsection{1D Interpolation on Chebyshev Nodes with $4n$ Degree}
+\label{ssec:fa_I_1D_4n}
+
+In this section we present a fast algorithm for 1D interpolation
+on the Chebyshev nodes using polynomials up to degree $4n$.
+This is based on the $LQ$ factorization from Sec.~\ref{ssec:CV_1D_4n}.
+
+The setup is similar to that in Sec.~\ref{ssec:fa_I_1D_2n};
+the only difference is here we have a larger \CV{} matrix.
+The algorithm is quite simple:
+%
+\begin{align}
+    y\parens{1\!:\!n} &= Y^{-1}C^{-1}f \nonumber\\
+    a &= D_{s}^{-1}Gy.
+\end{align}
+%
+An efficient memory usage, one would only need one vector
+$y$ (initialized to zero) of length $4n+1$
+and the rest of the operations could overwrite the vector.
+
+
+

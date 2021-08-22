@@ -1,0 +1,209 @@
+\section{Kronecker Products and Fast Matrix-Vector Multiplication}
+\label{sec:FastKronProduct}
+
+If $A$ and $B$ are structured matrices which allow for fast matrix-vector
+multiplication, then intuitively it should be possible to compute
+matrix-vector products involving $A\otimes B$ quickly as well.
+In this section we demonstrate particular instances that are important
+for the present research.
+If $A\in\R^{m\times n}$, $B\in\R^{k\times\ell}$, and 
+$g_{r} = g\parens{\brackets{r-1}\ell + 1\!:\!r\ell}$ with
+$r\in\braces{1,\cdots,n}$, then, in block form, we have
+
+\begin{equation}
+    \parens{A\otimes B}g = \begin{bmatrix}
+        a_{11}Bg_{1} + a_{12}Bg_{2} + \cdots + a_{1n}Bg_{n} \\
+        a_{21}Bg_{1} + a_{22}Bg_{2} + \cdots + a_{2n}Bg_{n} \\ \vdots \\
+        a_{m1}Bg_{1} + a_{m2}Bg_{2} + \cdots + a_{mn}Bg_{n} \\
+    \end{bmatrix}.
+\end{equation}
+
+\noindent
+If we set
+
+\begin{equation}
+    G = \begin{bmatrix} g_{1} & g_{2} & \cdots & g_{n} \end{bmatrix},
+\end{equation}
+
+\noindent
+then we can compute the above matrix product like
+
+\begin{samepage}
+\begin{align}
+    H &= BGA^{T} \nonumber\\
+    &= \begin{bmatrix} h_{1} & h_{2} & \cdots & h_{m} \end{bmatrix},
+\end{align}
+\end{samepage}
+
+\noindent
+where $h_{r}$ has $k$ rows, and
+
+\begin{align}
+    \parens{A\otimes B}g &= h \nonumber\\
+        &= \begin{bmatrix} h_{1} \\ h_{2} \\ \vdots \\ h_{m} \end{bmatrix}.
+\end{align}
+
+\noindent
+It is this insight which allows us to compute matrix-vector multiplication
+quickly when working with
+tensor products of matrices, especially if
+$A$ or $B$ allow for fast matrix-vector products.
+We merely note that the above product (if $A$ and $B$ are square
+matrices of size $n$) has cost $O(n^{4})$ flops if we explicitly
+form $A\otimes B$.
+By taking advantage of the tensor structure,
+we can reduce the cost of multiplication to $O(n^{3})$ flops.
+Naturally, this does not count memory transfer.
+
+We will need to do something slightly different if we are performing
+matrix-matrix multiplication. We see
+%
+\begin{align}
+    \parens{A\otimes B}\begin{bmatrix} g_{1} & \cdots & g_{s} \end{bmatrix}
+    &= \begin{bmatrix} \parens{A\otimes B}g_{1} & \cdots
+        & \parens{A\otimes B}g_{s} \end{bmatrix} \nonumber\\
+    &\sim \begin{bmatrix} BG_{1}A^{T} & \cdots & BG_{s}A^{T} \end{bmatrix}.
+\end{align}
+%
+This could be computed quickly by
+%
+\begin{align}
+    B\begin{bmatrix} G_{1} & \cdots & G_{s} \end{bmatrix}
+    &= \begin{bmatrix} H_{1} & \cdots & H_{s} \end{bmatrix} \nonumber\\
+    \begin{bmatrix} H_{1} \\ \vdots \\ H_{s} \end{bmatrix} A^{T}
+    &= K,
+\end{align}
+%
+before reading off the solution from the components of $K$.
+
+Throughout this section, we assume that $F$ is a general matrix which
+allows for fast matrix-vector products and we look at computing
+$\parens{A\otimes F}g$ for a vector $g$ and particular matrix $A$.
+
+For completeness, we recall some properties of the Kronecker product;
+one reference is~\cite{vanLoan2000ubiquitous}.
+These include bilinearity and associativity.
+Furthermore,
+%
+\begin{equation}
+    \parens{A\otimes B}\parens{C\otimes D} = AC\otimes BD.
+\end{equation}
+%
+Here, we are assuming that the matrix products $AC$ and $BD$
+are well-defined.
+Additionally, there are permutation matrices (called perfect shuffle matrices)
+$P$ and $Q$ so that
+%
+\begin{equation}
+    P(A\otimes B)Q = B\otimes A.
+\end{equation}
+
+
+
+\subsection{Low-rank Matrices}
+\label{ssec:FastKronProdLowRank}
+
+We look at computing the product $\parens{wv^{*}\otimes F}g$,
+where $w,v\in\R^{m}$ and $F\in\R^{n\times n}$.
+First, we see
+%
+\begin{align}
+    \parens{wv^{*}\otimes F}g &= \begin{bmatrix}
+        w_{1}v_{1}F & w_{1}v_{2}F & \cdots & w_{1}v_{m}F \\
+        w_{2}v_{1}F & w_{2}v_{2}F & \cdots & w_{2}v_{m}F \\
+        \vdots & \vdots & \cdots & \vdots \\
+        w_{m}v_{1}F & w_{m}v_{2}F & \cdots & w_{m}v_{m}F \\
+    \end{bmatrix}
+    \begin{bmatrix} g_{1} \\ g_{2} \\ \vdots \\ g_{m} \end{bmatrix} \nonumber\\
+    &= \begin{bmatrix}
+        w_{1}\parens{v_{1}Fg_{1} + v_{2}Fg_{2} + \cdots v_{m}Fg_{m}} \\
+        w_{2}\parens{v_{1}Fg_{1} + v_{2}Fg_{2} + \cdots v_{m}Fg_{m}} \\
+        \vdots \\
+        w_{m}\parens{v_{1}Fg_{1} + v_{2}Fg_{2} + \cdots v_{m}Fg_{m}} \\
+        \end{bmatrix} \nonumber\\
+    &= w\otimes FGv,
+\end{align}
+%
+where, as before, 
+%
+\begin{align}
+    g_{k} &= g\parens{\brackets{k-1}n + 1\!:\!kn}
+        \quad k\in\braces{1,\cdots,m} \nonumber\\
+    G &= \begin{bmatrix}
+        g_{1} & g_{2} & \cdots & g_{m}
+        \end{bmatrix}.
+\end{align}
+
+Now, from the above computation, we see
+%
+\begin{align}
+    \parens{WV^{*}\otimes F}g
+        &= \parens{\begin{bmatrix} w_{1} & \cdots & w_{r} \end{bmatrix}
+            \begin{bmatrix} v_{1} & \cdots & v_{r} \end{bmatrix}^{*}
+            \otimes F}g \nonumber\\
+        &= \parens{w_{1}v_{1}^{*} \otimes F}g + \cdots +
+            \parens{w_{r}v_{r}^{*} \otimes F}g \nonumber\\
+        &= w_{1}\otimes FGv_{1} + \cdots + w_{r}\otimes FGv_{r}
+\end{align}
+%
+To efficiently compute this, we can use
+%
+\begin{align}
+    H &= FGV \nonumber\\
+        &= \begin{bmatrix} FGv_{1} & \cdots & FGv_{r} \end{bmatrix} \nonumber\\
+        &= \begin{bmatrix} h_{1} & \cdots & h_{r} \end{bmatrix}
+\end{align}
+%
+so that
+%
+\begin{equation}
+    \parens{WV^{*}\otimes F}g = w_{1}\otimes h_{1} +
+        \cdots + w_{r}\otimes h_{r}.
+\end{equation}
+%
+Thus, we only need to compute fast multiplication with $F$ once.
+
+
+
+\subsection{Householder Reflectors}
+\label{ssec:FastKronProdHouse}
+
+From Sec.~\ref{ssec:FastKronProdLowRank}, we can easily
+compute $\parens{H\otimes F}g$, where $H = I - 2uu^{*}$ and
+$u$ is a unit vector.
+From properties of the Kronecker product, we see
+%
+\begin{align}
+    \parens{H\otimes F}g
+        &= \parens{I\otimes F}g - 2\parens{vv^{*}\otimes F}g \nonumber\\
+        &= \parens{I\otimes F}g - 2\parens{v\otimes FGv}
+\end{align}
+%
+We can quickly compute $\parens{I\otimes F}g$ from looking at the
+columns of $FG$.
+
+
+
+\subsection{Givens Rotations}
+\label{ssec:FastKronProdGivens}
+
+We assume our Givens rotation $P$ has the form
+%
+\begin{equation}
+    P\parens{\brackets{i,j},\brackets{i,j}} =
+        \begin{bmatrix} c & s \\ -s & c \end{bmatrix}.
+\end{equation}
+%
+If $g_{k} = g\parens{\brackets{k-1}n + 1\!:\!kn}$ for
+$k\in\braces{1,\cdots,m}$, then
+%
+\begin{equation}
+    \parens{P\otimes F}g = \begin{bmatrix}
+        Fg_{1} \\ \vdots \\ cFg_{i} + sFg_{j} \\ \vdots \\ -sFg_{i} + cFg_{j} \\
+        \vdots \\ Fg_{m} \end{bmatrix},
+\end{equation}
+%
+so that the $k$th block is $Fg_{k}$ except for blocks $i$ and $j$.
+
+Frequently, we will have (possibly disjoint) products of Givens rotations.
+We obtain similar results when applied to these products.

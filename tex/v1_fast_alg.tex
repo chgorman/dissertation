@@ -1,0 +1,17 @@
+\section{General Algorithm for MSN Interpolation using LQ factorization}
+\label{sec:interp_LQ_fast}
+
+The algorithm for computing the MSN interpolation solution is easy
+once we have the LQ factorization;
+see Alg.~\ref{alg:general_lq_solution}.
+We will only have fast solutions of this form when we can quickly invert
+$L$ and multiply by $Q$.
+Interpolation on Chebyshev nodes and expressing the result in
+Chebyshev polynomials gives $L$ and $Q$ the necessary structure.
+%Because we are interpolation on Chebyshev nodes,
+%there is a lot of structure that we exploit.
+
+\input{algs/general_lq_solution.tex}
+
+
+

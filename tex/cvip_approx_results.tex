@@ -1,0 +1,234 @@
+\section{Important Summation Bounds}
+\label{sec:cvip_sum_bounds}
+
+In this section we go over sums which must be bounded above or below.
+These bounds easily follow from the Mean Value Theorem,
+Intermediate Value Theorem, and Cauchy-Schwarz inequality.
+
+One sum we see is $\sum_{k=1}^{n}k^{p}$. Because
+%
+\begin{equation}
+    \sum_{k=1}^{n} k^{p} = n^{p+1} \sum_{k=1}^{N} \parens{\frac{k}{n}}^{p}
+        \frac{1}{n},
+\end{equation}
+%
+we note the right sum approximates $\int_{0}^{1}x^{p}dx$. When $p\ge1$,
+we have the error bound
+%
+\begin{equation}
+    \abs{\frac{1}{p+1} - \sum_{k=1}^{n}\parens{\frac{k}{n}}^{p}\frac{1}{n}}
+        \le \frac{p}{2n}.
+\end{equation}
+%
+For large enough $n$, then we have the following upper bound:
+%
+\begin{equation}
+    \sum_{k=1}^{n} k^{p} \le \frac{2}{p+1}n^{p+1},\quad
+    n\ge\frac{p(p+1)}{2}.
+\end{equation}
+%
+We cannot apply the same idea when $0<p<1$ because the derivative
+of $x^{p}$ is unbounded on $[0,1]$.
+Even so, we also have this error bound:
+%
+\begin{align}
+    \sum_{k=1}^{n}k^{p} &\le \int_{1}^{n+1} x^{p}dx \nonumber\\
+        &= \frac{1}{p+1}\brackets{\parens{n+1}^{p+1}-1} \nonumber\\
+        &\le \frac{2}{p+1}n^{p+1}, \quad 0<p<1, \quad n\ge2.
+\end{align}
+%
+Because $x^{p}$ is concave down for $p>0$, we have the lower bound
+%
+\begin{equation}
+    \sum_{k=1}^{n} k^{p} \ge \frac{1}{p+1}n^{p+1}.
+\end{equation}
+
+Similarly, we have can have sums of the form
+$\sum_{k=1}^{n} k^{-p}$ for $p\ge0$.
+It is easy to see for $p>0$ we have
+%
+\begin{equation}
+    \int_{1}^{n} x^{-p}dx \le \sum_{k=1}^{n}\frac{1}{k^{p}}
+        \le 1 + \int_{1}^{n}x^{-p}dx.
+\end{equation}
+
+\noindent
+For $0<p<1$, we see
+%
+\begin{align}
+    \sum_{k=1}^{n}\frac{1}{k^{p}} &\le 1 + \frac{n^{1-p}}{1-p} \nonumber\\
+        &\le \frac{2n^{1-p}}{1-p}
+\end{align}
+%
+and
+%
+\begin{equation}
+    \sum_{k=1}^{n}\frac{1}{k^{p}} \ge \frac{n^{1-p}}{1-p}.
+\end{equation}
+%
+When $p=1$, we see
+%
+\begin{align}
+    \sum_{k=1}^{n} \frac{1}{k} &\le 1 + \ln n \nonumber\\
+        &\le 2\ln n, \quad (n\ge3).
+\end{align}
+%
+Additionally, we have the lower bound
+%
+\begin{equation}
+    \sum_{k=1}^{n} \frac{1}{k} \ge \ln n.
+\end{equation}
+%
+For $p > 1$, we see
+%
+\begin{equation}
+    \sum_{k=1}^{n} \frac{1}{k^{p}} \le 1 + \frac{1}{p-1}.
+\end{equation}
+%
+Additionally, we find
+%
+\begin{equation}
+    \sum_{k=1}^{n} \frac{1}{k^{p}} \ge \frac{1}{2(p-1)},
+        \quad n\ge 2^{\frac{1}{p-1}}.
+\end{equation}
+
+We accumulate all of the previous bounds, which hold for large enough $n$:
+%
+\begin{align}
+    \sum_{k=1}^{n}k^{p} &\le \begin{cases}
+        \frac{2}{p+1}n^{p+1} \quad &p>-1 \\
+        2\ln n \quad &=-1 \\
+        \frac{-p}{-p-1} \quad &p<-1\\
+    \end{cases} \nonumber\\
+    \sum_{k=1}^{n}k^{p} &\ge \begin{cases}
+        \frac{1}{p+1}n^{p+1} \quad &p>-1 \\
+        \ln n \quad &=-1 \\
+        \frac{1}{2(-p-1)} \quad &p<-1\\
+    \end{cases}.
+    \label{eq:bound_xp_01}
+\end{align}
+
+
+
+We also encounter sums of the form
+%
+\begin{equation}
+    \sum_{k=1}^{n} \parens{n+k}^{p}
+        = n^{p+1}\sum_{k=1}^{n}\parens{1 + \frac{k}{n}}^{p}\frac{1}{n}.
+\end{equation}
+%
+This sum approximates $\int_{1}^{2}x^{p}dx$. For all $p$, we see
+%
+\begin{equation}
+    \max_{x\in\brackets{1,2}}\abs{\frac{d}{dx}x^{p}}
+        \le \abs{p}\max\braces{1,2^{p-1}}.
+\end{equation}
+%
+Thus, we can bound
+%
+\begin{equation}
+    \sum_{k=1}^{n}\brackets{1+\frac{k}{n}}^{p}\frac{1}{n}
+        \le 2\int_{1}^{2}x^{p}dx
+            \quad n\ge \frac{\abs{p}\max\braces{1,2^{p-1}}}{
+            \int_{1}^{2}x^{p}dx}
+\end{equation}
+%
+and
+%
+\begin{equation}
+    \sum_{k=1}^{n}\brackets{1+\frac{k}{n}}^{p}\frac{1}{n}
+        \ge \frac{1}{2}\int_{1}^{2}x^{p}dx
+            \quad n\ge \frac{\abs{p}\max\braces{1,2^{p-1}}}{
+            \int_{1}^{2}x^{p}dx}.
+\end{equation}
+%
+Therefore, we have the following bounds for sufficiently large $n$:
+%
+\begin{align}
+    \sum_{k=1}^{n}\brackets{n+k}^{p} &\le \begin{cases}
+        2\parens{\frac{2^{p+1}-1}{p+1}}n^{p+1} \quad &p\ne-1\\
+        2\ln 2 \quad&p=-1
+        \end{cases} \nonumber\\
+    \sum_{k=1}^{n}\brackets{n+k}^{p} &\ge \begin{cases}
+        \frac{1}{2}\parens{\frac{2^{p+1}-1}{p+1}}n^{p+1} \quad &p\ne-1\\
+        \frac{1}{2}\ln 2 \quad&p=-1
+        \end{cases}.
+    \label{eq:bound_xp_12}
+\end{align}
+
+The bounds we just computed are useful, but there are some situations when
+we have a few extra terms. So, we present similar results.
+First, we assume $p>1$ and $\alpha\in\N$ and see
+%
+\begin{align}
+    \sum_{k=1}^{n+\alpha}\brackets{n+k}^{-p}
+        &\le \braces{\sum_{k=1}^{n}\brackets{1+\frac{k}{n}}^{p}\frac{1}{n}
+            + \frac{\alpha}{n}}\frac{1}{n^{p-1}} \nonumber\\
+        &\le \frac{2}{p-1}\frac{1}{n^{p-1}},\quad
+            n\ge\frac{\max\braces{p,2\alpha}}{\int_{1}^{2}x^{-p}dx}.
+    \label{eq:ubound_xp_12_pneg}
+\end{align}
+%
+Naturally, we also have this bound when $\alpha=0$; in this case,
+we have simpler constants.
+
+
+
+We remember the Riemann Zeta function:
+%
+\begin{equation}
+    \zeta(s) = \sum_{k=1}^{\infty} \frac{1}{k^{s}}.
+\end{equation}
+%
+It is clear
+%
+\begin{equation}
+    \int_{1}^{n} \frac{1}{x^{s}}dx \le \sum_{k=1}^{n} \frac{1}{k^{s}}
+        \le 1 + \int_{1}^{n}\frac{1}{x^{s}}dx,
+\end{equation}
+%
+so that $\zeta(s) < \infty$ when $s>1$ with
+the bound
+%
+\begin{equation}
+    \frac{1}{s-1} \le \zeta(s) \le 1 + \frac{1}{s-1},
+\end{equation}
+%
+and $\zeta(s)\to\infty$ as $s\to1^{+}$.
+Better bounds for $\zeta(s)$ exist and can be found in~\cite{RZApprox}.
+
+Finally, this last bound is useful:
+%
+\begin{align}
+    \sum_{k=0}^{\infty}\abs{a_{k}}
+        &= \sum_{k=0}^{\infty} \parens{1+k}^{-\sigma}
+            \brackets{\parens{1+k}^{\sigma}\abs{a_{k}}} \nonumber\\
+        &\le \sqrt{\sum_{k=0}^{\infty} \parens{1+k}^{-2\sigma}}
+             \sqrt{\sum_{k=0}^{\infty} \parens{1+k}^{2\sigma}\abs{a_{k}}^{2}}
+                \nonumber\\
+        &= \sqrt{\zeta(2\sigma)} \norm{a}_{\sigma},
+    \label{eq:CS_coefs}
+\end{align}
+%
+where we require $\sigma>\frac{1}{2}$.
+Similarly, we have
+%
+\begin{equation}
+    \sum_{k=1}^{\infty} k^{\alpha}\abs{a_{k}} \le
+        \sqrt{\zeta(2\sigma-2\alpha)}\norm{a}_{\sigma},
+    \label{eq:CS_coefs_powers}
+\end{equation}
+%
+where we insist $\sigma>\alpha+\frac{1}{2}$.
+Similarly, we have
+%
+\begin{align}
+    \sum_{k=n}^{\infty} k^{\alpha}\abs{a_{k}}
+        &\le \sqrt{\sum_{k=n}^{\infty}\parens{k+1}^{-2s+2\alpha}}\norm{a}_{s}
+            \nonumber\\
+    &\le \frac{\norm{a}_{s}}{\sqrt{2s-2\alpha-1}}
+        \frac{1}{n^{s-\alpha-\frac{1}{2}}},
+    \label{eq:cvip_approx_coefs_tail_bound}
+\end{align}
+%
+where we must have $s>\alpha + \frac{1}{2}$.

@@ -1,0 +1,95 @@
+\section{Gibbs Phenomenon and Smooth Cutoff Filters}
+
+We now turn our attention from interpolating smooth functions
+to interpolating rough functions.
+
+The Gibbs phenomenon~\cite[Chapter 2]{zygmund} is a well-known problem
+when one attempts to approximate a discontinuous function by a finite sum of
+continuous functions, frequently chosen to be a Fourier series;
+this is also true for Chebyshev expansions.
+Recent work has been focused on determining filters
+which smoothly cutoff the Fourier series; one review article
+is~\cite{gottlieb1997gibbs}.
+The filters $\sigma$ in the review article take the form
+%
+\begin{equation}
+    f_{N}^{\sigma}(x) =
+        \sum_{k=-\infty}^{\infty}\hat{f}_{k}\sigma\parens{\frac{k}{N}}e^{ikx},
+\end{equation}
+%
+where $\sigma$ smoothly cuts off the higher order frequencies;
+a more precise definition is given below.
+This has a similar form of the smooth cutoff approximations
+for the MSN method found in~\cite{msnInterp,msnBirkhoff}
+as well as our proofs of Fast MSN convergence in
+Chapter~\ref{chap:cvip_converge}.
+In this way, MSN interpolation could be thought of as a smoothing
+filter which acts in such a way so as to retain equality
+at certain nodes (in this case, the Chebyshev interpolation nodes).
+We will choose $s\in\braces{1,2,3,4,5,6}$ for our simulations,
+although in practice $s$ can be any real number.
+
+From~\cite{gottlieb1997gibbs}, we say a filter $\sigma$ is of order $p$ if
+%
+\begin{itemize}
+\item $\sigma$ is an even function,
+\item $\sigma(0) = 1$, $\sigma^{(\ell)}(0) = 0$ for $1\le\ell\le p-1$,
+\item $\sigma(\eta) = 0$ for $\abs{\eta}\ge1$, and
+\item $\sigma\in C^{p-1}$ for $\eta\in\parens{-\infty,\infty}$.
+\end{itemize}
+
+\noindent
+We reproduce some of the filters from~\cite{gottlieb1997gibbs}
+which we will use to compare with our MSN results.
+In all instances, we set $\sigma(\eta) = 0$ when $\eta>1$.
+
+\begin{itemize}
+\item Chebyshev interpolation:
+%
+\begin{equation}
+    \sigma_{0}(\eta) = 1.
+\end{equation}
+%
+This results in no filtering but is kept as a baseline comparison.
+Clearly $\sigma_{0}$ is not continuous at $\eta=1$.
+
+\item The Fej\'{e}r filter:
+%
+\begin{equation}
+    \sigma_{1}(\eta) = 1 - \eta.
+\end{equation}
+
+\item The Lanczos filter:
+%
+\begin{equation}
+    \sigma_{2}(\eta) = \frac{\sin(\pi\eta)}{\pi\eta}.
+\end{equation}
+%
+This is the normalized sinc function.
+
+\item The Raised Cosine Filter:
+%
+\begin{equation}
+    \sigma_{3}(\eta) = \frac{1}{2}\parens{1 + \cos(\pi\eta)}.
+\end{equation}
+
+\item The Sharpened Raised Cosine Filter:
+%
+\begin{equation}
+    \sigma_{4}(\eta) = \sigma_{3}^{4}(\eta)\parens{
+        35 - 84\sigma_{3}(\eta) + 70\sigma_{3}^{2}(\eta)
+        - 20\sigma_{3}^{3}(\eta)}.
+\end{equation}
+%
+This is an order 8 filter and will be denoted as ``Cos8'' in error plots.
+
+\item The Exponential Filter of order $p$:
+%
+\begin{equation}
+    \sigma_{5}(\eta) = \exp\parens{-\alpha\eta^{p}}.
+\end{equation}
+%
+We will always take $p$ to be even and $\alpha = -\ln(\eps_{\text{mach}})$,
+so that the largest frequency will be $O(\eps_{\text{mach}})$.
+Naturally, $\sigma_{5}$ is not actually continuous at $\eta=1$.
+\end{itemize}

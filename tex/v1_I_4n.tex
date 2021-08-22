@@ -1,0 +1,119 @@
+\section{1D \CV{} Interpolation Matrix: $4n+1$ Columns}
+\label{sec:CV_1D_4n}
+
+If we use $4n+1$
+Chebyshev polynomials for interpolation (up to order $4n$), then
+we must compute the LQ factorization of the following matrix:
+%
+{\small
+\begin{align}
+    &\brackets{WD_{s}^{-1}}(:,1:2n+1) = \nonumber\\
+        &\begin{bmatrix}
+            1^{-s} & & & & & & & & & -\parens{2n+1}^{-s} \\
+            & 2^{-s} & & & & & & & -\parens{2n}^{-s} & \\
+            & & \ddots & & & & & \iddots & & \\
+            & & & & n^{-s} & 0 & -\parens{n+2}^{-s} & & & \\
+        \end{bmatrix} \nonumber\\
+    &\brackets{WD_{s}^{-1}}(:,2n+1:4n+1) = \nonumber\\
+        &\begin{bmatrix}
+            -\parens{2n+1}^{-s} & & & & & & & & & \parens{4n+1}^{-s} \\
+            & -\parens{2n+2}^{-s} & & & & & & & \parens{4n}^{-s} & \\
+            & & \ddots & & & & & \iddots & & \\
+            & & & & -\parens{3n}^{-s} & 0 & \parens{3n+2}^{-s} & & & \\
+        \end{bmatrix}.
+\end{align}
+}
+%
+By using disjoint Givens rotations, we let rotation matrix is
+%
+\begin{equation}
+    G = G_{1}G_{2},
+\end{equation}
+%
+where
+
+\begin{equation}
+    G_{1} = \begin{bmatrix}
+        c_{1} & & & & & & & & s_{1} \\
+        & c_{2} & & & & & & s_{2} & \\
+        & & \ddots & & & & \iddots & & \\
+        & & & c_{n} & & s_{n} & & & & \\
+        & & & & 1 & & & & \\
+        & & & -s_{n} & & c_{n} & & & & \\
+        & & \iddots & & & & \ddots & & \\
+        & -s_{2} & & & & & & c_{2} & \\
+        -s_{1} & & & & & & & & c_{1} & & & & & & & & 0 \\
+        & & & & & & & & & \mu_{2} & & & & & & \nu_{2} \\
+        & & & & & & & & & & \ddots & & & & \iddots \\
+        & & & & & & & & & & & \mu_{n} & & \nu_{n} \\
+        & & & & & & & & & & & & 1 \\
+        & & & & & & & & & & & -\nu_{n} & & \mu_{n} \\
+        & & & & & & & & & & \iddots & & & & \ddots & & \\
+        & & & & & & & & & -\nu_{2} & & & & & & \mu_{2} &  \\
+        & & & & & & & & 0 & & & & & & & & 1 \\
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    G_{2} = \begin{bmatrix}
+        \chi_{1} & & & & & & 0 & & & & & & & \sigma_{1} \\
+        & \chi_{2} & & & & & & \sigma_{2} & \\
+        & & \ddots & & & & & & \ddots & \\
+        & & & \chi_{n} & & & & & & \sigma_{n} & \\
+        & & & & 1 & & & & & & 0 & \\
+        & & & & & \ddots & & & & & & \\
+        0 & & & & & & 1 & & & & & & & 0 \\
+        & -\sigma_{2} & & & & & & \chi_{2} & \\
+        & & \ddots & & & & & & \ddots & \\
+        & & & -\sigma_{n} & & & & & & -\chi_{n} & \\
+        & & & & 0 & & & & & & 1 & & & \\
+        & & & & & & & & & & & \ddots & & \\
+        & & & & & & & & & & & & 1 & \\
+        -\sigma_{1} & & & & & & 0 & & & & & & & \chi_{1} \\
+    \end{bmatrix}.
+\end{equation}
+
+\noindent
+Here, we define
+%
+\begin{align}
+    \tau_{k} &= \parens{\frac{k}{2n+2-k}}^{s} \nonumber\\
+    c_{k} &= \frac{1}{\sqrt{1 + \tau_{k}^{2}}} \nonumber\\
+    s_{k} &= \tau_{k}c_{k} \nonumber\\
+    \xi_{k} &= \parens{\frac{2n+k}{4n+2-k}}^{s} \nonumber\\
+    \mu_{k} &= -\frac{1}{\sqrt{1 + \xi_{k}^{2}}} \nonumber\\
+    \nu_{k} &= \xi_{k}\mu_{k} \nonumber\\
+    \zeta_{1} &= -\parens{\frac{1}{4n+1}}^{s}c_{1} \nonumber\\
+    \zeta_{k} &= \parens{\frac{k}{2n+k}}^{s}\frac{c_{k}}{\mu_{k}}
+        \quad k\in\braces{2,\cdots,n} \nonumber\\
+    \chi_{k} &= \frac{1}{\sqrt{1 + \zeta_{k}^{2}}} \nonumber\\
+    \sigma_{k} &= \zeta_{k} \chi_{k}.
+\end{align}
+
+\noindent
+For $k\in\braces{2,\cdots,n}$, we note that $\zeta_{k} < 0$
+because $\mu_{k} < 0$.
+In this case, we see
+%
+\begin{equation}
+    WD_{s}^{-1}G = \begin{bmatrix} Y & 0 \end{bmatrix},
+\end{equation}
+%
+where $Y$ is diagonal with entries
+%
+\begin{align}
+    y_{1} &= \sqrt{1^{-2s} + (2n+1)^{-2s} + (4n+1)^{-2s}} \nonumber\\
+            &= \sqrt{1 + \parens{\frac{1}{2n+1}}^{2s}\brackets{
+                1 + \parens{\frac{2n+1}{4n+1}}^{2s}}} \nonumber\\
+    y_{k} &= \sqrt{k^{-2s} + (2n+2-k)^{-2s} + (2n+k)^{-2s} + (4n+2-k)^{-2s}}
+                \nonumber\\
+            &= k^{-s}\sqrt{1 + \parens{\frac{k}{2n+2-k}}^{2s}\braces{
+                1 + \parens{\frac{2n+2-k}{2n+k}}^{2s}\brackets{1 + 
+        \parens{\frac{2n+k}{4n+2-k}}^{2s}}}} \nonumber\\
+        &\quad k\in\braces{2,\cdots,n}.
+\end{align}
+%
+This is a numerically stable was to compute the entries.
+
+
+

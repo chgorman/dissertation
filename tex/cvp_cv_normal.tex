@@ -1,0 +1,137 @@
+\section{\CV{} Matrix Normal Equations}
+\label{sec:CV_normal}
+
+We will now look at the normal equations involving the \CV{}
+matrix. If $A\in\R^{m\times n}$ with $n>m$ has linearly independent
+rows (full row-rank, so that $A^{*}$ is injective), then we can solve
+%
+\begin{equation}
+    \min_{Ax = b} \norm{x}_{2}
+\end{equation}
+%
+by computing the LQ factorization of $A$ or using the pseudoinverse
+of $A$, $A^{+}$; one reference for the properties of the matrix pseudoinverse
+is~\cite[Chapter 11]{LAaction}.
+Because we are assuming that $A$ has full row-rank, we
+see
+\begin{equation}
+    A^{+} = A^{*}\parens{AA^{*}}^{-1}.
+\end{equation}
+%
+Thus, in our case, we want to look at the matrix $VD_{s}^{-1}$:
+%
+\begin{equation}
+    \parens{VD_{s}^{-1}}^{+} = D_{s}^{-1}V^{*}\parens{VD_{s}^{-2}V^{*}}^{-1}.
+\end{equation}
+%
+If $VD_{s}^{-2}V^{*}$ can be inverted quickly, then this will
+give us a fast algorithm for inversion.
+
+First, we assume that $V$ has $N$ columns
+and compute the components of $VD_{s}^{-2}V^{*}$:
+%
+\begin{align}
+    \brackets{VD_{s}^{-2}V^{*}}_{k,\ell} &= \sum_{m=1}^{N}
+            \brackets{VD_{s}^{-1}}_{k,m}\brackets{VD_{s}^{-1}}_{\ell,m}
+                    \nonumber\\
+        &= \sum_{m=1}^{N} \frac{
+            T_{m-1}\parens{z_{k}^{n}}T_{m-1}\parens{z_{\ell}^{n}}}{m^{2s}}
+                    \nonumber\\
+        &= \frac{1}{2}\braces{
+            \sum_{m=1}^{N} \frac{\cos\brackets{\frac{(m-1)\pi}{n}\parens{
+                2n - \brackets{k+\ell} + 1}}}{m^{2s}}
+            + \sum_{m=1}^{N} \frac{\cos\brackets{\frac{(m-1)\pi}{n}\parens{
+                k-\ell}}}{m^{2s}}} \nonumber\\
+        &= \frac{1}{2}\sum_{m=1}^{N}
+                \frac{\cos\brackets{\parens{m-1}\xi_{k+\ell}}}{m^{2s}}
+            + \frac{1}{2}\sum_{m=1}^{N}
+                \frac{\cos\brackets{\parens{m-1}\eta_{k-\ell}}}{m^{2s}}
+            \nonumber\\
+        &= P(\xi_{k+\ell}^{n}) + Q(\eta_{k-\ell}^{n}).
+\end{align}
+%
+Naturally, we have
+%
+\begin{align}
+    \xi_{j}^{n} &= \frac{\pi}{n}\parens{2n - j + 1} \nonumber\\
+    \eta_{j}^{n} &= \frac{\pi}{n} \nonumber\\
+    P(\xi) &= \frac{1}{2}\sum_{m=1}^{N}
+                \frac{\cos\brackets{\parens{m-1}\xi}}{m^{2s}}
+        \nonumber\\
+    Q(\eta) &= \frac{1}{2}\sum_{m=1}^{N}
+                \frac{\cos\brackets{\parens{m-1}\eta}}{m^{2s}}.
+\end{align}
+
+
+% Notes:
+% Karthik's thesis, under MSN on SCG website.
+% Clausen's Integral and Polylogarithm function.
+
+When $k+\ell$ is constant (on the antidiagonals), then we see that
+$\xi_{k+\ell}^{n}$ and $P(\xi_{k+\ell}^{n})$ are constant, while
+when $k-\ell$ is constant (on the diagonals), then we see
+$\eta_{k-\ell}^{n}$ and $Q(\eta_{k-\ell}^{n})$ are constant.
+This implies that
+%
+\begin{equation}
+    VD_{s}^{-2}V^{*} = H + T,
+\end{equation}
+%
+where $H$ is a Hankel matrix and $T$ is a Toeplitz matrix such that
+
+\begin{align}
+    H &= \begin{bmatrix}
+        P\parens{\xi_{2}^{n}} & P\parens{\xi_{3}^{n}} & P\parens{\xi_{4}^{n}}
+            & \iddots & P\parens{\xi_{n+1}^{n}} \\
+        P\parens{\xi_{3}^{n}} & P\parens{\xi_{4}^{n}} & P\parens{\xi_{5}^{n}}
+            & \iddots & P\parens{\xi_{n+2}^{n}} \\
+        P\parens{\xi_{4}^{n}} & P\parens{\xi_{5}^{n}} & P\parens{\xi_{6}^{n}}
+            & \iddots & P\parens{\xi_{n+3}^{n}} \\
+        \vdots & \iddots & \iddots & \iddots & \vdots \\
+        P\parens{\xi_{n+1}^{n}} & P\parens{\xi_{n+2}^{n}}
+            & P\parens{\xi_{n+3}^{n}} & \cdots & P\parens{\xi_{2n}^{n}} \\
+        \end{bmatrix} \nonumber\\
+    T &= \begin{bmatrix}
+        Q\parens{\eta_{0}^{n}} & Q\parens{\eta_{1}^{n}} & Q\parens{\eta_{2}^{n}}
+            & \cdots & Q\parens{\eta_{n-1}^{n}} \\
+        Q\parens{\eta_{1}^{n}} & Q\parens{\eta_{0}^{n}} & Q\parens{\eta_{1}^{n}}
+            & \ddots & Q\parens{\eta_{n-2}^{n}} \\
+        Q\parens{\eta_{2}^{n}} & Q\parens{\eta_{1}^{n}} & Q\parens{\eta_{0}^{n}}
+            & \ddots & Q\parens{\eta_{n-3}^{n}} \\
+        \vdots & \ddots & \ddots & \ddots & \vdots \\
+        Q\parens{\eta_{n-1}^{n}} & Q\parens{\eta_{n-2}^{n}} &
+            Q\parens{\eta_{n-3}^{n}} & \cdots & Q\parens{\eta_{0}^{n}} \\
+        \end{bmatrix}.
+\end{align}
+%
+We will only briefly pursue these matters further when
+proving convergence of interpolation using polynomials up to degree
+$2Ln$.
+
+For MSN interpolation on a general grid, the normal equations will
+be structured in a similar way and could be inverted quickly.
+This will be related to the Clausen function
+%
+\begin{equation}
+    C_{s}(\theta) = \sum_{k=1}^{\infty}\frac{\cos k\theta}{k^{s}}
+\end{equation}
+%
+and the polylogarithm
+%
+\begin{equation}
+    \textrm{Li}_{s}(z) = \sum_{k=1}^{\infty} \frac{z^{k}}{k^{s}}.
+\end{equation}
+%
+$C_{s}(\theta)$ is a polynomial in $\theta$ for even integer values of
+$s$~\cite[Page 1005 (27.8.6)]{abramowitz1965handbook}.
+The resulting matrices will have off-diagonal blocks of low rank and
+could be inverted quickly by converting them
+to Sequentially Semi-Separable (SSS)~\cite{chandrasekaran2005some}
+or Hierarchically Semi-Separable (HSS)~\cite{Chandrasekaran2005HSS}
+form.
+
+
+%Look at Terry Tao's blog:
+
+%\texttt{https://terrytao.wordpress.com/2015/02/07/254a-notes-5-bounding-exponential-sums-and-the-zeta-function/}
+

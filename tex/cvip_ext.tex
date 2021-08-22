@@ -1,0 +1,21 @@
+\section{Extension to Higher Dimensions}
+\label{sec:cvip_extension}
+
+Throughout this chapter, we have been able to prove convergence to
+the underlying solution because the inherent structure of the underlying
+system, allowing us to compare the MSN approximation to the true solution.
+While this could be extended to higher dimensions, the extensions would
+be tedious and not enlightening.
+General MSN theory from~\cite{msnInterp,msnBirkhoff} shows that
+for any point distribution with point separation $\eta$, it is possible
+to guarantee that we can choose the interpolation degree $O(\eta^{-1})$;
+this shows the importance of our convergence results for degree $2Ln$.
+The exact situation where this would be needed, though, is not known
+and may only occur for functions in $H_{s}$
+for $s\in\brackets{0,\frac{1}{2}}$.
+Our examples in Chapter~\ref{chap:func_interp} show that polynomials
+of degree $2n$ are usually sufficient.
+Future work will investigate methods which would allow us to prove
+convergence without resorting to carefully looking at the linear system
+yet do not require the technical machinery used in the original
+MSN proofs of~\cite{msnInterp,msnBirkhoff}.

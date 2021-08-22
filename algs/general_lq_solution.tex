@@ -1,0 +1,15 @@
+\begin{algorithm}
+\caption{Fast algorithm for solving structured MSN systems}
+\label{alg:general_lq_solution}
+\begin{algorithmic}[1]
+\Function{fast\_lq\_solve}{$f$,$V$,$D_{s}$}
+\Comment{Solve $\min_{Va=f}\norm{D_{s}a}_{2}$ where $C^{-1}VD_{s}^{-1} = LQ$.}
+    \State Set $\hat{f} = C^{-1}f$
+    \State Compute $LQ = C^{-1}VD_{s}^{-1}$
+    \State Solve $Ly = \hat{f}$
+    \State Compute $x = Q^{*}y$
+    \State Set $a = D_{s}^{-1}x$
+    \State \Return $a$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

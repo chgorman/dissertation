@@ -1,0 +1,451 @@
+\section{Conditioning of $H_{1}$ and Related Matrices}
+\label{sec:odes_h13_cond}
+
+Here, we begin with an analysis of the conditioning of the
+$H_{1}$ matrix.
+In the constant coefficient case from Eq.~\ref{eq:odes_const},
+$H_{1}$ is defined as follows, which we reproduce from
+Eqs.~\eqref{eq:odes_h1_mat} and \eqref{eq:odes_h2_mat}:
+%
+\begin{equation}
+    H_{1} = \begin{bmatrix}
+        \alpha          & -\frac{\beta}{2}         & \\
+        \frac{\beta}{2} & 2\alpha & -\frac{\beta}{2} \\
+        & \frac{\beta}{2} & 3\alpha & -\frac{\beta}{2} \\
+        & & \ddots & \ddots & \ddots \\
+        & & & \frac{\beta}{2} & (n-2)\alpha & -\frac{\beta}{2} \\
+        & & & & \frac{\beta}{2} & (n-1)\alpha & 0 \\ 
+        & & & & & \frac{\beta}{2} & n\alpha \\
+    \end{bmatrix}
+\end{equation}
+
+\begin{align}
+    &H_{2} = \nonumber\\
+    &\begin{bmatrix}
+        & & & & & \frac{\beta}{2} & (2n-1)\alpha & -\beta & \beta \\
+        & & & & \frac{\beta}{2} & (2n-2)\alpha & -\frac{\beta}{2} \\ 
+        & & & \frac{\beta}{2} & (2n-3)\alpha & -\frac{\beta}{2} \\
+        & & & \iddots & \\
+        & \frac{\beta}{2} & (n+3)\alpha & -\frac{\beta}{2} \\
+        \frac{\beta}{2} & (n+2)\alpha & -\frac{\beta}{2} \\
+        (n+1)\alpha     & -\frac{\beta}{2}         & \\
+        -\frac{\beta}{2}&                          & \\
+    \end{bmatrix}.
+\end{align}
+%
+If $\frac{\abs{\beta}}{\abs{\alpha}} < 2$, then $H_{1}$
+is diagonally dominant in both the rows and columns
+with
+%
+\begin{align}
+    \min_{k} \parens{\abs{H_{1;kk}} - \sum_{j\ne k} \abs{H_{1;kj}}}
+        &\ge \abs{\alpha} - \frac{\abs{\beta}}{2} \nonumber\\
+    \min_{k} \parens{\abs{H_{1;kk}} - \sum_{j\ne k} \abs{H_{1;jk}}}
+        &\ge \abs{\alpha} - \frac{\abs{\beta}}{2}.
+\end{align}
+%
+From \cite{Varah_1975}, we can then bound the smallest
+singular value:
+%
+\begin{equation}
+    \sigma_{n}(H_{1}) \ge \abs{\alpha} - \frac{\abs{\beta}}{2}.
+\end{equation}
+
+\noindent
+Because
+%
+\begin{align}
+    \norm{H_{1}}_{1} &\le n\abs{\alpha} + \abs{\beta} \nonumber\\
+    \norm{H_{1}}_{\infty} &\le n\abs{\alpha} + \abs{\beta},
+\end{align}
+%
+we see
+%
+\begin{equation}
+    \norm{H_{1}}_{2} = \sigma_{1}(H_{1}) \le n\abs{\alpha} + \abs{\beta}
+\end{equation}
+%
+by $\norm{H_{1}}_{2}^{2} \le \norm{H_{1}}_{1}\norm{H_{1}}_{\infty}$.
+This allows us to bound the condition number:
+%
+\begin{equation}
+    \kappa_{2}(H_{1}) = \frac{\sigma_{1}(H_{1})}{\sigma_{n}(H_{1})}
+            \le \frac{n + \frac{\abs{\beta}}{\abs{\alpha}}}{
+                      1 - \frac{1}{2}\frac{\abs{\beta}}{\abs{\alpha}}}.
+\end{equation}
+%
+If we look at Eq.~\eqref{eq:odes_h2_mat}, we have the following bounds:
+%
+\begin{align}
+    \norm{H_{2}}_{1} &\le 2n\abs{\alpha} + \abs{\beta}
+        \nonumber\\
+    \norm{H_{2}}_{\infty} &\le 2n\abs{\alpha} + \frac{5}{2}\abs{\beta}
+        \nonumber\\
+    \norm{H_{2}}_{2} &\le 2n\abs{\alpha} + \frac{5}{2}\abs{\beta}.
+\end{align}
+
+Using the exact form of $H_{1}$ and $H_{2}$ coupled with the fact
+$H_{3} = H_{1}^{-1}H_{2}$, we see
+%
+\begin{align}
+    \norm{H_{3}}_{2} &\le \norm{H_{1}^{-1}}_{2}\norm{H_{2}}_{2}
+        \nonumber\\
+    &\le \parens{\frac{1}{\abs{\alpha} - \frac{\abs{\beta}}{2}}}
+            \parens{2n\abs{\alpha} + \frac{5}{2}\abs{\beta}} \nonumber\\
+    &\le \frac{2n + \frac{5}{2}\frac{\abs{\beta}}{\abs{\alpha}}}{
+        1-\frac{1}{2}\frac{\abs{\beta}}{\abs{\alpha}}}.
+\end{align}
+%
+Thus, we see that $\norm{H_{3}}_{2} = O(n)$, so it does not
+grow too quickly.
+
+We now turn our attention to bounding $D_{1}H_{3}D_{2}^{-1}$.
+Previously, we have noted
+%
+\begin{align}
+    D_{1} &= \diag\brackets{2^{s},3^{s},\cdots,(n+1)^{s}} \nonumber\\
+    D_{2} &= \diag\brackets{(n+2)^{s},(n+2)^{s},\cdots,(2n+1)^{s},1^{s}}.
+\end{align}
+%
+Now, we see
+%
+\begin{align}
+    \abs{\brackets{D_{1}H_{3}D_{2}^{-1}}_{ij}}
+        &= \abs{\parens{\frac{i+1}{n+1+j}}^{s}H_{3;ij}} \nonumber\\
+    &\le \abs{H_{3;ij}}, \quad
+        i,j\in\braces{1,\cdots,n}.
+\end{align}
+%
+Importantly, we see that the elements of $H_{3}$ bound the elements
+of $D_{1}H_{3}D_{2}^{-1}$ \emph{except in the last column},
+for $H_{3}\in\R^{n\times(n+1)}$; this is most unfortunate.
+To proceed further, we let
+%
+\begin{equation}
+    H_{3} = \begin{bmatrix} \widetilde{H}_{3} & \tilde{h} \end{bmatrix},
+\end{equation}
+%
+so that $\tilde{h}$ is just the last column of $H_{3}$.
+We will show $||D_{1}\tilde{h}||_{2}$ is bounded, but to do so
+we will need to specifically look at $H_{3}$.
+
+From our previous work we see
+%
+\begin{equation}
+    \tilde{h} = \beta H_{1}^{-1}e_{1}.
+\end{equation}
+%
+The obvious bound
+%
+\begin{align}
+    ||D_{1}\tilde{h}||_{2}
+        &\le \norm{D_{1}}_{2}\norm{H_{1}^{-1}}_{2}\norm{e_{1}}_{2}
+        \nonumber\\
+    &\le \parens{n+1}^{s} \frac{\frac{\abs{\beta}}{\abs{\alpha}}}{
+        1 - \frac{1}{2}\frac{\abs{\beta}}{\abs{\alpha}}}
+\end{align}
+%
+is too rough, for the bound $||D_{1}\tilde{h}||_{2} = O(n^{s})$
+is unacceptable, for we expect that we could do better.
+To do so, we need to solve
+%
+\begin{equation}
+    \begin{bmatrix}
+        \gamma          & -\frac{1}{2}         & \\
+        \frac{1}{2} & 2\gamma & -\frac{1}{2} \\
+        & \frac{1}{2} & 3\gamma & -\frac{1}{2} \\
+        & & \ddots & \ddots & \ddots \\
+        & & & \frac{1}{2} & (n-2)\gamma & -\frac{1}{2} \\
+        & & & & \frac{1}{2} & (n-1)\gamma & 0 \\ 
+        & & & & & \frac{1}{2} & n\gamma \\
+    \end{bmatrix}
+    \tilde{h} = e_{1}.
+\end{equation}
+%
+Here, we have set $\gamma = \alpha/\beta$ (we are assuming $\beta\ne0$).
+We call the above matrix $\widetilde{H}_{1} = \frac{1}{\beta}H_{1}$.
+
+We employ the standard tridiagonal solver algorithm
+(one reference is~\cite[Chapter 9]{HighamASNA}),
+although our main concern is about
+bounding the size of the elements of $\tilde{h}$;
+therefore, we are only concerned
+about bounding the size of the entries of $\ell_{i}$, $d_{i}$, and $u_{i}$.
+We use the convention
+%
+\begin{align}
+    &\begin{bmatrix}
+        a_{1} & c_{1} & \\
+        b_{1} & a_{2} & c_{2} & \\
+              &       & \ddots&       & \\
+              &       &b_{n-2}&a_{n-1}&c_{n-1} \\
+              &       &       &b_{n-1}& a_{n}  \\
+    \end{bmatrix} = \nonumber\\
+    &\begin{bmatrix}
+        1 &       & \\
+        \ell_{1} & 1 &       & \\
+              &       & \ddots&       & \\
+              &       &\ell_{n-2}&  1    &   \\
+              &       &       &\ell_{n-1}& 1 \\
+    \end{bmatrix}
+    \begin{bmatrix}
+        d_{1} & u_{1} & \\
+              & d_{2} & u_{2} & \\
+              &       & \ddots&       & \\
+              &       &       &d_{n-1}& u_{n-1}\\
+              &       &       &       & d_{n}  \\
+    \end{bmatrix} \nonumber\\
+    &= \widetilde{L}\widetilde{U}.
+\end{align}
+%
+Clearly, we can factor $\widetilde{H}_{1}$ recursively as
+%
+\begin{align}
+    u_{k} &= -\frac{1}{2},\quad k\in\braces{1,\cdots,n-2} \nonumber\\
+    u_{n-1} &= 0 \nonumber\\
+    d_{1} &= \gamma \nonumber\\
+    \ell_{1} &= \frac{1}{2\gamma} \nonumber\\
+    d_{k} &= k\gamma - \ell_{k-1}u_{k-1} \nonumber\\
+    \ell_{k} &= \frac{1}{2d_{k}}.
+    \label{ode:h1_inv_defs}
+\end{align}
+
+\noindent
+By assumption, we have $\abs{\gamma} = \frac{\abs{\alpha}}{\abs{\beta}} > 2$.
+We will prove inductively that
+%
+\begin{align}
+    \sign(\gamma) &= \sign(d_{k}) \nonumber\\
+        &= \sign(\ell_{k}) \nonumber\\
+    k\abs{\gamma} &\le \abs{d_{k}} \le 2k\abs{\gamma} \nonumber\\
+    \frac{1}{4k\abs{\gamma}} &\le \abs{\ell_{k}}
+        \le \frac{1}{2k\abs{\gamma}}.
+\end{align}
+%
+The results hold for $k=1$, and assume they hold for $k\ge1$.
+Then we see
+%
+\begin{equation}
+    d_{k+1} = (k+1)\gamma + \frac{1}{2}\ell_{k},
+\end{equation}
+%
+telling us $\sign(d_{k+1}) = \sign(\ell_{k}) = \sign(\gamma)$,
+from which it follows
+%
+\begin{equation}
+    (k+1)\abs{\gamma} \le \abs{d_{k+1}} \le 2(k+1)\abs{\gamma}.
+\end{equation}
+%
+From Eq.~\eqref{ode:h1_inv_defs}, it is clear
+$\sign(\ell_{k}) = \sign(d_{k}) = \sign(\gamma)$, so that
+%
+\begin{equation}
+    \frac{1}{4(k+1)\abs{\gamma}} \le \abs{\ell_{k+1}}
+        \le \frac{1}{2(k+1)\abs{\gamma}}.
+\end{equation}
+%
+We have just proven the inductive step.
+All of these hold for $k\in\braces{1,\cdots,n-1}$.
+We have $d_{n} = n\gamma$ because $u_{n-1} = 0$.
+Therefore,
+%
+\begin{equation}
+    \widetilde{U}^{-1}e_{1} = \gamma^{-1}e_{1}
+\end{equation}
+%
+and
+%
+\begin{align}
+    \gamma^{-1}\widetilde{L}^{-1}e_{1} &= \tilde{h} \nonumber\\
+    \tilde{h}_{k} &= (-1)^{k-1}\ell_{k-1}\cdots\ell_{2}\ell_{1}\gamma^{-1}.
+\end{align}
+%
+This gives us
+%
+\begin{equation}
+    4\parens{\frac{1}{4\abs{\gamma}}}^{k}\frac{1}{(k-1)!} \le
+    |\tilde{h}_{k}| \le 2\parens{\frac{1}{2\abs{\gamma}}}^{k}\frac{1}{(k-1)!}.
+\end{equation}
+
+We can now compute
+%
+\begin{align}
+    ||D_{1}\tilde{h}||_{2}^{2}
+        &\le 4 \sum_{k=1}^{n} \parens{k+1}^{2s}
+        \parens{\frac{1}{2\abs{\gamma}}}^{2k}\frac{1}{\brackets{(k-1)!}^{2}}
+        \nonumber\\
+    &\le 4 \sum_{k=0}^{n-1} \parens{k+2}^{2s}
+        \parens{\frac{1}{2\abs{\gamma}}}^{2k+2}\frac{1}{\brackets{k!}^{2}}
+        \nonumber\\
+    &\le \frac{1}{\abs{\gamma}^{2}}\braces{
+        4^{s} + \sum_{k=1}^{n-1}\parens{k+2}^{2s}
+        \parens{\frac{1}{2\abs{\gamma}}}^{2k}\frac{1}{\brackets{k!}^{2}}}
+        \nonumber\\
+    &\le \frac{1}{\abs{\gamma}^{2}}\braces{
+        4^{s} + 9^{s}\sum_{k=1}^{\infty}k^{2s}
+        \parens{\frac{1}{2\abs{\gamma}}}^{2k}\frac{1}{\brackets{k!}^{2}}}
+        \nonumber\\
+    &\le \frac{1}{\abs{\gamma}^{2}}\braces{
+        4^{s} + 9^{s}C(s,\gamma)}.
+\end{align}
+%
+Here, we have
+%
+\begin{equation}
+    C(s,\gamma) = \sum_{k=1}^{\infty}k^{2s}
+    \parens{\frac{1}{2\abs{\gamma}}}^{2k}\frac{1}{\brackets{k!}^{2}},
+\end{equation}
+%
+so that we must now bound $C(s,\gamma)$.
+Currently, we have the bound
+%
+\begin{align}
+    C(s,\gamma) &\le \max_{k}\abs{k^{2s}\parens{\frac{1}{2\abs{\gamma}}}^{2k}}
+        \sum_{k=1}^{\infty} \frac{1}{\brackets{k!}^{2}}
+        \nonumber\\
+    &\le e\brackets{\frac{2s}{\ln\parens{4\abs{\gamma}}}}^{2s}
+        \parens{\frac{1}{2\abs{\gamma}}}^{
+            \brackets{\frac{4s}{\ln\parens{4\abs{\gamma}^{2}}}}} \nonumber\\
+    &\sim s^{2s}.
+\end{align}
+%
+This is a loose bound, and it should be possible to produce better bounds
+by attempting to compute
+%
+\begin{equation}
+    C(s,\gamma) \le \max_{k}\abs{\frac{k^{2s}}{\brackets{k!}^{2}}}
+        \sum_{k=1}^{\infty} \parens{\frac{1}{2\abs{\gamma}}}^{2k}
+\end{equation}
+%
+We know the geometric series will sum to a constant, but maximizing
+over the polynomial and factorial is nontrivial.
+
+We set
+%
+\begin{equation}
+    E(s,\gamma) = \frac{1}{\abs{\gamma}} \sqrt{
+        \sum_{k=0}^{\infty}\parens{k+2}^{2s}
+    \parens{\frac{1}{2\abs{\gamma}}}^{2k}\frac{1}{\brackets{k!}^{2}}}.
+\end{equation}
+%
+For all $n$, we have
+%
+\begin{equation}
+    ||D_{1}\tilde{h}||_{2} \le E(s,\gamma).
+\end{equation}
+%
+By computation, we have
+%
+\begin{equation}
+    E(10,2) \le 2.
+\end{equation}
+%
+This shows that we \emph{greatly} overestimated $||D_{1}\tilde{h}||_{2}$
+and suggests it is well-conditioned; the challenge is determining
+rigorous bounds.
+
+We also have the lower bound
+%
+\begin{align}
+    ||D_{1}\tilde{h}||_{2}^{2}
+        &\ge 16 \sum_{k=1}^{n} \parens{k+1}^{2s}
+        \parens{\frac{1}{4\abs{\gamma}}}^{2k}\frac{1}{\brackets{(k-1)!}^{2}}
+        \nonumber\\
+        &\ge \frac{1}{\abs{\gamma}^{2}} \sum_{k=0}^{n-1} \parens{k+2}^{2s}
+        \parens{\frac{1}{4\abs{\gamma}}}^{2k}\frac{1}{\brackets{k)!}^{2}}
+        \nonumber\\
+        &\ge \frac{1}{2\abs{\gamma}^{2}} \sum_{k=1}^{\infty} k^{2s}
+        \parens{\frac{1}{4\abs{\gamma}}}^{2k}\frac{1}{\brackets{k!}^{2}}
+\end{align}
+%
+where the last inequality holds for sufficientlylarge $n$.
+This has the same form as our upper bound.
+Future work will be devoted to obtaining a tight bound
+for $||D_{1}\tilde{h}||_{2}$.
+
+Before over previous work on bounding $||D_{1}\tilde{h}||_{2}$,
+we previously showed
+%
+\begin{equation}
+    |\widetilde{H}_{3}|_{ij} \le |H_{3;ij}|, \quad i,j\in\braces{1,\cdots,n},
+\end{equation}
+%
+Because
+%
+\begin{align}
+    \norm{A}_{1} &= \norm{\,\abs{A}\,}_{1} \nonumber\\
+    \norm{A}_{\infty} &= \norm{\,\abs{A}\,}_{\infty}
+\end{align}
+%
+holds for all matrices, we have the following bound:
+%
+\begin{align}
+    \norm{\,\abs{A}\,}_{2}
+        &\le \sqrt{\norm{\,\abs{A}\,}_{1}\norm{\,\abs{A}\,}_{\infty}}
+            \nonumber\\
+    &=\sqrt{\norm{A}_{1}\norm{A}_{\infty}}.
+\end{align}
+%
+This implies we have this final bound:
+%
+\begin{equation}
+    ||\widetilde{H}_{3}||_{2} = O(n).
+\end{equation}
+%
+With our above bound on $||\tilde{h}||_{2}$ combined with the fact
+%
+\begin{equation}
+    \norm{D_{1}H_{3}D_{2}^{-1}}_{2} \le \sqrt{||\widetilde{H}_{3}||_{2}^{2}
+        + ||\tilde{h}||_{2}^{2}},
+\end{equation}
+%
+we have shown
+%
+\begin{equation}
+    \norm{D_{1}H_{3}D_{2}^{-1}}_{2} = O_{s}(n),
+\end{equation}
+%
+where the constant depends on $s$.
+
+We now turn our attention to bounding
+$\kappa_{2}(\begin{bmatrix} I & H \end{bmatrix})$,
+and our goal will be to look at $H = D_{1}H_{3}D_{2}^{-1}$.
+First, we see
+%
+\begin{align}
+    x^{*}\parens{\begin{bmatrix} I & H \end{bmatrix}
+        \begin{bmatrix} I \\ H^{*} \end{bmatrix}}x &= x^{*}x + x^{*}HH^{*}x
+        \nonumber\\
+    &\ge 1
+\end{align}
+%
+when $\norm{x}_{2} = 1$.
+Next, we also have
+%
+\begin{align}
+    x^{*}\parens{\begin{bmatrix} I & H \end{bmatrix}
+        \begin{bmatrix} I \\ H^{*} \end{bmatrix}}x &= x^{*}x + x^{*}HH^{*}x
+        \nonumber\\
+    &\le 1 + \norm{H}_{2}^{2}.
+\end{align}
+%
+Thus, we now have
+%
+\begin{equation}
+    \kappa_{2}(\begin{bmatrix} I & H \end{bmatrix})
+        \le \sqrt{1 + \norm{H}_{2}^{2}}
+\end{equation}
+%
+and so
+%
+\begin{equation}
+    \kappa_{2}(\begin{bmatrix} I & D_{1}H_{3}D_{2}^{-1} \end{bmatrix})
+        = O_{s}(n).
+\end{equation}
+%
+This shows $\begin{bmatrix} I & D_{1}H_{3}D_{2}^{-1} \end{bmatrix}$
+is well-conditioned.
+
+Similar results exist for systems of ODEs for constant coefficient;
+we omit the details.
+

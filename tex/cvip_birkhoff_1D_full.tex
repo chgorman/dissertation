@@ -1,0 +1,190 @@
+\section{Proof of 1D Full Birkhoff Interpolation for polynomials of degree $2n$}
+\label{sec:cvip_birkhoff_full_1D}
+
+We begin by computing the error. Now, we know the coefficients are
+%
+\begin{align}
+    \tilde{a} &= D_{s}^{-1}G^{*} \begin{bmatrix}Y&\\A&B&0\end{bmatrix}^{+}
+        \begin{bmatrix} \hat{f} \\ E\hat{f}' \end{bmatrix} \nonumber\\
+    &= D_{s}^{-1}G^{*}\begin{bmatrix} Y^{-1}\hat{f} \\
+        B^{-1}(E\hat{f}' - AY^{-1}\hat{f}) \\ 0\end{bmatrix} \nonumber\\
+    &= D_{s}^{-1}G^{*}\begin{bmatrix} Y^{-1}\hat{f} \\ 0 \\ 0 \end{bmatrix}
+        + D_{s}^{-1}G^{*} \begin{bmatrix} 0 \\
+        B^{-1}(E\hat{f}' - AY^{-1}\hat{f}) \\ 0\end{bmatrix} \nonumber\\
+    &= \tilde{a}_{1} + \tilde{a}_{2}.
+    \label{eq:cvip_birkhoff_full_msn_total_terms}
+\end{align}
+%
+$Y$ and $G$ are the same as from Sec.~\ref{sec:cvip_interp_1D}.
+Additionally, we have
+%
+\begin{align}
+    A &= \begin{bmatrix}
+        & & & & 0 \\
+        & & & & \alpha_{n} \\
+        & & & \iddots & \\
+        & & \alpha_{3} & & \\
+        0 & \alpha_{2} & & & \\
+        \end{bmatrix}
+            \nonumber\\
+    B &= \diag\parens{\beta_{n+1},\beta_{n},\cdots,\beta_{2}}
+\end{align}
+%
+with
+%
+\begin{align}
+    y_{k} &= \frac{1}{c_{k}k^{s}} \nonumber\\
+    \alpha_{k} &= (k-1)k^{-s}c_{k}\braces{1-\parens{\frac{2n+1-k}{k-1}}
+        \tau_{k}^{2}}
+        \nonumber\\
+    \beta_{k} &= 2nk^{-s}s_{k} \quad k\in\braces{2,\cdots,n} \nonumber\\
+    \beta_{n+1} &= n\parens{n+1}^{-s}.
+\end{align}
+%
+
+
+
+Now, $\tilde{a}_{1}$ is the exact term we obtain
+from Eq.~\eqref{eq:cvip_interp_1D_msn_coefs}. Thus, we focus on
+the second term because
+%
+\begin{equation}
+    \norm{a_{c} - \tilde{a}}_{p,1}
+        \le \norm{a_{c}-\tilde{a}_{1}}_{p,1} + \norm{\tilde{a}_{2}}_{p,1}.
+\end{equation}
+%
+We set
+%
+\begin{align}
+    q &= \begin{bmatrix}
+        B^{-1}(E\hat{f}' - AY^{-1}\hat{f}) \\ 0\end{bmatrix} \nonumber\\
+    &= \begin{bmatrix} q_{n+1} & q_{n} & \cdots & q_{2} &q_{1}\end{bmatrix}^{*}
+\end{align}
+%
+with
+%
+\begin{align}
+    q_{1} &= 0 \nonumber\\
+    q_{k} &= \hat{f}_{k-1}' - \alpha_{k}y_{k}^{-1}\hat{f}_{k} \nonumber\\
+    &=\brackets{1-\alpha_{k}y_{k}^{-1}}a_{k-1}
+        + \eta_{k-1} - \alpha_{k}y_{k}^{-1}\eps_{k}
+        \quad k\in\braces{2,\cdots,n} \nonumber\\
+    q_{n+1} &= \hat{f}_{n}'.
+\end{align}
+%
+The reason for this unusual ordering is because it makes the notation easier.
+Then, the second term in Eq.~\eqref{eq:cvip_birkhoff_full_msn_total_terms}
+becomes
+%
+\begin{align}
+    \tilde{a}_{2} &= D_{s}^{-1}G^{*} \begin{bmatrix} 0 \\ q \end{bmatrix}
+        \nonumber\\
+    &= \begin{bmatrix} -s_{1}1^{-s}q_{1} \\ \vdots \\ -s_{n}n^{-s}q_{n} \\
+        (n+1)^{-s}q_{n+1} \\ c_{n}(n+2)^{-s}q_{n} \\ \vdots \\
+        c_{1}(2n+1)^{-s}q_{1} \end{bmatrix}.
+    \label{eq:cvip_birkhoff_1D_full_q_coefs}
+\end{align}
+%
+Now, we see
+%
+\begin{align}
+    \abs{-s_{k}k^{-s}} &\le n^{-s} \nonumber\\
+    \abs{c_{k}\parens{2n+2-k}^{-s}} & \le n^{-s}
+\end{align}
+%
+and
+%
+\begin{align}
+    \abs{1 - \alpha_{k}y_{k}^{-1}} &= \abs{2 - k + 2ns_{k}^{2}} \nonumber\\
+        &\le k + 2ns_{k}^{2} \nonumber\\
+    \abs{\alpha_{k}y_{k}^{-1}} &\le k + 2ns_{k}^{2},
+\end{align}
+%
+implying
+%
+\begin{equation}
+    \abs{-s_{k}k^{-s}q_{k}} \le \brackets{n^{-s}k + 2n^{1-s}s_{k}^{2}}
+        \abs{a_{k-1}} + n^{-s}\abs{\eta_{k-1}}
+        + \brackets{n^{-s}k +2n^{1-s}s_{k}^{2}}\abs{\eps_{k}}.
+\end{equation}
+%
+%This exact bound holds for $\abs{c_{k}\parens{2n+2-k}q_{k}}$ except
+%when $k=n+1$.
+We also have the bound
+%
+\begin{align}
+    \abs{c_{k}\parens{2n+2-k^{-s}q_{k}}}
+    &\le \brackets{n^{-s}k + 2n^{1-s}s_{k}^{2}}
+        \abs{a_{k-1}} + n^{-s}\abs{\eta_{k-1}}
+        + \brackets{n^{-s}k +2n^{1-s}s_{k}^{2}}\abs{\eps_{k}}, \nonumber\\
+    &\quad k\in\braces{1,\cdots,n}.
+\end{align}
+%
+When $k=n+1$, we have the easier bound
+%
+\begin{equation}
+    \abs{\parens{n+1}^{-s}q_{n+1}}
+        \le n^{-s}\brackets{\abs{a_{n}} + \abs{\eta_{n}}}.
+\end{equation}
+%
+All of the above work shows can be combined to show
+%
+\begin{align}
+    \sum_{k=1}^{n} \abs{-s_{k}k^{-s}q_{k}} &\le
+        \frac{\sqrt{\zeta(2s-2)}\norm{a}_{s}}{n^{s}}
+        + 2\sqrt{\frac{2}{2s+1}}\frac{\norm{a}_{s}}{n^{2s-\frac{3}{2}}}
+        + \frac{1}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{n^{2s-\frac{1}{2}}}
+            \nonumber\\
+    &\quad+ \frac{1}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{n^{2s-\frac{3}{2}}}
+        + \frac{2}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{n^{2s-\frac{3}{2}}}.
+\end{align}
+%
+The same bound holds for $\sum_{k=1}^{n+1}\abs{c_{k}\parens{2n+2-k}^{-s}q_{k}}$.
+All of these terms are $O(n^{-s+\frac{1}{2}})$
+and, naturally, we have the restriction $s>\frac{3}{2}$.
+
+Taken altogether, we see
+%
+\begin{align}
+    \norm{a_{c} - \tilde{a}}_{p,1}
+        &\le \norm{a_{c} - \tilde{a}_{1}}_{p,1} + \norm{\tilde{a}_{2}}_{p,1}
+        \nonumber\\
+    &\le \frac{C_{s}\norm{a}_{s}}{n^{s-\frac{1}{2}}},
+\end{align}
+%
+with convergence when $\frac{3}{2}<s\le\sigma$.
+
+From the above work, we can also compute the condition number.
+First, we see
+%
+\begin{align}
+    \norm{\begin{bmatrix}Y&\\A&B\end{bmatrix}
+            \begin{bmatrix}a\\b\end{bmatrix}}_{2}^{2}
+    &= \norm{Ya}_{2}^{2} + \norm{Aa + Yb}_{2}^{2} \nonumber\\
+    &\le 25.
+\end{align}
+%
+We also note we have $\norm{L}_{2}^{2}\ge\frac{1}{2}$.
+We now look at the greater challenge of bounding the inverse,
+and we use similar methods to those above:
+%
+\begin{align}
+    \norm{\begin{bmatrix}Y&\\A&B\end{bmatrix}^{-1}
+            \begin{bmatrix}a\\b\end{bmatrix}}_{2}^{2}
+    &= ||Y^{-1}a||_{2}^{2} + ||B^{-1}(b - AY^{-1}a)||_{2}^{2} \nonumber\\
+    &\le 2n^{2s} + \frac{2^{7}}{2s+1}n^{2s+1} \nonumber\\
+    &\le 2^{8}n^{2s+1}.
+\end{align}
+%
+Due to $Y$, we also have $||L^{-1}||_{2}^{2}\ge n^{2s}/2$.
+Therefore, we have
+%
+\begin{equation}
+    \frac{1}{2}n^{s} \le \kappa(L) \le 2^{4}n^{s+\frac{1}{2}}.
+\end{equation}
+%
+Therefore, we have shown $\kappa(L) = \Omega(n^{s})$ and
+$\kappa(L) = O(n^{s+\frac{1}{2}})$.
+
+
+

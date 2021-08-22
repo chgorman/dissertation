@@ -1,0 +1,25 @@
+\begin{algorithm}[t]
+\caption{Randomized Block Low-Rank Approximation (General)}
+\label{alg:rand_low_rank}
+\begin{algorithmic}[1]
+\Function{random\_low\_rank}{$A$,$d$,\texttt{stopping\_criterion}}
+\Comment{Builds $QB$ approximation}
+    \State $Q = [\,]$; $n = \texttt{cols}(A)$
+    \State $k=0$
+    \While {!\texttt{stopping\_criterion}($Q$,$A$,$\eps$)}
+        \State $k = k + 1$
+        \State $\Omega_{k} = \texttt{rand}(n,d)$
+        \Comment{$d$ is block size}
+        \State $S_{k} = A\Omega_{k}$
+        \State $\widehat{S}_{k} = \parens{I - QQ^{*}}^{2}S_{k}$
+        \Comment{$2\times$ GS orthogonalization for numerical stability}
+        \label{alg_line:rand_Gen_GS}
+        \State $[Q_{k},R_{k}] = \texttt{qr}(\widehat{S}_{k})$
+        \State $Q = \begin{bmatrix}Q & Q_{k}\end{bmatrix}$
+    \EndWhile
+\State $B = Q^{*}A$
+\State \Return $Q$, $B$
+\Comment{We have the approximation $A \approx QB$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

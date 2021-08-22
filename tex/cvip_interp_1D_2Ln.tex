@@ -1,0 +1,144 @@
+\section{Proof of 1D Interpolation for polynomials of degree $2Ln$}
+\label{sec:cvip_interp_1D_2Ln}
+
+We let $p_{n}$ be the MSN polynomial approximation of degree $2Ln$.
+Now, as before, we can bound the error
+%
+\begin{equation}
+    \norm{f-p_{n}}_{\infty} \le \norm{a-a_{c}}_{p,1}
+        + \norm{a_{c}-\tilde{a}}_{p,1},
+\end{equation}
+%
+where in this instance $a_{c}$ is the true coefficients chopped to degree
+$2Ln$ and $\tilde{a}$ are the coefficients of the MSN polynomial.
+As before,
+%
+\begin{equation}
+    \norm{a-a_{c}}_{p,1} \le \frac{1}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{
+        \brackets{2Ln+1}^{s-\frac{1}{2}}},
+\end{equation}
+%
+and so we only need to bound $\norm{a_{c}-\tilde{a}}_{p,1}$.
+
+From the normal equations of the MSN solution, we know
+%
+\begin{equation}
+    \tilde{a} = D_{s}^{-2}W^{*}\parens{WD_{s}^{-2}W^{*}}^{-1}\hat{f}
+\end{equation}
+%
+where $\hat{f} = C^{-1}f$ and
+%
+\begin{equation}
+    Y^{2} = WD_{s}^{-2}W^{*}
+\end{equation}
+%
+is a diagonal matrix with entries
+%
+\begin{align}
+    y_{1}^{2} &= 1^{-2s} + \brackets{2n+1}^{-2s} + \brackets{4n+1}^{-2s}
+        + \cdots + \brackets{2Ln+1}^{-2s} \nonumber\\
+        &= 1^{-2s} + \nu_{1} \nonumber\\
+    y_{k}^{2} &= k^{-2s} + \brackets{2n+2-k}^{-2s} + \brackets{2n+k}^{-2s}
+        + \brackets{4n+2-k}^{-2s} \nonumber\\
+        &\quad + \cdots + \brackets{2(L-1)n+k}^{-2s} + \brackets{2Ln+2-k}^{-2s}
+            \nonumber\\
+    &= k^{-2s} + \nu_{k}, \quad k\in\braces{2,\cdots,n}.
+\end{align}
+%
+The $\braces{\nu_{i}}$ keep track of the small terms in the sums.
+From here, we see
+%
+\begin{align}
+    \tilde{a}_{2\ell n+1-k} &= \parens{-1}^{\ell}\brackets{2\ell n+2-k}^{-2s}
+        y_{k}^{-2s}\hat{f}_{k}, \quad \ell\in\braces{1,2,\cdots,L} \nonumber\\
+    \tilde{a}_{2\ell n+k-1} &= \parens{-1}^{\ell}\brackets{2\ell n+k-2}^{-2s}
+        y_{k}^{-2s}\hat{f}_{k}, \quad \ell\in\braces{0,1,\cdots,L-1}.
+\end{align}
+
+Using this, we see
+%
+\begin{align}
+    \abs{a_{k-1} - \tilde{a}_{k-1}}
+        &\le \abs{a_{k-1}}\brackets{\frac{k^{2s}\nu_{k}}{1+k^{2s}nu_{k}}}
+        + \frac{1}{1+k^{2s}\nu_{k}}\abs{\eps_{k}} \nonumber\\
+    &\le k^{2s}\nu_{k}\abs{a_{k-1}} + \abs{\eps_{k}},
+    \quad k\in\braces{1,\cdots,n}.
+\end{align}
+%
+This fact allows us to bound the first few terms, which have been
+critical to prove convergence.
+It will be important for us to bound $k^{2s}\nu_{k}$, so we will look
+at those terms now.
+First, we see
+%
+\begin{align}
+    1^{-2s}\nu_{1} &= \nu_{1} \nonumber\\
+    &= \parens{2n+1}^{-2s} + \parens{4n+1}^{-2s} + \cdots + \parens{2Ln+1}^{-2s}
+        \nonumber\\
+    &\le \sum_{\ell=1}^{\infty}\parens{2\ell n+1}^{-2s} \nonumber\\
+    &\le 4^{-s}n^{-2s}\zeta(2s)
+\end{align}
+%
+and
+%
+\begin{align}
+    k^{2s}\nu_{k} &\le k^{2s}\brackets{
+        \sum_{\ell=1}^{\infty}\parens{2\ell n+2-k}^{-2s} + 
+        \sum_{\ell=1}^{\infty}\parens{2\ell n+k}^{-2s}} \nonumber\\
+    &\le \parens{\frac{k}{n}}^{2s}\brackets{1+4^{-s}}\zeta(2s),
+    \quad k\in\braces{2,\cdots,n}.
+\end{align}
+
+We now have
+%
+\begin{equation}
+    \norm{a_{c}-\tilde{a}}_{p,1} \le \sum_{k=1}^{n}k^{2s}\nu_{k}\abs{a_{k-1}}
+        + \sum_{k=n}^{2Ln}\brackets{\abs{a_{k}} + \abs{\tilde{a}_{k}}}.
+\end{equation}
+%
+The first term has the bound
+%
+\begin{align}
+    \sum_{k=1}^{n}k^{2s}\nu_{k}\abs{a_{k-1}}
+        &\le n^{-2s}\brackets{1+4^{-s}}\zeta(2s)
+            \sum_{k=1}^{n}k^{2s}\abs{a_{k-1}} \nonumber\\
+    &\le \brackets{1+4^{-s}}\zeta(2s)\sqrt{\frac{2}{2s+1}}\frac{\norm{a}_{s}}{
+        n^{s-\frac{1}{2}}}.
+\end{align}
+%
+The second term has two sums.
+The first one is easy:
+%
+\begin{align}
+    \sum_{k=n}^{2Ln} \abs{a_{k}} &\le \sum_{k=n}^{\infty} \abs{a_{k}}
+        \nonumber\\
+    &\le \frac{1}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}}.
+\end{align}
+%
+The second term is more involved.
+We see
+%
+\begin{align}
+    \sum_{k=n}^{2Ln}\abs{\tilde{a}_{k}}
+        &= \sum_{k=1}^{n}\braces{\parens{2Ln+2-k}^{-2s} +
+        \sum_{\ell=1}^{L-1}\brackets{2\ell n+2-k}^{-2s} +
+            \brackets{2\ell n+k}^{-2s}}y_{k}^{-2}|\hat{f}_{k}|
+        \nonumber\\
+    &\le 2Ln^{-2s}\sum_{k=1}^{n}y_{k}^{-2}|\hat{f}_{k}|
+        \nonumber\\
+    &\le 2Ln^{-2s}\brackets{\sum_{k=1}^{n}k^{2s}\abs{a_{k-1}}
+        + n^{2s}\sum_{k=1}^{n}\abs{\eps_{k}}}
+        \nonumber\\
+    &\le C(s,L)\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}}.
+\end{align}
+
+Taken together, these sums imply
+%
+\begin{equation}
+    \norm{f-p_{n}}_{\infty,[-1,1]}
+        \le C(s,L)\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}},
+\end{equation}
+%
+with convergence when $\frac{1}{2}<s\le\sigma$.
+
+

@@ -1,0 +1,53 @@
+\section{1D \CV{} Birkhoff Interpolation Matrix: $2n+1$ Columns,
+First Factorization}
+\label{sec:CV_ID_1D_2n_F1}
+
+In this section we investigate the full Birkhoff interpolation
+problem in 1D: interpolation and derivative information on the
+Chebyshev nodes.
+
+We must compute the LQ factorization of
+%
+\begin{equation}
+    \begin{bmatrix} V \\ V' \end{bmatrix} D_{s}^{-1}.
+\end{equation}
+%
+After applying the inverse DCT, this reduces to 
+%
+\begin{equation}
+    \begin{bmatrix} C^{-1} & \\ & C^{-1} \end{bmatrix}
+    \begin{bmatrix} V \\ V' \end{bmatrix} D_{s}^{-1}
+    = \begin{bmatrix} W \\ WD \end{bmatrix} D_{s}^{-1}.
+\end{equation}
+%
+If $G$ is taken from Eq.~\eqref{eq:vand_I_Givens} and $U$ from
+Eq.~\eqref{eq:vand_U_mat}, then we see
+%
+\begin{align}
+    &\begin{bmatrix} WD_{s}^{-1}G \\ EUWDD_{s}^{-1}G \end{bmatrix}
+        = \nonumber\\
+    &\begin{bmatrix}
+        y_{1} \\  & y_{2} \\ & & y_{3} \\ & & & y_{4} \\ & & & & \ddots \\
+        & & & & & y_{n-1} \\
+        & & & & & & y_{n} \\
+        & & & & & & & \alpha_{n+1} \\
+        & & & & & & \alpha_{n} & & \alpha_{n+2} \\
+        & & & & & \alpha_{n-1} & & & & \alpha_{n+3} \\
+        & & & & \iddots & & & & & & \ddots \\
+        & & & \alpha_{4} & & & & & & & & \alpha_{2n-2} \\
+        & & \alpha_{3} & & & & & & & & & & \alpha_{2n-1} \\
+        0 & \alpha_{2} & & & & & & & & & & & & \alpha_{2n} & 0 \\
+    \end{bmatrix}.
+\end{align}
+
+\noindent
+Here, if $\alpha$ is the vector which contains $\alpha_{i}$, then
+we see
+%
+\begin{align}
+    w^{*} &= \begin{bmatrix} 0 & 1 & 2 & 3 & \cdots &
+            2n-3 & 2n-2 & 2n-1 & 0 \end{bmatrix} \nonumber\\
+    \alpha &= G^{*}D_{s}^{-1}w.
+\end{align}
+%
+We now have the LQ factorization.

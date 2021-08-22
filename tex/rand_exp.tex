@@ -1,0 +1,188 @@
+\section{Stopping Criteria Comparison}
+\label{sec:rand_exp}
+
+In this section we compare the different error bounds and algorithms
+that have been discussed previously by running a set of tests.
+
+\subsection{Matrix Types}
+
+% Matrices for experiments
+%
+% Slow decay:
+%   1/sqrt(k), 1/k^2
+%
+% Fast decay:
+%   2^-52, 2^-113
+%
+% S-shaped:
+%   1e-14; 1e-16
+%
+% Devil's Staircase: 10 singular values at
+%   1e0, 1e-1, 1e-2, ... , 1e-8, 1e-9
+
+We will be testing our algorithms on a few different classes of matrices:
+algebraic decay, exponential decay, S-shaped decay, and a Devil's staircase.
+These matrices are chosen because they are similar to those
+in~\cite{yu2018efficient}.
+All these matrices have the form $UDV^{*}$, where $U$ and $V$
+are random orthogonal matrices and $D$ contains positive
+diagonal entries which vary depending on the matrix.
+All matrices have $\norm{A}_{2}\approx1$ and
+$U,V\in\R^{1000\times100}$.
+
+Specifically, we choose the following for $D$:
+\begin{itemize}
+\item Algebraic decay: $d_{k} = k^{-\beta}$
+    for $\beta\in\braces{0.5,2}$. We will refer to these matrices
+    as Matrix A1 and Matrix A2.
+\item Exponential decay: $d_{k} = 2^{-\beta(k-1)/100}$ for
+    $\beta\in\braces{52,113}$. This leads to exponential decay with
+    values ending approximately at $10^{-16}$ and $10^{-34}$.
+    To machine precision using double arithmetic,
+    the second matrix has rank 46.
+    We will refer to these matrices as Matrix E1 and Matrix E2.
+\item S-shaped decay: $d_{k} = 100\epsm + \brackets{1+2^{k-26}}^{-1}$.
+    We will call this Matrix S.
+\item Devil's Staircase: $d_{10(k-1)+j} = 10^{1-k}$
+    for $j\in\braces{1,2,\cdots,10}$ and $k\in\braces{1,2,\cdots,10}$;
+    that is, we have 10 singular values of value $1=10^{0}$, 10 singular values
+    of value $10^{-1}$, continuing until we have 10 singular values of
+    value $10^{-9}$.
+    We will call this Matrix D.
+\end{itemize}
+%
+A plot of the singular values can be seen in Fig.~\ref{fig:sing_decay}.
+
+\input{plots/sing_decay.tex}
+
+\subsection{Norm Approximation}
+% Give examples to show how HMT over estimates norm
+
+We begin by showing how poorly the HMT error bound from
+Lem.~\ref{thm:rand_hmt_bound} is by using it to estimate
+$\norm{A}_{2}$; the results are shown
+in Table~\ref{tab:hmt_norm_ubound_mat}, and we remember $\norm{A}_{2}\approx1$.
+We let $\alpha\in\braces{2,5,10}$ and choose the number of samples
+$p$ so that $\alpha^{p}\le 10^{-\ell}$ for various $\ell$.
+To allow for comparisons, we let
+$\alpha^{p}\in\braces{10^{-9},10^{-12},10^{-15}}$.
+It is clear that in \emph{every} case the norm is overestimated, always
+$3\times$ and frequently $10\times$ larger; furthermore, smaller $\alpha$
+always leads to a more accurate estimate.
+As we can see, we greatly overestimate the norm.
+We are able to accurately measure the F-norm as seen
+in Fig.~\ref{fig:geb_norm_bound_mat} using our stochastic estimate;
+note the logarithmic scale on the number of columns ($d$).
+We also include estimates of the squared F-norm in
+Fig.~\ref{fig:geb_norm_squared_bound_mat} including mean and standard
+deviations as well as the theoretical standard deviations;
+the predicted results accurately match expected results.
+We averaged 10,000 trials to obtain the statistics for these results.
+In order to obtain the theoretical standard deviations in
+Fig.~\ref{fig:geb_norm_squared_bound_mat}, we took the square root
+of the variance from Eq.~\eqref{eq:rand_Xd_variance_bounds}.
+
+\input{tables/hmt_results_norm_ubound.tex}
+\input{plots/geb_norm_sampled_results.tex}
+\input{plots/geb_norm_squared_sampled_results.tex}
+
+
+\subsection{Adaptive Comparison}
+
+We now compare some of the adaptive low-rank algorithms;
+in particular, we use Alg.~\ref{alg:rand_low_rank} with the HMT
+stopping criterion, the YGL algorithm in Alg.~\ref{alg:rand_low_rank_YGL},
+and the new randomized low-rank compression algorithm
+in Alg.~\ref{alg:rand_new_low_rank}.
+Once each algorithm has determined enough random samples have been computed,
+a pivoted QR factorization is computed on the entire batch
+and the factorization is truncated below the specified tolerance.
+This last part (pivoted QR) is not an explicit feature of
+Algs.~\ref{alg:rand_low_rank}--\ref{alg:rand_low_rank_YGL} but is added
+due to it being necessary in the situation where our new algorithm
+was developed~\cite{randomHSSLBL}.
+These results can be found in Table~\ref{tab:results_qb_approx_mat};
+the minimum samples required to meet the specified tolerance
+(as determined by the SVD) are given in Table~\ref{tab:results_qb_min_rank}.
+The averaged number of random samples used is computed as well
+as the average 2-norm error taken over 1,000 trials.
+While the YGL and new algorithm bounds are related to the F-norm,
+the 2-norm is of primary importance.
+Random samples are computed in blocks of 16 random samples and,
+due to the nature of our new algorithm, the minimum possible number of
+samples used in Alg.~\ref{alg:rand_new_low_rank} is 32:
+16 samples for initial $Q$ and 16 samples for the error estimate.
+The YGL algorithm stops if we compute $E\le0$.
+
+From the results, we see that the HMT bound always performs the worst
+in every case; this is expected from it overestimating the 2-norm.
+Outside of this, the YGL and GEB algorithms are close.
+Matrix A1 is particularly challenging: it has slow singular value decay
+and our algorithm performs no power iteration.
+For this matrix, YGL does better than GEB in every case
+(they perform equally well with a relative error of $0.1$), in part
+because knowing the error exactly is important.
+For Matrix A2, YGL does better for $0.1$ relative error, with GEB
+using fewer or equal samples in the other cases.
+Matrices E1, E2, and S are similar: YGL and GEB are about the same
+for large relative errors but, due to the inherent error bound restrictions,
+the new algorithm is better for smaller tolerances.
+For Matrix D, YGL did a little better than GEB.
+Overall, the results here show that the YGL stopping criterion
+may be slightly better than the GEB stopping criterion when
+for $\epsr\ge O(\sqrt{\epsm})$, but our stochastic F-norm bound allows us
+to determine relative errors to smaller tolerances.
+
+We now perform more runs, except here we only look at the new
+stopping criterion;
+we set the blocksize to 5 and change the relative tolerances.
+Results are shown in Table~\ref{tab:results_qb_approx_mat_geb_hard},
+and Table~\ref{tab:results_qb_min_rank_tough_geb} contains the minimum
+required ranks.
+The relative tolerances here are difficult and are meant to test
+the limits of our stopping criterion.
+For Matrix E1, we are able to have relative tolerances down to
+5E-15 without having any problems with the
+stopping criterion (that is, every trial determined 100 samples
+was sufficient for the specified tolerance);
+some trials failed to satisfy the stopping criterion for 1E-15 and
+no trials satisfied the stopping criterion for 5E-16.
+These difficulties are expected because we are getting close to
+the limitations of machine precision ($\epsm\approx10^{-16}$
+for double precision).
+For Matrix S, we note that we use an average of 107 samples for
+the tolerance 1E-14, which is more than the 100 samples that
+should be sufficient ideally.
+For Matrix D, we used \textbf{single precision}.
+We did not have any problems with relative tolerances down
+to 5E-6; for the tolerance 1E-6, most trials (738/1000) failed to
+satisfy the stopping criterion.
+Again, this is expected because $\epsm\approx10^{-7}$ in single precision.
+Overall, we see that our new stopping criterion allows us to get
+close to machine precision, which is not the case
+when using the HMT or YGL algorithms.
+
+\input{tables/results_qb_comp_adapt.tex}
+\input{tables/results_qb_min_ranks.tex}
+
+\input{tables/results_qb_geb_hard.tex}
+\input{tables/results_qb_min_ranks_geb_hard.tex}
+
+
+
+\subsection{Stopping Criteria Discussion}
+
+The results of this section show our new stopping criterion does well,
+usually being on par or better than other stopping criteria
+while allowing for small tolerances.
+One noticeable difficultly, shared by others, is using too many
+additional samples to perform a low-order approximation
+($\epsr\gtrsim0.1$) for matrices with slow decay without using power iteration;
+part of the difficulty comes from using F-norm
+bounds when desiring 2-norm accuracy.
+Outside of this limited range, the error closely matches
+the specified tolerance, keeping communication-heavy computations
+to one rank-revealing QR factorization.
+Additionally, we showed our stopping criterion
+allows us to approximate matrices to relative tolerances
+close to machine precision.

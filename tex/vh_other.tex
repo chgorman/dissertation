@@ -1,0 +1,16 @@
+\section{Extending Previous 2D \CV{} Interpolation Matrix Results}
+\label{sec:CV_2D_other}
+
+By looking at the results we have just computed, we see that to compute
+fast MSN interpolation problems, we ``stack'' our linear interpolation
+requirements and then use factorizations from 1D to build up the
+structured LQ factorization needed.
+This should work with other 2D interpolation problems in addition
+to problems in higher dimensions;
+the main difficulty in higher dimensions may be keeping track of
+all the linear requirements (as well as the appropriate index sets)
+and then inverting and applying the fast, structured matrices appropriately.
+Even so, the bulk of the computational complexity comes from the 
+initial IDCT.
+To ensure that we can take advantage of the tensor product structure,
+it is necessary to make sure we have enough columns in each matrix.

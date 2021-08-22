@@ -1,0 +1,115 @@
+\section{Proof of 1D Birkhoff Interpolation for polynomials of degree $2n$
+    with Point Interpolation}
+\label{sec:cvip_birkhoff_pt}
+
+In this section, we interpolate derivative values on the Chebyshev
+nodes with the function value at $0$. For ease of notation,
+\emph{in this section only} we will label $f(0) = \hat{f}_{1} = a_{0}$ and
+label
+%
+\begin{equation}
+    \hat{f}' = \begin{bmatrix} \hat{f}_{2}' & \cdots & \hat{f}_{n+1}'
+        \end{bmatrix}^{*}.
+\end{equation}
+%
+The reason will become clear when we see the simplified nature of the
+interpolation coefficients.
+Now, from Eq.~\eqref{eq:cvip_idct_fhat_prime}, we know
+%
+\begin{equation}
+    \hat{f}_{k}' = \parens{k-1}a_{k-1} + \eta_{k-1},
+\end{equation}
+%
+We find the MSN solution coefficients to be
+%
+\begin{align}
+    \tilde{a} &= D_{s}^{-1}G^{*}
+        \begin{bmatrix} 1 &  & \\ & \Gamma & 0 \end{bmatrix}^{+}
+        \begin{bmatrix} \hat{f}_{1} \\ \hat{f}' \end{bmatrix} \nonumber\\
+    &= \begin{bmatrix} \hat{f}_{1} \\ \frac{c_{2}^{2}\hat{f}_{2}'}{2-1} \\
+        \vdots \\ \frac{c_{n}^{2}\hat{f}_{n}'}{n-1} \\
+        \frac{\hat{f}_{n+1}'}{n} \\ \frac{s_{n}^{2}\hat{f}_{n}'}{n-1} \\
+        \vdots \\ \frac{s_{2}^{2}\hat{f}_{2}'}{2-1} \\ 0 \end{bmatrix}
+        \nonumber\\
+    &= \begin{bmatrix} a_{0} \\
+        c_{2}^{2}a_{1} \\ \vdots \\
+        c_{n}^{2}a_{n-1}  \\
+        a_{n} \\
+        s_{n}^{2}a_{n-1} \\ \vdots \\
+        s_{2}^{2}a_{1} \\ 0 \end{bmatrix}
+    + \begin{bmatrix} 0 \\
+        \frac{c_{2}^{2}}{2-1}\eta_{1} \\ \vdots \\
+        \frac{c_{n}^{2}}{n-1}\eta_{n-1} \\
+        \frac{1}{n}\eta_{n} \\
+        \frac{s_{n}^{2}}{n-1}\eta_{n-1} \\ \vdots \\
+        \frac{s_{2}^{2}}{2-1}\eta_{1} \\ 0
+    \end{bmatrix}
+        \nonumber\\
+    &= \tilde{a}_{1} + \tilde{a}_{2}
+\end{align}
+%
+Here, $\tilde{a}_{1}$ includes the main coefficient terms and $\tilde{a}_{2}$
+includes the $\eta_{k}$.
+We have
+%
+\begin{align}
+    \tau_{k} &= -\parens{\frac{2n+1-k}{k-1}}\parens{\frac{k}{2n+2-k}}^{s}
+        \nonumber\\
+    c_{k} &= \frac{1}{\sqrt{1+\tau_{k}^{2}}} \nonumber\\
+    s_{k} &= \tau_{k}c_{k} \nonumber\\
+    \gamma_{k} &= \parens{k-1}k^{-s}\sqrt{1 + \parens{\frac{2n+1-k}{k-1}}^{2}
+        \parens{\frac{k}{2n+2-k}}^{2s}} \quad k\in\braces{2,\cdots,n}
+        \nonumber\\
+    \gamma_{n+1} &= \frac{n}{\parens{n+1}^{s}}
+\end{align}
+%
+from Eqs.~\eqref{eq:v1_D_2n_Givens_cs_def}
+and \eqref{eq:v1_I_2n_Givens_gamma_def} in
+Sec.~\ref{sec:CV_D_1D_2n_F2}.
+
+Therefore, we see we have
+%
+\begin{align}
+    \norm{a_{c} - \tilde{a}}_{p,1} &\le \norm{a_{c}-\tilde{a}_{1}}_{p,1}
+        + \norm{\tilde{a}_{2}}_{p,1} \nonumber\\
+    &\le 2\sum_{k=1}^{n}s_{k}^{2}\abs{a_{k-1}}
+        + 2\sum_{k=n+1}^{\infty} k\abs{a_{k}} \nonumber\\
+    &\le 2\sqrt{\frac{2}{2s+1}}\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}}
+        + \frac{1}{\sqrt{2s-3}}\frac{\norm{a}_{s}}{n^{s-\frac{3}{2}}},
+\end{align}
+%
+where we use bounds from Eqs.~\eqref{eq:bound_xp_01} and 
+\eqref{eq:cvip_approx_coefs_tail_bound}.
+Thus, we see
+%
+\begin{equation}
+    \norm{f-p_{n}}_{\infty,[-1,1]}
+        \le \frac{C_{s}\norm{a}_{s}}{n^{s-\frac{3}{2}}},
+\end{equation}
+%
+with convergence when $\frac{3}{2} < s \le \sigma$.
+
+
+
+We now focus on bounding the condition number $\kappa(L)$.
+We see
+%
+\begin{equation}
+    \norm{\begin{bmatrix} 1 & \\ & \Gamma \end{bmatrix}}_{2} = 1
+\end{equation}
+%
+under the restriction $s>\frac{3}{2}$, which is required for convergence.
+Similarly, we see
+%
+\begin{align}
+    \norm{\begin{bmatrix} 1 & \\ & \Gamma \end{bmatrix}^{-1}}_{2} 
+        &= \gamma_{n+1}^{-1} \nonumber\\
+    &= n^{s-1}\parens{1+\frac{1}{n}}^{s} \nonumber\\
+    &\le 2n^{s-1}, \quad n\ge \brackets{2^{1/s}-1}^{-1},
+\end{align}
+%
+while we also have $\gamma_{n+1}^{-1} \ge n^{s-1}$.
+Therefore, $\kappa(L) = \Theta(n^{s-1})$.
+
+
+

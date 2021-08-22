@@ -1,0 +1,45 @@
+\begin{algorithm}[t]
+\caption{Randomized Block Low-Rank Approximation (New)}
+\label{alg:rand_new_low_rank}
+\begin{algorithmic}[1]
+\Function{random\_new\_low\_rank}{$A$,$d$,$\epsa$,$\epsr$}
+\Comment{Builds $QB$ approximation}
+    \State $Q = [\,]$; $n = \texttt{cols}(A)$
+    \State $\Omega_{i} = \texttt{rand}(n,d)$, $S_{i} = A\Omega_{i}$
+        for $i\in\braces{1,2}$
+    \Comment{$d$ is block size}
+    \State $S = \begin{bmatrix} S_{1} & S_{2} \end{bmatrix}$
+    \State $[Q_{1},R_{1}] = \texttt{qr}(S_{1})$; $Q = Q_{1}$
+    \State $\rho = \norm{S_{1}}_{F}/\sqrt{d}$
+    \If {$\min_{j} |(R_{1})_{jj}| < \max(\epsa,\epsr\rho)$}
+        \State $\texttt{loop\_bool} = \texttt{false}$
+        \Comment{$S_{1}$ is numerically rank-deficient}
+    \Else
+        \State $\texttt{loop\_bool} = \texttt{true}$
+    \EndIf
+    \State $k=1$
+    \While {\texttt{loop\_bool}}
+        \State $k = k + 1$
+        \State $\widehat{S}_{k} = \parens{I - QQ^{*}}^{2}S_{k}$
+        \Comment{$2\times$ GS orthogonalization for numerical stability}
+        \label{alg_line:rand_new_GS_2x}
+        \If {$||\widehat{S}_{k}||_{F} < \max(\epsa\sqrt{d},\epsr||S_{k}||_{F})$}
+            \State \textbf{break}
+            \Comment{Range of $A$ is known to specified tolerance}
+        \EndIf
+        \State $\Omega_{k+1} = \texttt{rand}(n,d)$; $S_{k+1} = A\Omega_{k+1}$
+        \State $S = \begin{bmatrix} S & S_{k+1} \end{bmatrix}$
+        \State $[Q_{k},R_{k}] = \texttt{qr}(\widehat{S}_{k})$
+        \If {$\min_{j} |(R_{k})_{jj}| < \max(\epsa,\epsr\rho)$}
+            \State \textbf{break}
+            \Comment{$\widehat{S}_{k}$ is numerically rank-deficient}
+        \EndIf
+        \State $Q = \begin{bmatrix}Q & Q_{k}\end{bmatrix}$
+    \EndWhile
+\State $Q = \texttt{rrqr}(S,\epsa,\epsr)$
+\State $B = Q^{*}A$
+\State \Return $Q$, $B$
+\Comment{We have the approximation $A \approx QB$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

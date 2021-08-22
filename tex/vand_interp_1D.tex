@@ -1,0 +1,60 @@
+\chapter{\CV{} Matrices and Factorizations for 1D Interpolation}
+\label{chap:CV_mat_1D_I}
+
+Using structured matrices from Chapter~\ref{chap:K_and_R},
+we investigate Chebyshev-Vandermonde matrices
+in 1D and use this information to construct
+fast algorithms for interpolation problems.
+These factorizations will allow us to quickly compute
+the MSN solution to interpolation and differential equations
+(discussed later in Chapter~\ref{chap:fast_ode}).
+
+% Subsection: General Algorithm for MSN Interpolation using $LQ$ factorization
+% Label: \ref{sec:interp_LQ_fast}
+\input{tex/v1_fast_alg.tex}
+
+% Subsection: 1D \CV{} Interpolation Matrix: $2n+1$ Columns
+% Label: \ref{sec:CV_1D_2n}
+\input{tex/v1_I_2n.tex}
+
+% Subsection: 1D \CV{} Interpolation Matrix: $2n+1$ Columns
+%             with interpolation Endpoints
+% Label: \ref{sec:CV_1D_2n_E}
+\input{tex/v1_I_2n_E.tex}
+
+% Subsection: 1D \CV{} Interpolation Matrix: $3n+1$ Columns
+% Label: \ref{sec:CV_1D_3n}
+\input{tex/v1_I_3n.tex}
+
+% Subsection: 1D \CV{} Interpolation Matrix: $4n+1$ Columns
+% Label: \ref{sec:CV_1D_4n}
+\input{tex/v1_I_4n.tex}
+
+% Subsection: 1D \CV{} Interpolation Matrix: $2Ln+1$ Columns
+% Label: \ref{sec:CV_1D_2Ln}
+\input{tex/v1_I_2Ln.tex}
+
+% Subsection: 1D \CV{} Derivative Matrix: $2n+1$ Columns
+% Label: \ref{sec:CV_D_1D_2n}
+\input{tex/v1_D_2n.tex}
+
+% This needs to be fixed
+% Subsection: 1D \CV{} Derivative Matrix: $3n+1$ Columns
+% Label: \ref{sec:CV_D_1D_3n}
+\input{tex/v1_D_3n.tex}
+
+% This needs to be fixed
+% Subsection: 1D \CV{} Derivative Matrix: $4n+1$ Columns
+% Label: \ref{sec:CV_D_1D_4n}
+\input{tex/v1_D_4n.tex}
+
+% Subsection: 1D \CV{} Derivative Matrix: $2n+1$ Columns
+%             with Interpolation Endpoints
+% Label: \ref{sec:CV_D_1D_2n_E}
+\input{tex/v1_D_2n_E.tex}
+
+% Subsection: 1D \CV{} Birkhoff Interpolation Matrix: $2n+1$ Columns,
+% First Factorization
+% Label: \ref{ssec:CV_ID_1D_2n_F1}
+% Label: \ref{ssec:CV_ID_1D_2n_F2}
+\input{tex/v1_ID_2n.tex}

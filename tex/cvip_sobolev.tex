@@ -1,0 +1,98 @@
+\section{Sobolev Embedding Theorems and Related Work}
+\label{sec:cvip_sobolev}
+
+This work has focused on functions with bounded
+Sobolev norm, but because it is usually more convenient
+to think it terms of continuous
+and continuously-differentiable functions, we prove some embedding theorems.
+
+We assume
+%
+\begin{equation}
+    g(\theta) = \sum_{k\in\Z} a_{k}e^{ik\theta}.
+\end{equation}
+%
+In this case,
+%
+\begin{align}
+    \sum_{k=-N}^{N} \abs{a_{k}}
+        &= \sum_{k=-N}^{N} \parens{1+\abs{k}}^{-s}
+            \brackets{\parens{1+\abs{k}}^{s}\abs{a_{k}}} \nonumber\\
+    &\le \sqrt{\sum_{k=-N}^{N}\parens{1+\abs{k}}^{-2s}} \norm{a}_{s} \nonumber\\
+    &\le \sqrt{2\zeta(2s)}\norm{a}_{s}.
+\end{align}
+%
+Thus, if $s>\frac{1}{2}$ and $\norm{a}_{s}<\infty$, this upper bound
+is finite and holds for all $N$, so $g(\theta)$ is continuous.
+Similarly, for an integer $m\ge1$, we have
+%
+\begin{align}
+    \sum_{\substack{k=-N\\k\ne0}}^{N} \abs{k}^{m}\abs{a_{k}}
+        &\le \sum_{k=-N}^{N}\parens{1+\abs{k}}^{m}\abs{a_{k}} \nonumber\\
+    &\le \sqrt{2\zeta(2s-2m)}\norm{a}_{s}.
+\end{align}
+%
+Thus, for $s>m+\frac{1}{2}$ and $\norm{a}_{s}<\infty$, the above bound
+is finite and holds for all $N$, showing $g^{(m)}$ is continuous.
+Therefore, we have shown
+%
+\begin{equation}
+    H_{s} \subseteq C^{m},\quad s>m+\frac{1}{2}
+\end{equation}
+%
+for integers $m\ge0$.
+
+In the other direction, if $g\in C^{m,\alpha}$, so that $g^{(m)}$
+is $\alpha$-H\"{o}lder continuous with constant $L$, then
+with integration by parts we find
+%
+\begin{align}
+    a_{k} &= \frac{1}{2\pi}\int_{-\pi}^{\pi} g(\theta)e^{-ik\theta}d\theta
+        \nonumber\\
+    &= \frac{1}{2\pi\parens{ik}^{m}}
+        \int_{-\pi}^{\pi} g^{(m)}(\theta)e^{-ik\theta}d\theta.
+\end{align}
+%
+Similarly, by changing the limits of integration, we see
+%
+\begin{equation}
+    a_{k} = -\frac{1}{2\pi\parens{ik}^{m}} \int_{-\pi}^{\pi}
+        g^{(m)}\parens{\theta+\frac{\pi}{k}}e^{-ik\theta}d\theta,
+    \quad k\ne0.
+\end{equation}
+%
+Therefore, we find
+%
+\begin{align}
+    \abs{a_{k}} &\le \frac{1}{4\pi\abs{k}^{m}}\int_{-\pi}^{\pi}
+        \abs{g(\theta)-g\parens{\theta+\frac{\pi}{k}}}d\theta \nonumber\\
+    &\le \frac{L\pi^{\alpha}}{2\abs{k}^{m+\alpha}}.
+\end{align}
+%
+Thus, we see $a_{k} = O(k^{-m-\alpha})$.
+We let $C = \max\braces{\abs{a_{0}},L\pi^{\alpha}/2}$.
+In this case
+%
+\begin{align}
+    \sum_{k=-N}^{N} \parens{1+\abs{k}}^{2s} \abs{a_{k}}^{2}
+        &\le C^{2} + C^{2}\sum_{\substack{k=-N\\n\ne0}}^{N}
+            \parens{1+\abs{k}}^{2s} \frac{1}{\abs{k}^{2m+2\alpha}} \nonumber\\
+    &\le C^{2}\brackets{1 + 2^{2s+1}\sum_{k=1}^{N} \abs{k}^{2s-2m-2\alpha}}
+        \nonumber\\
+    &\le C^{2}\brackets{1 + 2^{2s+1}\zeta(2m+2\alpha-2s)}.
+\end{align}
+%
+The above bound is holds for all $N$ and is finite so long as
+$s<m+\alpha+\frac{1}{2}$, which implies $\norm{a}_{s} < \infty$.
+Thus, we have shown
+%
+\begin{equation}
+    C^{m,\alpha}\subseteq H_{s}, \quad s<m+\alpha+\frac{1}{2}.
+\end{equation}
+%
+This last bound can be slightly improved by looking
+at functions of bounded variation (see \cite{ATAP,zygmund}),
+but we will not pursue the matter here.
+
+
+

@@ -1,0 +1,176 @@
+\section{Differentiation of Chebyshev Polynomials}
+\label{sec:CV_diff}
+
+We would eventually like to solve ordinary and partial differential equations
+(ODEs and PDEs), so we must work with derivatives of Chebyshev polynomials.
+We define the infinite Chebyshev-Vandermonde derivative matrix
+$V_{\infty}'$ by
+%
+\begin{equation}
+\brackets{V_{\infty}'}_{ij}
+    = T_{j-1}'\parens{z_{i}^{n}},\quad i\in\braces{1,\cdots,n}
+\quad j\in\N.
+\end{equation}
+%
+Any other Chebyshev-Vandermonde matrix $V'$ will contain
+a finite number of columns of $V_{\infty}'$. 
+
+We prove the following theorem:
+
+\begin{thm}[Derivative of Chebyshev Polynomials]
+We have the following relationship between Chebyshev polynomials
+and their derivatives:
+%
+\begin{align}
+    T_{2n+1}' &= 2\parens{2n+1}\parens{T_{2n} + T_{2n-2} + \cdots + T_{2} +
+                    \frac{1}{2}T_{0}} \nonumber\\
+    T_{2n}' &= 2\parens{2n}\parens{T_{2n-1} + T_{2n-3} + \cdots + T_{1}}.
+\end{align}
+\end{thm}
+
+\begin{proof}
+We proceed by induction. First, from the recurrence relation
+in Eq.~\eqref{eq:cheby_rec_rel}, we see
+%
+\begin{align}
+    T_{0}(x) &= 1 \nonumber\\
+    T_{1}(x) &= x \nonumber\\
+    T_{2}(x) &= 2x^{2} - 1 \nonumber\\
+    T_{3}(x) &= 4x^{3} - 3x.
+\end{align}
+%
+Direct computation shows us
+%
+\begin{align}
+    T_{0}'(x) &= 0 \nonumber\\
+        &= 2(2\cdot0) \nonumber\\
+    T_{1}'(x) &= 1 \nonumber\\
+        &= 2(2\cdot0+1)\frac{1}{2}T_{0}(x) \nonumber\\
+    T_{2}'(x) &= 4x \nonumber\\
+        &= 2(2\cdot1)T_{1}(x) \nonumber\\
+    T_{3}'(x) &= 12x^{2} - 3 \nonumber\\
+        &= 2(2\cdot1+1)\brackets{T_{2}(x) + \frac{1}{2}T_{0}(x)}.
+\end{align}
+%
+Thus, we have proven the base cases $n=0$ and $n=1$.
+
+Assume $n\ge2$ and that the relationship holds for
+for $T_{2k}'$ and $T_{2k+1}'$ for all $k<n$.
+From the recurrence relationship of Chebyshev polynomials
+and recognizing $T_{1}(x) = x$,
+we see
+%
+\begin{align}
+    T_{2n}' &= 2T_{2n-1} + 2T_{1}T_{2n-1}' - T_{2n-2}' \nonumber\\
+    &= 2T_{2n-1} + 2T_{1}\braces{
+        2\parens{2n-1}\brackets{T_{2n-2} + T_{2n-4} + \cdots + T_{2} +
+        \frac{1}{2}T_{0}}}
+        \nonumber\\
+        &\quad - 2\parens{2n-2}\brackets{T_{2n-3} + T_{2n-5} + \cdots + T_{1}}
+        \nonumber\\
+    &= 2T_{2n-1} + 2\parens{2n-1}\brackets{T_{2n-1} + 2T_{2n-3} + \cdots
+        + 2T_{3} + 2T_{1}} \nonumber\\
+        &\quad - 2\parens{2n-2}\brackets{T_{2n-3} + T_{2n-5} + \cdots + T_{1}}
+        \nonumber\\
+    &= 2\parens{2n}\brackets{T_{2n-1} + T_{2n-3} + \cdots + T_{1}}.
+\end{align}
+%
+Similarly, we have
+%
+\begin{align}
+    T_{2n+1}' &= 2T_{2n} + 2T_{1}T_{2n}' - T_{2n-1}' \nonumber\\
+        &= 2T_{2n} + 2T_{1}\braces{2(2n)\brackets{T_{2n-1} + T_{2n-3}
+            + \cdots + T_{1}}} \nonumber\\
+    &\quad - 2\parens{2n-1}\brackets{T_{2n-2} + T_{2n-4} + \cdots + T_{2}
+        + \frac{1}{2}T_{0}} \nonumber\\
+    &= 2T_{2n} + (2n)\brackets{T_{2n} + 2T_{2n-2} + 2T_{2n-4} + \cdots
+        + 2T_{2} + T_{0}} \nonumber\\
+    &\quad - 2\parens{2n-1}\brackets{T_{2n-2} + T_{2n-4} + \cdots + T_{2}
+        + \frac{1}{2}T_{0}} \nonumber\\
+    &= 2\parens{2n+1}\brackets{T_{2n} + T_{2n-2} + \cdots + T_{2} +
+        \frac{1}{2}T_{0}}.
+\end{align}
+%
+This is the desired result.
+\end{proof}
+
+
+
+This allows us to write
+%
+\begin{equation}
+    V_{\infty}' = V_{\infty}D_{\infty},
+\end{equation}
+
+\noindent
+where
+%
+\begin{equation}
+    D_{\infty} = 2\begin{bmatrix}
+            0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 & \cdots \\
+            0 & 0 & 1 & 0           & 1 & 0           & 1 & \cdots \\
+            0 & 0 & 0 & 1           & 0 & 1           & 0 & \cdots \\
+            \vdots & \ddots & \ddots & \ddots & \ddots & \ddots & \ddots
+                   & \ddots \\
+        \end{bmatrix}
+        \diag\parens{0,1,2,3,4,\cdots}.
+\end{equation}
+%
+Explicitly, we see
+%
+\begin{align}
+    \brackets{D_{\infty}}_{1,2k} &= 2k-1,\quad k\in\N \nonumber\\
+    \brackets{D_{\infty}}_{j,j-1+2k} &= 2\parens{2k+j-2},
+        \quad j\in\braces{2,3,\cdots},\quad k\in\N.
+\end{align}
+%
+All other entries are 0.
+
+When we have $n=9$ rows and $2n+1$ columns, we see
+%
+\begin{equation}
+    WD = \begin{bmatrix}
+    0 & 1 & & 3 & & 5 & & 7 & & 9 & & 11 & & 13 & & 15 & & 17 & 0 \\
+    & & 4 & & 8 & & 12 & & 16 & & 20 & & 24 & & 28 & & 32 & & \\
+    & & & 6 & & 10 & & 14 & & 18 & & 22 & & 26 & & 30 & & & \\
+    & & & & 8 & & 12 & & 16 & & 20 & & 24 & & 28 & & & & \\
+    & & & & & 10 & & 14 & & 18 & & 22 & & 26 & & & & & \\
+    & & & & & & 12 & & 16 & & 20 & & 24 & & & & & & \\
+    & & & & & & & 14 & & 18 & & 22 & & & & & & & \\
+    & & & & & & & & 16 & & 20 & & & & & & & & \\
+    & & & & & & & & & 18 & & & & & & & & & \\
+    \end{bmatrix}.
+\end{equation}
+%
+This pattern holds in general.
+For a simpler structure, we let
+%
+\begin{equation}
+    U = \begin{bmatrix}
+    1  &    & -1 \\
+       &  1 &    & -1 \\
+       &    &  1 &    & -1 \\
+       &    &    &  1 &    & -1 \\
+       &    &    &    &  \ddots &    & \ddots \\
+       &    &    &    &    &  1 &    & -1 \\
+       &    &    &    &    &    &  1 &    & -1 \\
+       &    &    &    &    &    &    &  1 &    \\
+       &    &    &    &    &    &    &    &  1 \\
+    \end{bmatrix}
+    \diag\parens{1,\frac{1}{2},\cdots,\frac{1}{2}}.
+    \label{eq:vand_U_mat}
+\end{equation}
+%
+Then, for general $n$ rows and $2n+1$ columns, we have
+%
+\begin{equation}
+    UWD = \begin{bmatrix}
+    0 & 1 &   &   &   &   &   &   &   &    &    &2n-1&  0 \\
+      &   & 2 &   &   &   &   &   &   &    &2n-2&    &    \\
+      &  & &\ddots&   &   &   &   &   &\iddots& &    &    \\
+      &   &   &   &n-2&   &   &   &n+2&    &    &    &    \\
+      &   &   &   &   &n-1&   &n+1&   &    &    &    &    \\
+      &   &   &   &   &   & n &   &   &    &    &    &    \\
+    \end{bmatrix}.
+    \label{eq:CV_UWD_mat}
+\end{equation}

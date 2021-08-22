@@ -1,0 +1,256 @@
+\section{Constant-Coefficient Scalar ODE}
+\label{sec:odes_const}
+
+Here, we begin with the simplest ODE:
+%
+\begin{equation}
+    \label{eq:odes_const}
+    \alpha u'(x) + \beta u(x) = f(x), \quad x\in\brackets{-1,1}.
+\end{equation}
+%
+We assume $\alpha,\beta\in\R$, $\alpha\ne0$.
+This does not completely determine the solution,
+so one additional equation is required to uniquely
+determine a solution. Initially, we will not worry about
+this constraint in order to first better understand the structure
+of main set of linear requirements.
+
+Previously in Chapter~\ref{chap:CV_Prop} and \ref{chap:CV_mat_1D_I},
+we looked at the interpolation \CV{} and derivative \CV{} matrices
+in order to understand their structure.
+If our approximation is
+%
+\begin{equation}
+    u(x) = \sum_{k=0}^{2n} a_{k}T_{k}(x),
+\end{equation}
+%
+then the resulting linear system is
+%
+\begin{equation}
+    V\brackets{\alpha D + \beta I}a = f,
+\end{equation}
+%
+so that we are enforcing these linear requirements on the $n$ Chebyshev nodes.
+The MSN solution comes down to computing
+%
+\begin{equation}
+    \min_{V\brackets{\alpha D + \beta I}a = f} \norm{D_{s}a}_{2},
+\end{equation}
+%
+which is equivalent to
+%
+\begin{equation}
+    \min_{V\brackets{\alpha D + \beta I}D_{s}^{-1}x = f} \norm{x}_{2}
+\end{equation}
+%
+where $x = D_{s}a$.
+
+From our definitions, we have the matrices
+%
+\begin{equation}
+    UWD = \begin{bmatrix}
+    0 & 1 &   &   &   &   &   &   &   &    &    &2n-1&  0 \\
+      &   & 2 &   &   &   &   &   &   &    &2n-2&    &    \\
+      &  & &\ddots&   &   &   &   &   &\iddots& &    &    \\
+      &   &   &   &n-2&   &   &   &n+2&    &    &    &    \\
+      &   &   &   &   &n-1&   &n+1&   &    &    &    &    \\
+      &   &   &   &   &   & n &   &   &    &    &    &    \\
+    \end{bmatrix}
+\end{equation}
+%
+All entries not specified are $0$. Similarly, we have
+%
+\begin{equation}
+    UW = \frac{1}{2}\begin{bmatrix}
+        2 &   & - &   &   &   &   &   &   &   &   &   & + &   & -2 \\
+          & + &   & - &   &   &   &   &   &   &   & + &   & - & \\ 
+          &   & + &   & - &   &   &   &   &   & + &   & - &   & \\
+          &   &  & &\ddots&   &   &   & & &\iddots&   &   &   & \\
+          &   &   &   & + &   & - & 0 & + &   & - &   &   &   & \\
+          &   &   &   &   & + &   & 0 &   & - &   &   &   &   & \\
+          &   &   &   &   &   & + & 0 & - &   &   &   &   &   & \\
+    \end{bmatrix},
+\end{equation}
+%
+where ``$+$'' stands for $+1$ and ``$-$'' stands for $-1$.
+These and similar matrices were described in Sec.~\ref{sec:CV_lin_comb}.
+
+To compute the minimum norm solution, we take care
+to control the condition number.
+We let $Aa = f_{2}$ represent the boundary conditions of the ODE
+which specify the unique solution,
+where $A$ has small number of rows independent of $n$;
+in this case, $A$ is one row.
+First, we see
+%
+\begin{equation}
+    V\brackets{\alpha D + \beta I}\Pi
+        = \begin{bmatrix} H_{1} & H_{2} \end{bmatrix},
+\end{equation}
+%
+where $\Pi$ is the circular downshift permutation matrix.
+Here, we see that $H_{1}$ (the $n\times n$ subblock) and $H_{2}$
+are rank-structured matrices:
+that is, their off-diagonal blocks have low-rank, and in this case
+the matrices are almost ``tridiagonal''.
+In Sec.~\ref{sec:odes_h13_cond}, we show
+that $H_{1}$ and other related matrices are well-conditioned.
+For completeness, we show $H_{1}$ and $H_{2}$ here:
+%
+\begin{equation}
+    H_{1} = \begin{bmatrix}
+        \alpha          & -\frac{\beta}{2}         & \\
+        \frac{\beta}{2} & 2\alpha & -\frac{\beta}{2} \\
+        & \frac{\beta}{2} & 3\alpha & -\frac{\beta}{2} \\
+        & & & \ddots & \\
+        & & & \frac{\beta}{2} & (n-2)\alpha & -\frac{\beta}{2} \\
+        & & & & \frac{\beta}{2} & (n-1)\alpha & 0 \\ 
+        & & & & & \frac{\beta}{2} & n\alpha \\
+    \end{bmatrix}
+    \label{eq:odes_h1_mat}
+\end{equation}
+
+\begin{align}
+    &H_{2} = \nonumber\\
+    &\begin{bmatrix}
+        & & & & & \frac{\beta}{2} & (2n-1)\alpha & -\beta & \beta \\
+        & & & & \frac{\beta}{2} & (2n-2)\alpha & -\frac{\beta}{2} \\ 
+        & & & \frac{\beta}{2} & (2n-3)\alpha & -\frac{\beta}{2} \\
+        & & & \iddots & \\
+        & \frac{\beta}{2} & (n+3)\alpha & -\frac{\beta}{2} \\
+        \frac{\beta}{2} & (n+2)\alpha & -\frac{\beta}{2} \\
+        (n+1)\alpha     & -\frac{\beta}{2}         & \\
+        -\frac{\beta}{2}&                          & \\
+    \end{bmatrix}.
+    \label{eq:odes_h2_mat}
+\end{align}
+
+In this case, we see our entire
+matrix can be factored in this way:
+%
+\begin{equation}
+    \begin{bmatrix} H_{1} & H_{2} \\ A_{1} & A_{2} \end{bmatrix}
+        = \begin{bmatrix}H_{1} & \\ & I \end{bmatrix}
+            \begin{bmatrix} I  & H_{3} \\ A_{1} & A_{2} \end{bmatrix},
+\end{equation}
+
+\noindent
+where $H_{3} = H_{1}^{-1}H_{2}$ and
+$A\Pi = \begin{bmatrix} A_{1} & A_{2} \end{bmatrix}$.
+Now, the off-diagonal ranks of $H_{3}$
+are at most the sum of the ranks of $H_{1}$ and $H_{2}$, but we assume these
+are small so the complexity has not increased much; furthermore,
+these ranks are exact and there have been no approximation errors.
+That is, we could represent $H_{1}$, $H_{2}$, and $H_{3}$ exactly
+by Sequentially Semiseparable (SSS)~\cite{chandrasekaran2005some}
+or Hierarchically Semiseparable (HSS)~\cite{Chandrasekaran2005HSS} matrices.
+In the constant coefficient case, the HSS and SSS ranks of $H_{1}$ and
+$H_{2}$ are 1, while the rank of $H_{3}$ is 2.
+We are now ready to multiply by $D_{s}^{-1}$, but we need to remember
+that we have already right-multiplied by $\Pi$.
+So, we set
+%
+\begin{align}
+    \widetilde{D}_{s}^{-1} &= \Pi^{*}D_{s}^{-1}\Pi \nonumber\\
+        &= \diag(D_{1},D_{2}) \nonumber\\
+    D_{1} &= \diag(2^{s},3^{s},\cdots,(n+1)^{s}) \nonumber\\
+    D_{2} &= \diag((n+2)^{s},(n+3)^{s},\cdots,(2n+1)^{s},1^{s})
+\end{align}
+%
+in order to see
+%
+\begin{equation}
+        \begin{bmatrix}H_{1} & \\ & I \end{bmatrix}
+            \begin{bmatrix} I  & H_{3} \\ A_{1} & A_{2} \end{bmatrix}
+        \widetilde{D}_{s}^{-1}
+        = \begin{bmatrix}H_{1}D_{1}^{-1} & \\ & I \end{bmatrix}
+            \begin{bmatrix} I  & D_{1}H_{3}D_{2}^{-1} \\
+                A_{1}D_{1}^{-1} & A_{2}D_{2}^{-1} \end{bmatrix}.
+\end{equation}
+%
+Because $\norm{H_{3}}_{2}$ is not too large,
+$\kappa_{2}(\begin{bmatrix} I  & D_{1}H_{3}D_{2}^{-1} \end{bmatrix})$
+grows slowly, and we have successfully moved
+the ill-conditioning from column scaling to row scaling.
+
+To proceed we compute a ULV factorization
+$D_{1}H_{3}D_{2}^{-1} = U_{1}L_{1}V_{1}^{*}$,
+where $L_{1}$ is lower triangular and $U_{1}$ and $V_{1}$ are
+orthogonal.
+Factoring this information, we find
+%
+\begin{equation}
+    \begin{bmatrix}H_{1}D_{1}^{-1} & \\ & I \end{bmatrix}
+        \begin{bmatrix} I  & D_{1}H_{3}D_{2}^{-1} \\
+            A_{1}D_{1}^{-1} & A_{2}D_{2}^{-1} \end{bmatrix}
+    = \begin{bmatrix}H_{1}D_{1}^{-1}U_{1} & \\ & I \end{bmatrix}
+        \begin{bmatrix} I  & L_{1} \\
+        \overline{A}_{1} & \overline{A}_{2} \end{bmatrix}
+        \begin{bmatrix} U_{1}^{*} & \\ & V_{1}^{*} \end{bmatrix}.
+\end{equation}
+
+\noindent
+Here, $\overline{A}_{1} = A_{1}D_{1}^{-1}U_{1}$
+and $\overline{A}_{2} = A_{2}D_{2}^{-1}V_{1}$;
+we set $\overline{A} = \begin{bmatrix} \overline{A}_{1} & \overline{A}_{2}
+\end{bmatrix}$.
+We perform another factorization
+$\begin{bmatrix} I & L_{1} \end{bmatrix} = U_{2}L_{2}V_{2}^{*}$
+and set $\overline{A}V_{2} =
+\begin{bmatrix} \widetilde{A}_{1} & \widetilde{A}_{2} \end{bmatrix}$:
+%
+\begin{align}
+    \begin{bmatrix}H_{1}D_{1}^{-1}U_{1} & \\ & I \end{bmatrix}
+        \begin{bmatrix} I  & L_{1} \\
+        \overline{A}_{1} & \overline{A}_{2} \end{bmatrix}
+        \begin{bmatrix} U_{1}^{*} & \\ & V_{1}^{*} \end{bmatrix}
+    &= \begin{bmatrix}H_{1}D_{1}^{-1}U_{1} & \\ & I \end{bmatrix}
+        \begin{bmatrix} U_{2}\begin{bmatrix}L_{2} & 0 \end{bmatrix} V_{2}^{*}
+            \\
+        \overline{A} \end{bmatrix}
+        \begin{bmatrix} U_{1}^{*} & \\ & V_{1}^{*} \end{bmatrix}
+        \nonumber\\
+    &= \begin{bmatrix}H_{1}D_{1}^{-1}U_{1}U_{2} & \\ & I \end{bmatrix}
+        \begin{bmatrix} \begin{bmatrix}L_{2} & 0 \end{bmatrix} \\
+        \overline{A}V_{2} \end{bmatrix}
+        V_{2}^{*}\begin{bmatrix} U_{1}^{*} & \\ & V_{1}^{*} \end{bmatrix}
+        \nonumber\\
+    &= \begin{bmatrix}H_{1}D_{1}^{-1}U_{1}U_{2} & \\ & I \end{bmatrix}
+        \begin{bmatrix} L_{2} & 0 \\
+        \widetilde{A}_{1} & \widetilde{A}_{2} \end{bmatrix}
+        V_{2}^{*}\begin{bmatrix} U_{1}^{*} & \\ & V_{1}^{*} \end{bmatrix}.
+\end{align}
+
+\noindent
+After a rotation (a small number of Householder reflectors) $P$
+to put $\widetilde{A}_{2}$ into lower triangular form,
+we compute the final factorization:
+%
+\begin{align}
+    &\begin{bmatrix}H_{1}D_{1}^{-1}U_{1}U_{2} & \\ & I \end{bmatrix}
+        \begin{bmatrix} L_{2} & 0 \\
+        \widetilde{A}_{1} & \widetilde{A}_{2} \end{bmatrix}
+        V_{2}^{*}\begin{bmatrix} U_{1}^{*} & \\ & V_{1}^{*} \end{bmatrix}
+            \nonumber\\
+    &= \begin{bmatrix}H_{1}D_{1}^{-1}U_{1}U_{2} & \\ & I \end{bmatrix}
+        \begin{bmatrix} L_{2} & 0 & 0 \\
+        \widetilde{A}_{1} & \widetilde{L} & 0 \end{bmatrix}
+        \begin{bmatrix} I & \\ & P^{*} \end{bmatrix} V_{2}^{*}
+        \begin{bmatrix} U_{1}^{*} & \\ & V_{1}^{*} \end{bmatrix}.
+\end{align}
+
+\noindent
+We can easily solve for the MSN solution:
+%
+\begin{align}
+    \begin{bmatrix} L_{2} & 0 & 0 \\
+        \widetilde{A}_{1} & \widetilde{L} & 0 \end{bmatrix} y &= 
+        \begin{bmatrix} U_{2}^{*} U_{1}^{*} D_{1} H_{1}^{-1}U\hat{f} \\
+            \hat{f}_{2} \end{bmatrix} \nonumber\\
+    a &= D_{s}^{-1} \Pi \begin{bmatrix} U_{1} & \\ & V_{1} \end{bmatrix}
+            V_{2} \begin{bmatrix} I & \\ & P \end{bmatrix}y.
+\end{align}
+%
+All of the above computations can be performed quickly.
+
+

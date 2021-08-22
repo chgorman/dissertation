@@ -1,0 +1,121 @@
+\section{2D Full Birkhoff Interpolation Problem}
+\label{sec:CV_2D_full_birkhoff}
+
+We now look at the full Birkhoff interpolation problem in 2D:
+%
+\begin{align}
+    f(z_{i}^{n},z_{j}^{n}) &= p(z_{i}^{n},z_{j}^{n}),
+        \quad i,j\in\braces{1,\cdots,n} \nonumber\\
+    f_{x}(z_{i}^{n},z_{j}^{n}) &= p_{x}(z_{i}^{n},z_{j}^{n}),
+        \quad i,j\in\braces{1,\cdots,n} \nonumber\\
+    f_{y}(z_{i}^{n},z_{j}^{n}) &= p_{y}(z_{i}^{n},z_{j}^{n}),
+        \quad i,j\in\braces{1,\cdots,n}.
+\end{align}
+%
+That is, we interpolate all function and first derivative values
+on the $n\times n$ Chebyshev tensor grid.
+
+After some of the standard matrix preprocessing, we must compute
+the LQ factorization of the following matrix:
+%
+\begin{equation}
+    \begin{bmatrix}
+        WD_{s}^{-1} \otimes WD_{s}^{-1} \\
+        EUWD_{s}^{-1} \otimes WD_{s}^{-1} \\
+        WD_{s}^{-1} \otimes EUWD_{s}^{-1} \\
+    \end{bmatrix}.
+\end{equation}
+%
+We assume that we are interpolating up to degree $N$ in both $x$
+and $y$ (not specified except that $N\ge2n$).
+If $G$ is the structured rotation matrix so that
+%
+\begin{equation}
+    WD_{s}^{-1}G = \begin{bmatrix} Y & 0 \end{bmatrix},
+\end{equation}
+%
+then
+%
+\begin{equation}
+    \begin{bmatrix}
+        WD_{s}^{-1} \otimes WD_{s}^{-1} \\
+        EUWD_{s}^{-1} \otimes WD_{s}^{-1} \\
+        WD_{s}^{-1} \otimes EUWD_{s}^{-1} \\
+    \end{bmatrix}
+    \parens{G\otimes G} = 
+    \begin{bmatrix}
+        \begin{bmatrix} Y & 0 \end{bmatrix} \otimes
+            \begin{bmatrix} Y & 0 \end{bmatrix} \\
+        EUWD_{s}^{-1}G \otimes \begin{bmatrix} Y & 0 \end{bmatrix} \\
+        \begin{bmatrix} Y & 0 \end{bmatrix} \otimes EUWD_{s}^{-1}G \\
+    \end{bmatrix}.
+\end{equation}
+%
+We now take $H$ to be the rotation matrix so that
+%
+\begin{align}
+    \begin{bmatrix} Y & 0 \end{bmatrix}H &= \begin{bmatrix} Y & 0 \end{bmatrix}
+        \nonumber\\
+    \parens{EUWD_{s}^{-1}G}H &= \begin{bmatrix} A & B & 0 \end{bmatrix}.
+\end{align}
+%
+This rotation matrix $H$ comes up in the full Birkhoff problem in 1D
+and will contain some Givens rotations when $N>2n+1$.
+Using this, we see
+
+\begin{equation}
+    \begin{bmatrix}
+        \begin{bmatrix} Y & 0 \end{bmatrix} \otimes
+            \begin{bmatrix} Y & 0 \end{bmatrix} \\
+        EUWD_{s}^{-1}G \otimes \begin{bmatrix} Y & 0 \end{bmatrix} \\
+        \begin{bmatrix} Y & 0 \end{bmatrix} \otimes EUWD_{s}^{-1}G \\
+    \end{bmatrix}\parens{H\otimes H} = 
+    \begin{bmatrix}
+        \begin{bmatrix} Y & 0 & 0 \end{bmatrix} \otimes
+            \begin{bmatrix} Y & 0 & 0 \end{bmatrix} \\
+        \begin{bmatrix} A & B & 0 \end{bmatrix} \otimes
+            \begin{bmatrix} Y & 0 & 0 \end{bmatrix} \\
+        \begin{bmatrix} Y & 0 & 0 \end{bmatrix} \otimes
+            \begin{bmatrix} A & B & 0 \end{bmatrix} \\
+    \end{bmatrix}.
+\end{equation}
+
+At this point, we can compute the solution, once we use the following
+index sets:
+%
+\begin{align}
+    I_{1} &= \bigcup_{k=1}^{2n} \brackets{(k-1)N + 1: (k-1)N + n} \nonumber\\
+    I_{2} &= \bigcup_{k=1}^{n} \brackets{(k-1)N + (n+1): (k-1)N + 2n}.
+\end{align}
+%
+In this case, we need to solve
+%
+\begin{align}
+    \parens{\begin{bmatrix} Y & 0 \\ A & B \end{bmatrix} \otimes Y}y(I_{1})
+        &= \begin{bmatrix} \hat{f} \\ \parens{U\otimes I}\hat{f}_{y}
+        \end{bmatrix} \nonumber\\
+    \parens{Y\otimes B}y(I_{2}) &= \parens{I\otimes U}\hat{f}_{x}.
+\end{align}
+%
+The rest of the entries of $y$ are initialized to zero.
+Here, we remember that we compute hat's by the 2D IDCT.
+From here, we can easily solve for the coefficients:
+%
+\begin{equation}
+    a = \overline{D}_{s}^{-1} \overline{G} \overline{H}y.
+\end{equation}
+
+This problem is useful because of how difficult it would
+be to solve in another setting.
+If we wish to keep the tensor structure with each matrix
+having the same number of columns $N$, then we have $3n^{2}$ linear
+constraints and $N^{2}$ total columns.
+It is not possible for $3n^{2} = N^{2}$ to hold for all $n$ and $N$
+when we are forced to have a square system.
+The MSN method does not care about this restriction and so we can
+choose $N$ freely, so long as it is large enough that the structured
+rotations go through.
+While fast algorithms may exist without the tensor structure,
+it is not clear how this could be determined or exploited.
+
+

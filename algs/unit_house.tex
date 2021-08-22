@@ -1,0 +1,20 @@
+\begin{algorithm}[t]
+\caption{Householder Reflector}
+\label{alg:unit_house}
+\begin{algorithmic}[1]
+\Function{house}{$x$}
+\Comment{Numerically stable way to compute Householder Reflector}
+\State $m = \text{length}(x)$
+\State $v = \text{zeros}(m)$
+\State $\sigma = \norm{x(2:m)}_{2}^{2}$
+\State $\mu = \sqrt{x_{1}^{2} + \sigma}$
+\If{$x_{1}\le0$}
+    \State $v_{1} = x_{1} - \mu$
+\Else
+    \State $v_{1} = -\frac{\sigma}{x_{1} + \mu}$
+\EndIf
+\State $v = v/\norm{v}_{2}$
+\State \Return $v$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

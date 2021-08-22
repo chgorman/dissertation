@@ -1,0 +1,107 @@
+\section{Systems of ODEs}
+\label{sec:odes_systems}
+
+We are now ready to look at systems of ODEs and will
+start with the constant coefficient case:
+%
+\begin{align}
+    Au'(x) + Bu(x) &= F(x) \nonumber\\
+    Lu = G.
+\end{align}
+%
+Here, we are seeking a solution
+%
+\begin{align}
+    u(x) &= \begin{bmatrix}
+            u_{1}(x) \\
+            u_{2}(x) \\
+            \vdots \\
+            u_{m}(x) \\ \end{bmatrix} \nonumber\\
+    u_{\ell}(x) &= \sum_{k=0}^{2n} a_{\ell;k}T_{k}(x).
+\end{align}
+%
+with the coefficients arranged like
+%
+\begin{equation}
+    a^{*} = \begin{bmatrix}
+        a_{1;0} & a_{1;1} & \cdots & a_{1;2n} &
+        a_{2;0} & a_{2;1} & \cdots & a_{2;2n} & \cdots
+        a_{m;0} & a_{m;1} & \cdots & a_{m;2n} \end{bmatrix}
+\end{equation}
+%
+From this arrangement, we see the results linear system will be
+%
+\begin{equation}
+    \brackets{A\otimes VD + B\otimes V}a = F,
+\end{equation}
+%
+where $F$ will store all the values from the righthand side.
+After applying the tensored IDCT $I\otimes C^{-1}$
+gives
+%
+\begin{equation}
+    \brackets{A\otimes WD + B\otimes W}a = \widehat{F}.
+\end{equation}
+
+\noindent
+Applying perfect shuffle matrices~\cite{vanLoan2000ubiquitous} $P$
+and $Q$, we can switch the order of the Kronecker product:
+%
+\begin{equation}
+    P\brackets{A\otimes WD + B\otimes W}QQ^{*}a = P\widehat{F},
+\end{equation}
+%
+which implies
+%
+\begin{equation}
+    \brackets{WD\otimes A + W\otimes B}Q^{*}a = P\widehat{F}.
+\end{equation}
+%
+Multiplying by $U\otimes I$ on the left gives
+%
+\begin{equation}
+    \brackets{UWD\otimes A + UW\otimes B}Q^{*}a
+        = \parens{U\otimes I}P\widehat{F}.
+\end{equation}
+%
+If $\Pi$ is the circular downshift permutation matrix, then
+%
+\begin{equation}
+    \brackets{UWD\otimes A + UW\otimes B}\parens{\Pi\otimes I}
+    = \begin{bmatrix} H_{1} & H_{2} \end{bmatrix}.
+\end{equation}
+
+In this case, we have the following block matrix:
+%
+\begin{equation}
+    H_{1} = \begin{bmatrix}
+        A               & -\frac{1}{2}B         & \\
+        \frac{1}{2}B & 2A & -\frac{1}{2}B \\
+        & \frac{1}{2}B & 3A & -\frac{1}{2}B \\
+        & & \ddots & \ddots & \ddots \\
+        & & & \frac{1}{2}B & (n-2)A & -\frac{1}{2}B \\
+        & & & & \frac{1}{2}B & (n-1)A & 0 \\ 
+        & & & & & \frac{1}{2}B & nA \\
+    \end{bmatrix}.
+\end{equation}
+%
+This matrix has the exact same form as the constant coefficient
+example in Eq.~\eqref{eq:odes_h1_mat}.
+This time, $H_{1}$ now has off-diagonal blocks for rank $m$,
+implying $H_{1}$ (and $H_{2}$) are matrices with SSS and HSS rank $m$
+and that $H_{3}$ has rank $2m$.
+
+By performing similar operations in the variable-coefficient
+scalar case, we see that if
+%
+\begin{align}
+    A(x) &= \sum_{k=0}^{r} A_{k}T_{k}(x) \nonumber\\
+    B(x) &= \sum_{k=0}^{r} B_{k}T_{k}(x),
+    \label{eq:odes_systems_coefs}
+\end{align}
+%
+then the $H_{1}$ and $H_{2}$ matrices will have HSS rank $m(r+1)$
+and $H_{3}$ will have rank $2m(r+1)$.
+
+
+

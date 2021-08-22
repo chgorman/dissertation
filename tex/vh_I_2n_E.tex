@@ -1,0 +1,81 @@
+\section{2D \CV{} Interpolation Matrix: $2n+1$ Columns with Boundary}
+\label{sec:CV_2D_2n_E}
+
+We assume $V^{x},V^{y}\in\R^{n\times(2n+1)}$.
+
+In this section we work through the matrix factorization
+of for interpolating on the tensor product of \CV{}
+matrices given by
+%
+\begin{equation}
+    \min_{\overline{V}a=f} \norm{\overline{D}_{s}a}_{2},
+\end{equation}
+%
+where
+%
+\begin{equation}
+    \overline{C}^{-1}\overline{V}
+    = \begin{bmatrix}
+        W^{y} \otimes W^{x} \\
+        \overline{A^{y}} \otimes W^{x} \\
+        W^{y} \otimes \overline{A^{x}} 
+    \end{bmatrix}.
+\end{equation}
+%
+This corresponds to function interpolation on the points
+%
+\begin{equation}
+    Z = \braces{\parens{z^{n}_{j},z^{n}_{k}}}_{j\in\braces{1,\cdots,n},
+            k\in\braces{1,\cdots,n}} \cup
+        \braces{\parens{\hat{z},z^{n}_{k}}}_{\hat{z}\in\braces{-1,1},
+            k\in\braces{1,\cdots,n}} \cup
+        \braces{\parens{z^{n}_{k},\hat{z}}}_{\hat{z}\in\braces{-1,1},
+            k\in\braces{1,\cdots,n}}.
+\end{equation}
+
+We let $G$ and $P$ be the Givens rotation matrixes and Householder
+reflectors from Sec.~\eqref{sec:CV_1D_2n_E} for size $n$, so that
+%
+\begin{equation}
+    \begin{bmatrix}
+        W^{y} \otimes W^{x} \\
+        \overline{A^{y}} \otimes W^{x} \\
+        W^{y} \otimes \overline{A^{x}} 
+    \end{bmatrix}\parens{D_{s}^{-1}GP\otimes D_{s}^{-1}GP}
+    = \begin{bmatrix} \begin{bmatrix} Y^{y} & 0 & 0 \end{bmatrix}
+            \otimes \begin{bmatrix} Y^{x} & 0 & 0 \end{bmatrix} \\
+            \begin{bmatrix} \widehat{A^{y}} & \widehat{L^{y}} & 0 \end{bmatrix}
+            \otimes \begin{bmatrix} Y^{x} & 0 & 0 \end{bmatrix} \\
+            \begin{bmatrix} Y^{y} & 0 & 0 \end{bmatrix} \otimes
+            \begin{bmatrix} \widehat{A^{x}} & \widehat{L^{x}} & 0 \end{bmatrix}
+    \end{bmatrix}.
+\end{equation}
+%
+After a permutation of the columns, this is the desired LQ factorization.
+
+To do so, we let
+%
+\begin{align}
+    I_{1} &= \bigcup_{k=1}^{n} \brackets{(k-1)(2n+1) + 1:(k-1)(2n+1) + n}
+        \nonumber\\
+    I_{2} &= \bigcup_{k=n+1}^{n+2} \brackets{(k-1)(2n+1) + 1:(k-1)(2n+1) + n}
+        \nonumber\\
+    I_{3} &= \bigcup_{k=1}^{n} \brackets{(k-1)(2n+1) + n+1:(k-1)(2n+1) + n+2}.
+\end{align}
+%
+In this case, we require
+%
+\begin{align}
+    \parens{Y^{y}\otimes Y^{x}}y(I_{1}) &= \hat{f}_{1} \nonumber\\
+    (\widehat{A^{y}}\otimes Y^{x})y(I_{1})
+        + (\widehat{L^{y}}\otimes Y^{x})y(I_{2}) &= \hat{f}_{2}
+        \nonumber\\
+    (Y^{y}\otimes \widehat{A^{x}})y(I_{1})
+        + (Y^{y}\otimes\widehat{L^{x}})y(I_{3}) &= \hat{f}_{3}.
+\end{align}
+%
+All other values are initialized to zero. Finally, we see
+%
+\begin{equation}
+    a = \overline{D}_{s}^{-1}\overline{G}\overline{P}y.
+\end{equation}

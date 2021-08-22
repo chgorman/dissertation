@@ -1,0 +1,41 @@
+\section{Variable-Coefficient Scalar ODE}
+\label{sec:odes_scalar_var}
+
+When we have the differential equation
+%
+\begin{align}
+    \alpha(x)u'(x) + \beta(x)u(x) &= f(x) \nonumber\\
+    Lu &= g,
+\end{align}
+%
+the cost of solving the linear system becomes higher.
+The good news is that much remains the same; the primary difference
+comes in the off-diagonal ranks of the $H_{i}$ matrices.
+If we have
+%
+\begin{align}
+    \alpha(x) &= \sum_{k=0}^{r} a_{k}T_{k}(x) \nonumber\\
+    \beta(x)  &= \sum_{k=0}^{r} b_{k}T_{k}(x),
+\end{align}
+%
+then from the results in Sec.~\ref{sec:CV_lin_comb} show that
+now $H_{1}$ and $H_{2}$ will be ``banded'' matrices with bandwidth $r+1$
+(technically, $H_{2}$ is banded along the antidiagonal);
+thus, they will have off-diagonal rank of $r+1$ while
+$H_{3}$ will have off-diagonal rank $2r+2$.
+The fast algorithms will still apply, save the fact that now
+the structured solver will take more time.
+The boundary condition still adds one additional linear constraint
+to the overall system and is not complicated by the variable $\alpha$
+and $\beta$.
+
+If the coefficients are not polynomials, then the infinite series
+can be truncated.
+In the case of smooth $\alpha$ and $\beta$, only a few terms should
+be required until errors from machine precision take over.
+Bounds similar to those in Sec.~\ref{sec:odes_h13_cond} for the
+constant coefficient case should be possible so long as $\alpha_{0}$
+is sufficiently large to ensure diagonal dominance.
+Regardless, the fast algorithm still applies with cost proportional
+to the off-diagonal rank.
+

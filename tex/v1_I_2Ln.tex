@@ -1,0 +1,77 @@
+\section{1D \CV{} Interpolation Matrix: $2Ln+1$ Columns}
+\label{sec:CV_1D_2Ln}
+
+The previous interpolation patterns showed us a standard way to 
+compute the pseudoinverse: compute the necessary LQ factorization
+using structured rotations.
+This is always possible but becomes difficult as the interpolation
+degree becomes larger; previously, we have always computed
+the full $Q$ matrix, but the $Q$ factor became more involved when
+using $3n+1$ and $4n+1$ columns.
+If we wish to have a method that works for MSN interpolation up to degree
+$2Ln$, then we will need to use something else: the normal equations.
+While it is well-known the normal equations can increase
+the difficulty of solving linear systems because it results
+in a squaring of the condition number~\cite{gvl4,HighamASNA},
+this is not an issue here because the system is well structured and
+we are computing the factorization exactly (by hand).
+
+After performing an IDCT, we see
+%
+\begin{equation}
+    \parens{WD_{s}^{-1}}^{+} = D_{s}^{-1}W^{*}
+        \parens{WD_{s}^{-2}W^{*}}^{-1},
+\end{equation}
+%
+where we are assuming $W$ has $2Ln+1$ columns.
+$W$ has the following form:
+%
+\begin{align}
+    W &= \begin{bmatrix}
+        I & 0 & -\Lambda & 0 & \Lambda & \cdots & 0 & E \end{bmatrix},
+    %\quad \mod(L,4) = 0 \nonumber\\
+    \quad L \mod 4 = 0 \nonumber\\
+    W &= \begin{bmatrix}
+        I & 0 & -\Lambda & 0 & \Lambda & \cdots & 0 & -E \end{bmatrix},
+    %\quad \mod(L,4) = 2.
+    \quad L \mod 4 = 2.
+\end{align}
+%
+We see
+%
+\begin{equation}
+    WD_{s}^{-2}W^{*} = Y^{2},
+\end{equation}
+%
+where $Y$ is a diagonal matrix with
+%
+\begin{align}
+    y_{1}^{2} &= 1^{-2s} + \brackets{2n+1}^{-2s} + \brackets{4n+1}^{-2s}
+        + \cdots + \brackets{2Ln+1}^{-2s}
+        \nonumber\\
+    y_{k}^{2} &= k^{-2s} + \brackets{2n+2-k}^{-2s} + \brackets{2n+k}^{-2s}
+        + \brackets{4n+2-k}^{-2s} + \brackets{4n+k}^{-2s} \nonumber\\
+        &\quad+ \cdots
+        + \brackets{2(L-1)n+2-k}^{-2s} + \brackets{2(L-1)n+k}^{-2s}
+        + \brackets{2Ln+2-k}^{-2s} \nonumber\\
+    &\quad k\in\braces{2,\cdots,n}.
+\end{align}
+
+\noindent
+If there is concern about roundoff error in these calculations,
+the values could be first sorted into increasing order before
+being added or compensated summation could be used;
+see~\cite[Chapter 4]{HighamASNA}.
+In this case, we see
+%
+\begin{equation}
+    \parens{WD_{s}^{-1}}^{+} = D_{s}^{-1}W^{*}Y^{-2},
+\end{equation}
+%
+and all of these operations can be performed quickly.
+The solution coefficients are given by
+%
+\begin{equation}
+    a = D_{s}^{-2}W^{*}Y^{-2}\hat{f}.
+\end{equation}
+

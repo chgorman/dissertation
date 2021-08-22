@@ -1,0 +1,142 @@
+\section{Proof of 1D Interpolation for polynomials of degree $2n$}
+\label{sec:cvip_interp_1D}
+
+We begin by computing the error. First, we have the MSN coefficients
+%
+\begin{align}
+    \tilde{a} &= D_{s}^{-1}G^{*}\begin{bmatrix} Y^{-1}\hat{f} \\ 0 \end{bmatrix}
+        \nonumber\\
+    &= \begin{bmatrix} c_{1}^{2}\hat{f}_{1} \\ \vdots \\ c_{n}^{2}\hat{f}_{n} \\
+        0 \\  s_{n}^{2}\hat{f}_{n} \\ \vdots \\ s_{1}^{2}\hat{f}_{1}
+        \end{bmatrix}.
+    \label{eq:cvip_interp_1D_msn_coefs}
+\end{align}
+%
+From Eqs.~\eqref{eq:v1_I_2n_Givens_cs_def} and \eqref{eq:v1_I_2n_Givens_y_def}
+in Sec.~\ref{sec:CV_1D_2n}, we recall
+%
+\begin{align}
+    \tau_{k} &= \parens{\frac{k}{2n+2-k}}^{s} \nonumber\\
+    c_{k} &= \frac{1}{\sqrt{1+\tau^{2}}} \nonumber\\
+    s_{k} &= \tau_{k}c_{k} \nonumber\\
+    y_{k} &= \frac{1}{c_{k}k^{s}}.
+\end{align}
+%
+It is clear
+%
+\begin{align}
+    c_{k} & \le 1 \nonumber\\
+    \tau_{k} &\le \frac{k^{s}}{n^{s}} \nonumber\\
+    s_{k} &\le \tau_{k} \nonumber\\
+    y_{k} &\ge k^{-s} \nonumber\\
+    y_{k} &\le \sqrt{2}k^{-s}.
+\end{align}
+%
+As stated in Sec.~\ref{sec:cvip_main}, we only need to focus on computing
+%
+\begin{align}
+    \norm{a_{c} - \tilde{a}}_{p,1}
+        &\le \sum_{k=1}^{n}|a_{k-1}-c_{k}^{2}\hat{f}_{k}|
+            + \abs{a_{n}} + \sum_{k=1}^{n}|a_{2n+1-k}-s_{k}^{2}\hat{f}_{k}|
+            \nonumber\\
+        &\le 2\sum_{k=1}^{n}s_{k}^{2}\abs{a_{k-1}}
+            + 2\sum_{k=n}^{\infty}\abs{a_{k}}.
+\end{align}
+
+We look at these terms separately. First, we see
+%
+\begin{align}
+    \sum_{k=1}^{n}s_{k}^{2}\abs{a_{k-1}} &\le
+        \frac{1}{n^{2s}} \sum_{k=1}^{n}k^{s}\cdot k^{s}\abs{a_{k-1}} \nonumber\\
+    &\le \frac{1}{n^{2s}}\sqrt{\sum_{k=1}^{n} k^{2s}}\norm{a}_{s}
+        \nonumber\\
+    &\le \sqrt{\frac{2}{2s+1}}\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}}.
+    \label{eq:cvip_interp_1D_sine_bound}
+\end{align}
+%
+Here, the bound in the last equality follows from Eq.~\eqref{eq:bound_xp_01}.
+Similarly,
+%
+\begin{equation}
+    \sum_{k=n}^{\infty}\abs{a_{k}}
+        \le \frac{1}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}},
+    \label{eq:cvip_interp_1D_tail_bound}
+\end{equation}
+%
+which follows from Eq.~\eqref{eq:cvip_main_large_bound}.
+Finally, we have the uniform bound
+%
+\begin{equation}
+    \norm{f-p_{n}}_{\infty,[-1,1]}
+        \le \frac{C_{s}}{n^{s-\frac{1}{2}}}\norm{a}_{s}.
+\end{equation}
+%
+Thus, $\norm{f-p_{n}}_{\infty}\to0$ as $n\to\infty$
+when $\frac{1}{2} < s \le \sigma$.
+
+
+
+From the above work, we can also compute the condition number of
+the matrix $WD_{s}^{-1}$. It is clear
+%
+\begin{equation}
+    \frac{n^{s}}{\sqrt{2}}\le y_{1}y_{n}^{-1} \le \sqrt{2}n^{s},
+\end{equation}
+%
+so it follows $\kappa_{2}(L) = \Theta(n^{s})$.
+
+
+
+The above work suggests that we must choose $s\le\sigma$, but
+it turns out that this restriction is not necessary.
+To see this, we will look at Eqs.~\eqref{eq:cvip_interp_1D_sine_bound}
+and \eqref{eq:cvip_interp_1D_tail_bound} to see where we
+were too loose in our bounds.
+We will use the bound
+%
+\begin{equation}
+    \parens{1+k}^{\sigma}\abs{a_{k}} \le \norm{a}_{\sigma}.
+\end{equation}
+%
+In Eq.~\eqref{eq:cvip_interp_1D_sine_bound}, we have
+%
+\begin{align}
+    \sum_{k=1}^{n}s_{k}^{2}\abs{a_{k-1}} &\le
+        \frac{1}{n^{2s}} \sum_{k=1}^{n}k^{2s}\abs{a_{k-1}} \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}}{n^{2s}}\sum_{k=1}^{n} k^{2s-\sigma}
+        \nonumber\\
+    &\le \frac{2\norm{a}_{\sigma}}{2s-\sigma+1}\frac{1}{n^{\sigma-1}}.
+    %\label{eq:cvip_interp_1D_sine_bound}
+\end{align}
+%
+Here, we are assuming $2s-\sigma>-1$; otherwise, we have the bound
+\begin{equation}
+    \sum_{k=1}^{n}s_{k}^{2}\abs{a_{k-1}} \le C_{s,\sigma}\frac{\log n}{n^{2s}}.
+\end{equation}
+%
+Thus, the requirement here is that $\sigma>1$.
+Similarly, Eq.~\eqref{eq:cvip_interp_1D_tail_bound} can be replaced with
+%
+\begin{equation}
+    \sum_{k=n}^{\infty}\abs{a_{k}}
+        \le \frac{1}{\sqrt{2\sigma-1}}\frac{\norm{a}_{\sigma}}{
+        n^{\sigma-\frac{1}{2}}},
+\end{equation}
+%
+so that $\sigma>\frac{1}{2}$.
+
+Taken together, we have improved our bound for convergence to
+%
+\begin{equation}
+    \norm{f-p_{n}}_{\infty,[-1,1]}
+        \le \frac{C_{s,\sigma}}{n^{\sigma-1}}\norm{a}_{\sigma}
+\end{equation}
+%
+when $\sigma>1$, and we can choose $s>\frac{1}{2}$.
+Whether this can be extended to the case when $\sigma\in(\frac{1}{2},1]$
+will be looked at in the future.
+This also shows that the results in future sections likely
+could be strengthened.
+
+
+

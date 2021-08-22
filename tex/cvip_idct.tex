@@ -1,0 +1,97 @@
+\section{IDCT Coefficients}
+\label{sec:cvip_idct}
+
+We now explicitly work out what coefficients are computed using the IDCT.
+We first define
+%
+\begin{align}
+    f_{k} &= f(z_{k}^{n}) \nonumber\\
+    f_{k}' &= f'(z_{k}^{n}) \nonumber\\
+    \bar{f} &= \begin{bmatrix} f(-1) \\ f(1) \end{bmatrix} \nonumber\\
+    \widehat{C} &= \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}.
+\end{align}
+%
+It is clear
+%
+\begin{align}
+    \hat{f}_{k} &= \brackets{C^{-1}f}_{k} \nonumber\\
+    &= d_{k}\sum_{j=1}^{n} T_{k-1}(z_{j}^{n})f(z_{j}^{n})
+        \nonumber\\
+    &= d_{k}\sum_{j=1}^{n}T_{k-1}(z_{j}^{n})\brackets{
+        \sum_{\ell=0}^{\infty}a_{\ell}T_{\ell}(z_{j}^{n})} \nonumber\\
+    &= d_{k}\sum_{\ell=0}^{\infty} a_{\ell}\brackets{
+        \sum_{j=1}^{n}T_{k-1}(z_{j}^{n})T_{\ell}(z_{j}^{n})}.
+\end{align}
+%
+Here, $d_{k}$ is the appropriate constant. From work in
+Sec.~\ref{sec:CV_mat}, we find
+%
+\begin{align}
+    \hat{f}_{1} &= \sum_{\ell=0}^{\infty} a_{4\ell n}
+            - \sum_{\ell=0}^{\infty} a_{2n+4\ell n} \nonumber\\
+    \hat{f}_{k} &= \sum_{\ell=0}^{\infty} \brackets{
+            a_{k-1+4\ell n} + a_{4n+1-k+4\ell n}} - \sum_{\ell=0}^{\infty}
+        \brackets{a_{2n+1-k+4\ell n} + a_{2n-1+k+4\ell n}} \nonumber\\
+    &\quad k\in\braces{2,\cdots,n}.
+\end{align}
+%
+In particular, this becomes
+%
+\begin{equation}
+    \hat{f}_{k} = a_{k-1} + \eps_{k},
+    \label{eq:cvip_idct_fhat}
+\end{equation}
+%
+where
+%
+\begin{align}
+    \sum_{k=1}^{n} \abs{\eps_{k}} &\le \sum_{k=n+1}^{\infty} \abs{a_{k}}
+        \nonumber\\
+    &\le \frac{1}{\sqrt{2s-1}}\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}}.
+    \label{eq:cvip_eps_sum}
+\end{align}
+
+Similarly, we also have
+%
+\begin{align}
+    \hat{f}_{k}' &= \brackets{UC^{-1}f'}_{k} \nonumber\\
+    &= \sum_{\ell=0}^{\infty} \brackets{
+        \parens{k+4\ell n}a_{k+4\ell n} +
+        \parens{2n-k+4\ell n}a_{2n-k+4\ell n}} \nonumber\\
+        &\quad- \sum_{\ell=0}^{\infty}
+        \brackets{\parens{2n+k+4\ell n}a_{2n+k+4\ell n} +
+        \parens{4n-k+4\ell n}a_{4n-k+4\ell n}} \nonumber\\
+    &\quad k\in\braces{1,\cdots,n-1} \nonumber\\
+    \hat{f}_{n}' &= \brackets{UC^{-1}f'}_{n} \nonumber\\
+    &= \sum_{\ell=0}^{\infty} \parens{n+4\ell n}a_{n+4\ell n}
+        - \sum_{\ell=0}^{\infty} \parens{3n+4\ell n}a_{3n+4\ell n}
+\end{align}
+%
+and
+%
+\begin{align}
+    \widehat{C}^{-1}\bar{f} &=
+        \begin{bmatrix} \tilde{f}_{1} \\ \tilde{f}_{2}
+            \end{bmatrix} \nonumber\\
+        \tilde{f}_{1} &= \sum_{\ell=0}^{\infty} a_{2\ell} \nonumber\\
+        \tilde{f}_{2} &= \sum_{\ell=0}^{\infty} a_{2\ell+1}.
+\end{align}
+%
+This gives
+%
+\begin{equation}
+    \hat{f}_{k}' = ka_{k} + \eta_{k}
+    \label{eq:cvip_idct_fhat_prime}
+\end{equation}
+%
+with
+%
+\begin{align}
+    \sum_{k=1}^{n} \abs{\eta_{k}} &\le \sum_{k=n+1}^{\infty} k\abs{a_{k}}
+        \nonumber\\
+    &\le \frac{1}{\sqrt{2s-3}}\frac{\norm{a}_{s}}{n^{s-\frac{3}{2}}}.
+    \label{eq:cvip_eta_sum}
+\end{align}
+
+
+

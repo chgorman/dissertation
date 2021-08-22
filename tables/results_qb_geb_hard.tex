@@ -1,0 +1,63 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% HMT/YGL/GEB QB Approx table
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\cline{2-9}
+\multicolumn{1}{c|}{} &
+\multicolumn{2}{|c|}{\textbf{1E-14}} & \multicolumn{2}{|c|}{\textbf{5E-15}} &
+\multicolumn{2}{|c|}{\textbf{1E-15}} & \multicolumn{2}{|c|}{\textbf{5E-16}} \\
+\hline
+Matrix E1 &
+Err & Samp & Err & Samp &
+Err & Samp & Err & Samp \\
+\hline
+GEB & 1E-14 & 97 & 4E-15 & 100 & 6E-16  & 144* & 7E-16 & 200+ \\
+\hline
+\hline
+\multicolumn{1}{c|}{} &
+\multicolumn{2}{|c|}{\textbf{5E-13}} & \multicolumn{2}{|c|}{\textbf{1E-13}} &
+\multicolumn{2}{|c|}{\textbf{4E-14}} & \multicolumn{2}{|c|}{\textbf{1E-14}} \\
+\hline
+Matrix S &
+Err & Samp & Err & Samp &
+Err & Samp & Err & Samp \\
+\hline
+GEB & 4E-13 & 75 & 7E-14 & 96 & 5E-14 & 100 & 9E-15 & 107 \\
+\hline
+\hline
+\multicolumn{1}{c|}{} &
+\multicolumn{2}{|c|}{\textbf{5E-5}} & \multicolumn{2}{|c|}{\textbf{1E-5}} &
+\multicolumn{2}{|c|}{\textbf{5E-6}} & \multicolumn{2}{|c|}{\textbf{1E-6}} \\
+\hline
+Matrix D &
+Err & Samp & Err & Samp &
+Err & Samp & Err & Samp \\
+\hline
+GEB (s) & 4E-5 & 59 & 9E-6 & 66 & 9E-6 & 71 & 6E-7 & 186* \\
+\hline
+\end{tabular}
+\end{center}
+\caption[QB Adaptive Approximation Results (Stringent GEB Tests)]{
+Tough QB approximation results for Matrices E1, S, and D
+using the new GEB stopping criterion.
+For each absolute error tolerance, we averaged 1,000 trials to determine
+the average error (Err) and average samples used (Samp) in order to compute
+a QB approximation once we used the new stopping criterion to
+determine when we had approximated the range.
+Random samples were computed in blocks of 5.
+For matrix D, we used \textbf{single precision}.
+In the case when we used $200+$ samples,
+we were not able to meet the HMT stopping criterion
+and used the maximum of 200 random samples.
+The minimum possible ranks can be found in
+Table~\ref{tab:results_qb_min_rank_tough_geb}.
+A ``*'' means that there were some runs which reached the maximum allowable
+samples of 200 before compression.
+For matrix E1 with $\epsr$=1E-15, 7.7\% of the trials used over 200 samples
+(and so failed to stop);
+for matrix D  with $\epsr$=1F-6, 73.8\% of the trials used over 200 samples.
+}
+\label{tab:results_qb_approx_mat_geb_hard}
+\end{table}

@@ -1,0 +1,141 @@
+\section{1D \CV{} Interpolation Matrix: $2n+1$ Columns with
+Endpoint Interpolation}
+\label{sec:CV_1D_2n_E}
+
+In this section we look at a slight variation of interpolation
+on the Chebyshev nodes: we include endpoint interpolation
+from the previous section.
+This changes our \CV{} matrix slightly, for we have
+some additional linear requirements.
+In light of Sec.~\ref{sec:CV_1D_Endpoints}
+and Eqs.~\eqref{eq:vand_pm1} and \eqref{eq:vand_pm1_C}, we list our
+additional requirements as
+%
+\begin{equation}
+    Aa = \begin{bmatrix} f_{0} \\ f_{n+1} \end{bmatrix},
+\end{equation}
+%
+where $f_{0} = f(-1)$ and $f_{n+1} = f(1)$.
+We set
+%
+\begin{equation}
+    \overline{A} = C_{0}^{-1}A.
+\end{equation}
+
+Using the previous computations for $G$, we find
+%
+\begin{align}
+    \setcounter{MaxMatrixCols}{20}
+    &\begin{bmatrix} W \\ \overline{A} \end{bmatrix} D_{s}^{-1}G = \nonumber\\
+    &\begin{bmatrix}
+        y_{1} & & & & \\
+        & y_{2} & & & \\
+        & & y_{3} & & \\
+        & & & y_{4} & \\
+        & & & & \ddots \\
+        & & & & & y_{n-1} & & \\
+        & & & & & & y_{n} & \\
+        \alpha_{1} & & \alpha_{3} & & \cdots & \alpha_{n-1} & &
+            \alpha_{n+1} & & \alpha_{n+3} & & \cdots & & \alpha_{2n+1} \\
+        & \alpha_{2} & & \alpha_{4} & \cdots & & \alpha_{n} & &
+            \alpha_{n+2} & & \alpha_{n+4} & \cdots & \alpha_{2n} & \\
+    \end{bmatrix}.
+    \label{eq:interp_prob_1}
+\end{align}
+%
+From Eq.~\eqref{eq:interp_prob_1}, we see that we almost have the LQ
+factorization.
+We only need two Householder reflectors to convert this to lower triangular
+form, and it is convenient that the vectors are orthogonal.
+We let
+%
+\begin{align}
+    v_{1}^{*} &= \begin{bmatrix} \alpha_{n+1} & 0 & \alpha_{n+3} & 0 &
+                \cdots & 0 & \alpha_{2n+1} \end{bmatrix} \nonumber\\
+    v_{2}^{*} &= \begin{bmatrix} 0 & \alpha_{n+2} & 0 & \alpha_{n+4} &
+                \cdots & \alpha_{2n} & 0 \end{bmatrix}
+\end{align}
+%
+and set
+%
+\begin{align}
+    u_{1} &= \frac{1}{\norm{v_{1} - \norm{v_{1}}_{2}e_{1}}_{2}}
+        \parens{v_{1} - \norm{v_{1}}_{2}e_{1}} \nonumber\\
+    u_{2} &= \frac{1}{\norm{v_{2} - \norm{v_{2}}_{2}e_{2}}_{2}}
+        \parens{v_{2} - \norm{v_{2}}_{2}e_{2}}.
+\end{align}
+%
+We remember that care must be taken when computing
+$v_{i} - \norm{v_{i}}_{2}e_{i}$ to avoid large numerical errors;
+see Alg.~\ref{alg:unit_house}.
+
+With
+%
+\begin{align}
+    \widehat{P}_{1} &= I_{n+1} - 2u_{1}u_{1}^{*} \nonumber\\
+    \widehat{P}_{2} &= I_{n+1} - 2u_{2}u_{2}^{*} \nonumber\\
+    \widehat{P} &= \widehat{P}_{1}\widehat{P}_{2} \nonumber\\
+        &= I_{n+1} - 2\begin{bmatrix} u_{1} & u_{2} \end{bmatrix}
+            \begin{bmatrix} u_{1} & u_{2} \end{bmatrix}^{*} \nonumber\\
+    P &= \begin{bmatrix} I_{n} & \\ & \widehat{P} \end{bmatrix},
+\end{align}
+%
+we have
+%
+\begin{equation}
+    \begin{bmatrix} W \\ \overline{A} \end{bmatrix}
+            D_{s}^{-1}GP = \begin{bmatrix}
+        y_{1} & & & & \\
+        & y_{2} & & & \\
+        & & y_{3} & & \\
+        & & & y_{4} & \\
+        & & & & \ddots \\
+        & & & & & y_{n-1} & & \\
+        & & & & & & y_{n} & \\
+        \alpha_{1} & & \alpha_{3} & & \cdots & \alpha_{n-1} & &
+            \norm{v_{1}}_{2} \\
+        & \alpha_{2} & & \alpha_{4} & \cdots & & \alpha_{n} & &
+            \norm{v_{2}}_{2} \\
+    \end{bmatrix},
+\end{equation}
+%
+where we have ignored the zero entries of the matrix.
+This lower triangular matrix can be quickly inverted to compute the minimum
+norm solution, from which we then obtain the MSN solution after
+computing fast Householder reflectors and Givens rotations.
+
+% Odd case
+
+All of the above work was in the case when $n$ was even. We now look
+at the odd case. For this, we set
+%
+\begin{equation}
+    \overline{A} = C_{1}^{-1}A
+\end{equation}
+%
+and find
+%
+\begin{align}
+    \setcounter{MaxMatrixCols}{20}
+    &\begin{bmatrix} W \\ \overline{A} \end{bmatrix} D_{s}^{-1}G = \nonumber\\
+    &\begin{bmatrix}
+        y_{1} & & & & \\
+        & y_{2} & & & \\
+        & & y_{3} & & \\
+        & & & y_{4} & \\
+        & & & & \ddots \\
+        & & & & & y_{n-1} & & \\
+        & & & & & & y_{n} & \\
+        & \alpha_{2} & & \alpha_{4} & \cdots & \alpha_{n-1} & & \alpha_{n+1} &
+            & \alpha_{n+3} & & \cdots & \alpha_{2n} & \\
+        \alpha_{1} & & \alpha_{3} & & \cdots & & \alpha_{n} & &
+            \alpha_{n+2} & & \alpha_{n+4} & \cdots & & \alpha_{2n+1} \\
+    \end{bmatrix}.
+    \label{eq:interp_prob_1_odd}
+\end{align}
+%
+After computing the correct Householder reflectors, we will have the
+LQ factorization.
+
+
+

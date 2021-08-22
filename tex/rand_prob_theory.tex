@@ -1,0 +1,662 @@
+\section{Basic Probability Theory}
+\label{sec:rand_prob_theory_intro}
+
+We assume $A$ has positive singular values
+$\sigma_{1}\ge\cdots\ge\sigma_{r}>0$.
+It follows that we have the SVD
+%
+\begin{align}
+    A &= U\Sigma V^{*} \nonumber\\
+    &= \begin{bmatrix} U_{1} & U_{2} \end{bmatrix}
+        \begin{bmatrix} \Sigma_{r} & 0 \\ 0 & 0 \end{bmatrix}
+        \begin{bmatrix} V_{1}^{*} \\ V_{2}^{*} \end{bmatrix} \nonumber\\
+    &= U_{1}\Sigma_{r}V_{1}^{*},
+\end{align}
+%
+where
+%
+\begin{equation}
+    \Sigma_{r} = \diag\parens{\sigma_{1},\cdots,\sigma_{r}}.
+\end{equation}
+%
+If $x\in\R^{n}$ is a Gaussian random vector (that is, $x_{i}\sim N(0,1)$)
+and we set $\xi = V^{*}x$, then by the rotational invariance
+of $\norm{\cdot}_{2}$ we have
+%
+\begin{align}
+    \norm{Ax}_{2}^{2} &= \norm{\Sigma_{r}\xi}_{2}^{2} \nonumber\\
+        &= \sigma_{1}^{2}\xi_{1}^{2} + \cdots + \sigma_{r}^{2}\xi_{r}^{2}.
+\end{align}
+%
+Now, $\xi_{i}\sim N(0,1)$ because rotations of Gaussian random vectors
+are also Gaussian random vectors.
+From here, we can see
+%
+\begin{equation}
+    \E\norm{Ax}_{2}^{2} = \norm{A}_{F}^{2}.
+\end{equation}
+%
+This by itself is useful, but, in order to make use of
+computer architecture, matrix-matrix products are preferred over
+multiple matrix-vector products.
+Thus, if $\Omega\in\R^{n\times d}$ with $\Omega_{ij}\sim N(0,1)$
+(so that $\Omega$ is a Gaussian random matrix), it follows that
+%
+\begin{equation}
+    \norm{A\Omega}_{F}^{2} = \norm{A\Omega_{:,1}}_{2}^{2} + \cdots
+        + \norm{A\Omega_{:,d}}_{2}^{2}.
+\end{equation}
+%
+Because each $\Omega_{:,i}$ is a Gaussian random vector, we also have
+%
+\begin{equation}
+    \E\norm{A\Omega}_{F}^{2} = d\norm{A}_{F}^{2}.
+    \label{eq:rand_new_error_bound}
+\end{equation}
+%
+It is this equality that allows us to accurately compute the F-norm
+of matrices using random range samples.
+
+Because there is interest in using power iterations to increase
+the quality of randomized low-rank factorizations~\cite{RandomReview2011},
+we also include these related results.
+In particular, it is clear from the previous work that
+%
+\begin{align}
+    \norm{\parens{AA^{*}}^{q}Ax}_{2}^{2}
+        &= \sigma_{1}^{4q+2}\xi_{1}^{2} + \cdots + \sigma_{r}^{4q+2}\xi_{r}^{2}
+        \nonumber\\
+    \norm{\parens{A^{*}A}^{q}x}_{2}^{2}
+        &= \sigma_{1}^{4q}\xi_{1}^{2} + \cdots + \sigma_{r}^{4q}\xi_{r}^{2},
+\end{align}
+%
+so we have
+%
+\begin{align}
+    \E\norm{\parens{AA^{*}}^{q}Ax}_{2}^{2}
+        &= \norm{A}_{s,4q+2}^{4q+2}
+        \nonumber\\
+    \E\norm{\parens{A^{*}A}^{q}x}_{2}^{2}
+        &= \norm{A}_{s,4q}^{4q}
+\end{align}
+%
+and
+%
+\begin{align}
+    \E\norm{\parens{AA^{*}}^{q}A\Omega}_{2}^{2}
+        &= d\norm{A}_{s,4q+2}^{4q+2}
+        \nonumber\\
+    \E\norm{\parens{A^{*}A}^{q}\Omega}_{2}^{2}
+        &= d\norm{A}_{s,4q}^{4q}.
+    \label{eq:rand_new_power_error_bound}
+\end{align}
+%
+Here, $\norm{\cdot}_{s,p}$ is the Schatten $p$-norm defined
+in Eq.~\eqref{eq:kar_schatten_def} and $\Omega$ is a Gaussian random
+matrix with $d$ columns, as before.
+From the definitions of the Schatten $p$-norm, it is clear
+%
+\begin{align}
+    \brackets{\E\norm{\parens{AA^{*}}^{q}Ax}_{2}^{2}}^{1/4q+2}
+        &\to \norm{A}_{2}
+        \nonumber\\
+    \brackets{\E\norm{\parens{A^{*}A}^{q}x}_{2}^{2}}^{1/4q}
+        &\to \norm{A}_{2}
+        \nonumber\\
+    \brackets{\E\norm{\parens{AA^{*}}^{q}A\Omega}_{2}^{2}}^{1/4q+2}
+        &\to \norm{A}_{2}
+        \nonumber\\
+    \brackets{\E\norm{\parens{A^{*}A}^{q}\Omega}_{2}^{2}}^{1/4q}
+        &\to \norm{A}_{2}
+\end{align}
+%
+as $q\to\infty$.
+
+The proof that independent realizations of Eqs.~\eqref{eq:rand_new_error_bound}
+and \eqref{eq:rand_new_power_error_bound}
+produce accurate approximations of the F-norm and Schatten norm
+will be postponed until Sec.~\ref{sec:rand_prob_theory_proofs}.
+We now focus on developing our stopping criterion, which is based on
+the fact that we can now accurately estimate our error in a matrix norm.
+
+
+
+
+
+\section{New Stopping Criterion}
+\label{sec:rand_new_stopping}
+
+We now step through Alg.~\ref{alg:rand_low_rank} to see
+where some problems, previously ignored, may arise;
+this stems from the fact that we are wanting to be able to have
+relative error tolerances on the order of $10^{-12}$ or $10^{-14}$
+in double precision.
+We will be building our random matrices up in blocks of $d$ random
+vectors at a time, although in theory the size of the blocks could vary.
+Assume we have our absolute tolerance $\epsa$ and relative tolerance $\epsr$.
+Then our \texttt{stopping\_criterion} function will return \texttt{true} if
+%
+\begin{equation}
+    ||\widehat{S}_{k}||_{F} < \max(\epsa\sqrt{d},\epsr\norm{S_{k}}_{F});
+\end{equation}
+%
+otherwise, \texttt{stopping\_criterion} returns \texttt{false}.
+
+\begin{enumerate}
+
+\item Set $\Omega_{i} = \texttt{rand}(n,d)$ and compute $S_{i} = A\Omega_{i}$
+for $i\in\braces{1,2}$; set $Q = [\,]$ and
+$S = \begin{bmatrix} S_{1} & S_{2} \end{bmatrix}$.
+
+\item Compute $[Q_{1},R_{1}] = \texttt{qr}(S_{1})$,
+giving the initial approximation for the range of $A$; set $Q = Q_{1}$.
+
+\item Set $\widehat{S}_{2} = \parens{I-QQ^{*}}^{2}S_{2}$, so that
+$\widehat{S}_{2}$ contains potentially new information
+about the range of $A$.
+If
+%
+\begin{equation}
+    ||\widehat{S}_{2}||_{F} < \max(\epsa\sqrt{d},\epsr||S_{2}||_{F}),
+\end{equation}
+%
+then stop and perform $Q = \texttt{rrqr}(S,\epsa,\epsr)$.
+
+\item Set $\Omega_{3} = \texttt{rand}(n,d)$ and compute $S_{3} = A\Omega_{3}$;
+set $S = \begin{bmatrix} S & S_{3} \end{bmatrix}$.
+
+\item Compute $[Q_{2},R_{2}] = \texttt{qr}(\widehat{S}_{2})$,
+giving new information for the range of $A$;
+set $Q = \begin{bmatrix} Q & Q_{2} \end{bmatrix}$.
+
+\item Set $\widehat{S}_{3} = \parens{I-QQ^{*}}^{2}S_{3}$, so that
+$\widehat{S}_{3}$ contains potentially new information
+about the range of $A$.
+If
+%
+\begin{equation}
+    ||\widehat{S}_{3}||_{F} < \max(\epsa\sqrt{d},\epsr||S_{3}||_{F}),
+\end{equation}
+%
+then stop and perform $Q = \texttt{rrqr}(S,\epsa,\epsr)$.
+
+\item Continue this process until convergence $\dots$
+
+\end{enumerate}
+
+\noindent
+Using individual realizations of Eq.~\eqref{eq:rand_new_error_bound}
+is important in the stopping criterion, although the relative stopping
+$||\widehat{S}_{k}||_{F} < \epsr||S_{k}||_{F}$ is new.
+Even so, in order to ensure we are adding new information to $Q$ in steps
+2 and 5, we need to know $\widehat{S}_{k}$ is full rank.
+This problem does not show up in the unblocked version because
+updating $Q$ one vector at a time makes it easy to determine
+when a vector has small norm.
+This situation, when $\widehat{S}_{k}$ is numerically low-rank,
+is not considered in
+Algs.~\ref{alg:rand_low_rank_MV} and \ref{alg:rand_low_rank_YGL}
+due to how the $Q_{k}$ blocks are formed,
+although this is critical to ensure $Q$ has orthonormal columns.
+As noted previously, performing multiple matrix-vector multiplications
+is inefficient on modern machines, which is why the blocked case is important.
+Thus, if $\widehat{S}_{k}$ is (numerically) rank-deficient,
+then additional random samples contain no new information above the
+specified tolerance and we should
+compute the rank-revealing QR factorization on our random samples.
+If $\widehat{S}_{k}$ is determined to be rank-deficient, then
+$\begin{bmatrix} S_{1} & S_{2} & \cdots & S_{k} \end{bmatrix}$
+is rank-deficient.
+This implies the random samples matrix
+%
+\begin{equation}
+    S = \begin{bmatrix} S_{1} & S_{2} & \cdots & S_{k} & S_{k+1} \end{bmatrix}.
+\end{equation}
+%
+is rank-deficient as well and the additional block of random samples $S_{k+1}$
+should ensure a better quality RRQR factorization than just using
+$\begin{bmatrix} S_{1} & S_{2} & \cdots & S_{k} \end{bmatrix}$.
+Although this is not a proof, extensive examples
+in Sec.~\ref{sec:rand_exp} show that this is expected
+and matches our intuition.
+
+To determine numerical rank-deficiency, we set
+%
+\begin{equation}
+    \rho = \frac{||S_{1}||_{F}}{\sqrt{d}},
+\end{equation}
+%
+implying $\rho\approx\norm{A}_{F}$,
+and say $\widehat{S}_{k}$ is numerically rank-deficient when
+%
+\begin{equation}
+    \min_{j=1,\cdots,d} |\parens{R_{k}}_{j,j}| < \max(\epsa,\epsr\rho).
+\end{equation}
+%
+The purpose of $\rho$ is to characterize how large the original norms
+of the random samples should be, as this will help determine when
+they have fallen below the desired tolerance.
+Because of this, other potential values of $\rho$ are $|(R_{1})_{1,1}|$,
+$\max_{j} |(R_{1})_{j,j}|$, or $\max_{j,k} |(R_{k})_{j,j}|$.
+If the desire is to minimize communication, then
+$|(R_{1})_{1,1}|$ or $\max_{j} |(R_{1})_{j,j}|$ may be preferred.
+Because \texttt{qr} is unpivoted, there is no guarantee the diagonals
+of $R$ will always decrease in value.
+Even so, extensive tests have shown there is general decay, but more
+theoretical work that needs to be done.
+This is one reason for using the additional block of
+samples $S_{k+1}$ in \texttt{rrqr}.
+
+Taken together, this gives us a new stopping criterion for low-rank
+approximations, presented in Alg.~\ref{alg:rand_new_low_rank}.
+At this point, we now compare our stopping criterion with the ones
+previously mentioned.
+
+\input{algs/random_new_low-rank.tex}
+
+The MV stopping criterion explicitly assumes an absolute stopping tolerance.
+The YGL stopping criterion has an absolute stopping tolerance that
+requires and depends on $\norm{A}_{F}$, so this could be viewed
+as a relative stopping criterion with the restriction
+that $\epsr \ge C\sqrt{\epsm}$.
+One important benefit to the MV and YGL stopping criteria
+is that they are exact: we know the exact error in the F-norm
+at each step in the process.
+Our new stopping criterion allows for absolute and relative
+stopping criteria explicitly; furthermore, the relative tolerance is
+limited by the ability to accurately compute
+%
+\begin{equation}
+    ||\widehat{S}_{k}||_{F} < \epsr\norm{S_{k}}_{F}
+    \quad\text{and}\quad \min_{j=1,\cdots,d} |(R_{k})_{j,j}| < \epsr\rho.
+\end{equation}
+%
+Thus, we expect to be able to compute relative tolerances down to
+$O(\eps_{\text{mach}})$, although we have not determined the exact
+restrictions.
+It is likely that we must have $\epsr\ge C_{n,d}\epsm$,
+but we will not investigate the nature of $C_{n,d}$ at this
+time, as it is related to the accuracy of matrix-matrix
+multiplication~\cite[Chapter 3]{HighamASNA},
+blocked GS~\cite{bjorck1994GS,stewart2008},
+and QR factorizations~\cite[Chapter 19]{HighamASNA}.
+The results in Sec.~\ref{sec:rand_exp} and~\cite{randomHSSLBL}
+show that we can obtain excellent
+results using our relative stopping criterion
+even though our estimates are probabilistic.
+
+
+
+\section{Probability Theory Proofs}
+\label{sec:rand_prob_theory_proofs}
+
+To simplify our analysis, we begin by defining a random variable
+which has the same properties as $\norm{Ax}_{F}^{2}$:
+%
+\begin{equation}
+    X \sim \sigma_{1}^{2}\xi_{1}^{2} + \cdots + \sigma_{r}^{2}\xi_{r}^{2}.
+\end{equation}
+%
+Here, $\xi_{i}\sim N(0,1)$,
+so we have $\E\norm{Ax}_{2}^{2} = \norm{A}_{F}^{2}$.
+We now average $X$ to arrive at the random variable
+%
+\begin{equation}
+    \overline{X}_{d} \sim \frac{1}{d}\brackets{X_{1} + \cdots + X_{d}}.
+    \label{eq:rand_averaged_RV}
+\end{equation}
+%
+$X_{i}$ are independent and identically distributed realizations of $X$.
+Obviously, we also have $\E(\overline{X}_{d}) = \norm{A}_{F}^{2}$ as well as
+%
+\begin{align}
+    \V(\overline{X}_{d}) &= \frac{1}{d}\V(X) \nonumber\\
+        &= \frac{2\norm{A}_{s,4}^{4}}{d}.
+    \label{eq:rand_Xd_variance_bounds}
+\end{align}
+%
+The above result is well-known about the variance of independent random
+variables.
+
+We now seek a concentration inequality
+for $\overline{X}_{d}$.
+To do this, we need Chernoff's Inequality~\cite{prob_book},
+which is useful for bounding tail probabilities:
+
+\begin{thm}[Chernoff's Inequality;
+    Theorem 3.2.2 in~\cite{prob_book}]\label{thm:Chernoff}
+Given a random variable $X$, we have
+%
+\begin{equation}
+    \P\brackets{X \ge a} \le \min_{t > 0} e^{-ta}\, \E\parens{e^{tX}}.
+    \label{eq:Chernoff}
+\end{equation}
+%
+and
+%
+\begin{equation}
+    \P\brackets{X \le a} \le \min_{t>0} e^{ta}\,\E\parens{e^{-tX}}.
+\end{equation}
+\end{thm}
+
+\noindent
+Here, $\E\parens{e^{tX}}$ is the moment generating function
+for the random variable $X$.
+We will use these inequalities to prove the tail probabilities
+of $\overline{X}_{d}$ decay exponentially in $d$,
+ensuring independent realizations of
+Eq.~\eqref{eq:rand_new_error_bound} are close to the expected value.
+This result and proof were published
+in~\cite{randomHSSLBL} but we flesh out some of the details not
+included due to length considerations.
+
+
+
+\begin{thm}[Probabilistic Error Bounds]\label{thm:prob_err_bound}
+Given $\overline{X}_{d}$ as defined in Eq.~\eqref{eq:rand_averaged_RV}
+with $r\ge2$, the following bounds on the tail probabilities hold:
+%
+\begin{align}
+    \P\brackets{\overline{X}_{d}\ge \norm{A}_{F}^{2}\mu}
+        &\le \exp\parens{-\frac{d\mu}{2}} \norm{A}_{F}^{dr}
+        \prod_{k=1}^{r}\parens{A_{k}'}^{-d}
+        \quad \mu>1 \nonumber\\
+    \P\brackets{\overline{X}_{d}\le \norm{A}_{F}^{2}\mu}
+    &\le \exp\parens{\frac{d\mu}{2}} \norm{A}_{F}^{dr}
+        \prod_{k=1}^{r}\parens{A_{k}''}^{-d}
+        \quad \mu\in[0,1).
+\end{align}
+%
+Here,
+%
+\begin{align}
+    \norm{A}_{F}^{2} &= \sigma_{1}^{2} + \cdots + \sigma_{r}^{2} \nonumber\\
+    \parens{A_{k}'}^{2} &= \norm{A}_{F}^{2} - \sigma_{k}^{2} \nonumber\\
+    \parens{A_{k}''}^{2} &= \norm{A}_{F}^{2} + \sigma_{k}^{2}.
+    \label{eq:rand_As_def}
+\end{align}
+%
+We know $\E\parens{\overline{X}_{d}} = \norm{A}_{F}^{2}$, so $\mu$
+controls multiplicative deviation above or below the expectation value.
+Furthermore, if
+%
+\begin{align}
+    \nu_{k} &= -\ln\brackets{1-\frac{\sigma_{k}^{2}}{\norm{A}_{F}^{2}}}
+        \nonumber\\
+    \lambda_{k} &= \ln\brackets{1+\frac{\sigma_{k}^{2}}{\norm{A}_{F}^{2}}},
+\end{align}
+%
+then
+%
+\begin{equation}
+    \P\brackets{\overline{X}_{d}\ge \norm{A}_{F}^{2}\mu}
+        \le \exp\brackets{-\frac{d\mu}{2}\parens{
+            \mu-\braces{\nu_{1}+\cdots+\nu_{r}}}}
+\end{equation}
+%
+decays exponentially in $d$ when
+%
+\begin{equation}
+    \mu > 1 + \frac{\norm{A}_{2}^{2}}{\norm{A}_{F}^{2} - \norm{A}_{2}^{2}}.
+\end{equation}
+%
+Similarly,
+\begin{equation}
+    \P\brackets{\overline{X}_{d}\le \norm{A}_{F}^{2}\mu}
+        \le \exp\brackets{-\frac{d}{2}\parens{
+            \braces{\lambda_{1}+\cdots+\lambda_{r}}-\mu}}
+\end{equation}
+%
+decays exponentially in $d$ when $\mu\in[0,\ln2)$.
+\end{thm}
+
+\begin{proof}
+When $r=1$ (that is, when $A$ is a rank-one matrix),
+we can use Thm.~\ref{thm:Chernoff} to compute exponential
+bounds on tail probabilities.
+Because these bounds can be computed exactly, we assume $r\ge2$.
+
+Clearly $X$ is a linear combination of chi-squared distributions,
+so by properties of the moment generating function we have
+%
+\begin{equation}
+    M_{\overline{X}_{d}}(t) =
+    \prod_{k=1}^{r}
+    \parens{1 - \frac{2\sigma_{k}^{2}}{d}t}^{-\frac{d}{2}}.
+\end{equation}
+%
+Attempting to compute
+%
+\begin{equation}
+    \min_{t>0} e^{-at}M_{\overline{X}_{d}}(t)
+\end{equation}
+%
+will require factoring the roots of a degree $r$ polynomial in $t$;
+a standard result of Galois theory is that this is not possible
+in general for $r\ge5$.
+Instead, we set
+%
+\begin{equation}
+    \bar{t} = \frac{d}{2\norm{A}_{F}^{2}}.
+\end{equation}
+%
+Then, if we set $a = \mu\norm{A}_{F}^{2}$ for $\mu>1$, we have
+%
+\begin{align}
+    \P\brackets{\overline{X}_{d}\ge \mu\norm{A}_{F}^{2}}
+    &\le \min_{t>0} \exp\parens{-\mu\norm{A}_{F}^{2}t} M_{\overline{X}_{d}}(t)
+        \nonumber\\
+    &\le \exp\parens{-\mu\norm{A}_{F}^{2}\bar{t}} M_{\overline{X}_{d}}(\bar{t})
+        \nonumber\\
+    &= \exp\parens{-\frac{\mu d}{2}}\prod_{k=1}^{r}
+        \brackets{1-\frac{\sigma_{k}^{2}}{\norm{A}_{F}^{2}}}^{-\frac{d}{2}}
+        \nonumber\\
+    &= \exp\parens{-\frac{\mu d}{2}}\norm{A}_{F}^{rd} \prod_{k=1}^{r}
+        \parens{A_{k}'}^{-d}.
+\end{align}
+%
+Here, $A_{k}'$ is as defined in Eq.~\eqref{eq:rand_As_def}.
+Similarly, for $\mu\in[0,1)$ and $a = \mu\norm{A}_{F}^{2}$, we have
+%
+\begin{align}
+    \P\brackets{\overline{X}_{d}\le \mu\norm{A}_{F}^{2}}
+    &\le \min_{t>0} \exp\parens{\mu\norm{A}_{F}^{2}t} M_{\overline{X}_{d}}(-t)
+        \nonumber\\
+    &\le \exp\parens{\mu\norm{A}_{F}^{2}\bar{t}} M_{\overline{X}_{d}}(-\bar{t})
+        \nonumber\\
+    &= \exp\parens{\frac{\mu d}{2}}\prod_{k=1}^{r}
+        \brackets{1+\frac{\sigma_{k}^{2}}{\norm{A}_{F}^{2}}}^{-\frac{d}{2}}
+        \nonumber\\
+    &= \exp\parens{\frac{\mu d}{2}}\norm{A}_{F}^{rd} \prod_{k=1}^{r}
+        \parens{A_{k}''}^{-d}.
+\end{align}
+%
+$A_{k}''$ is defined in Eq.~\eqref{eq:rand_As_def}.
+This proves the desired bounds as stated in the theorem.
+Stronger tail probability bounds could be determined but we will
+not pursue the matter here, for to do so may require
+knowledge of the singular value decay.
+
+
+
+We now focus on determining when the tail probabilities decay
+exponentially in $d$.
+Looking at the upper tail probability, we have
+%
+\begin{align}
+    \P\brackets{\overline{X}_{d}\ge \mu\norm{A}_{F}^{2}}
+    &\le \exp\parens{-\frac{\mu d}{2}}\norm{A}_{F}^{rd} \prod_{k=1}^{r}
+        \parens{A_{k}'}^{-d} \nonumber\\
+    &= \exp\parens{-\frac{d}{2}\brackets{\mu-\braces{\nu_{1}+\cdots+\nu_{r}}}},
+\end{align}
+%
+where
+%
+\begin{equation}
+    \nu_{k} = -\ln\brackets{1-\frac{\sigma_{k}^{2}}{\norm{A}_{F}^{2}}}.
+\end{equation}
+%
+We will have exponential tail probability decay in $d$ if
+%
+\begin{equation}
+    \nu_{1} + \cdots + \nu_{r} < \mu.
+\end{equation}
+%
+We know $-\ln x$ is a convex function, so $-\ln(1-x)$ is convex on $[0,1)$.
+For any $\alpha\in(0,1)$, we have
+%
+\begin{equation}
+    \ln\parens{\frac{1}{1-x}}\le\frac{x}{\alpha}\ln\parens{\frac{1}{1-\alpha}}.
+\end{equation}
+%
+Because $r\ge2$, we have $\sigma_{1} = \norm{A}_{2} < \norm{A}_{F}$ and
+set $\alpha = \frac{\norm{A}_{2}^{2}}{\norm{A}_{F}^{2}} < 1$.
+It now follows that
+%
+\begin{align}
+    \nu_{1} + \cdots + \nu_{r}
+        &\le \frac{1}{\alpha}\ln\parens{\frac{1}{1-\alpha}}
+            \brackets{\frac{\sigma_{1}^{2}}{\norm{A}_{F}^{2}} + \cdots +
+            \frac{\sigma_{r}^{2}}{\norm{A}_{F}^{2}}} \nonumber\\
+    &= \frac{1}{\alpha}\ln\parens{1 + \frac{\alpha}{1-\alpha}} \nonumber\\
+    &\le 1 + \frac{\alpha}{1-\alpha} \nonumber\\
+    &= 1 + \frac{\norm{A}_{2}^{2}}{\norm{A}_{F}^{2} - \norm{A}_{2}^{2}},
+\end{align}
+%
+where we used $\ln(1+x)\le x$ in the last inequality.
+So long as
+%
+\begin{equation}
+    \mu > 1 + \frac{\norm{A}_{2}^{2}}{\norm{A}_{F}^{2} - \norm{A}_{2}^{2}},
+\end{equation}
+%
+we have exponential decay in $d$.
+
+We now look at the lower tail probability.
+For $\mu\in[0,1)$, we have
+%
+\begin{align}
+    \P\brackets{\overline{X}_{d}\le \norm{A}_{F}^{2}\mu}
+        &\le \exp\parens{\frac{d\mu}{2}} \norm{A}_{F}^{dr}
+            \prod_{k=1}^{r}\parens{A_{k}''}^{-d} \nonumber\\
+        &= \exp\brackets{\frac{d}{2}\braces{\mu - \parens{\lambda_{1}
+            + \cdots + \lambda_{r}}}},
+\end{align}
+%
+where
+%
+\begin{equation}
+    \lambda_{k} = \ln\brackets{1 + \frac{\sigma_{k}^{2}}{\norm{A}_{F}^{2}}}.
+\end{equation}
+%
+To have exponential decay in probability, we require
+%
+\begin{equation}
+    \lambda_{1} + \cdots + \lambda_{r} > \mu \, .
+\end{equation}
+%
+Now, we know
+%
+\begin{equation}
+    \ln\parens{1 + x} \ge x\ln 2 \quad x\in\brackets{0,1},
+\end{equation}
+%
+which implies
+%
+\begin{align}
+    \lambda_{1} + \cdots + \lambda_{r}
+        &\ge \frac{\sigma_{1}^{2}}{\norm{A}_{F}^{2}}\ln2
+            + \cdots + \frac{\sigma_{r}^{2}}{\norm{A}_{F}^{2}}\ln2 \nonumber\\
+        &= \ln 2.
+\end{align}
+%
+Therefore, so long as $\mu<\ln2$, we have exponentially decaying tail
+probabilities in $d$.
+
+\end{proof}
+
+
+
+We now analyze the situation for power iteration.
+Let $\alpha\ge\frac{1}{2}$ and define
+%
+\begin{equation}
+    Y_{\alpha} = \sigma_{1}^{2\alpha}\xi_{1}^{2} + \cdots +
+        \sigma_{r}^{2\alpha}\xi_{r}^{2}.
+\end{equation}
+%
+Additionally, let
+%
+\begin{equation}
+    \overline{Y}_{d,\alpha} = \frac{1}{d}\brackets{Y_{1,\alpha} + \cdot
+        + Y_{d,\alpha}},
+    \label{eq:rand_averaged_power_RV}
+\end{equation}
+%
+where $Y_{i,\alpha}$ are independent and identically distributed realizations
+of $Y_{\alpha}$.
+Naturally, $\E(Y_{\alpha}) = \E(\overline{Y}_{d,\alpha}) =
+\norm{A}_{s,2\alpha}^{2\alpha}$
+and it clear we have
+%
+\begin{align}
+    \V(\overline{Y}_{d,\alpha}) &= \frac{1}{d}\V(Y_{\alpha}) \nonumber\\
+        &= \frac{2\norm{A}_{s,4\alpha}^{4\alpha}}{d}.
+\end{align}
+%
+We have the analogous theorem:
+
+\begin{thm}[Probabilistic Error Bounds for Power Iteration]
+\label{thm:prob_err_bound_power}
+Given $\overline{Y}_{d}$ as defined in Eq.~\eqref{eq:rand_averaged_power_RV}
+with $r\ge2$ and
+%
+\begin{align}
+    \bar{\nu}_{k} &= -\ln\brackets{1-\frac{\sigma_{k}^{2\alpha}}{
+        \norm{A}_{s,2\alpha}^{2\alpha}}}
+        \nonumber\\
+    \bar{\lambda}_{k} &= \ln\brackets{1+\frac{\sigma_{k}^{2\alpha}}{
+        \norm{A}_{s,2\alpha}^{2\alpha}}},
+\end{align}
+%
+then
+%
+\begin{equation}
+    \P\brackets{\overline{Y}_{d}\ge \norm{A}_{s,2\alpha}^{2\alpha}\mu}
+        \le \exp\brackets{-\frac{d\mu}{2}\parens{
+            \mu-\braces{\bar{\nu}_{1}+\cdots+\bar{\nu}_{r}}}}
+\end{equation}
+%
+decays exponentially in $d$ when
+%
+\begin{equation}
+    \mu > 1 + \frac{\norm{A}_{s,\infty}^{2\alpha}}{
+        \norm{A}_{s,2\alpha}^{2\alpha} - \norm{A}_{2,\infty}^{2\alpha}}.
+\end{equation}
+%
+Similarly,
+\begin{equation}
+    \P\brackets{\overline{Y}_{d}\le \norm{A}_{s,2\alpha}^{2\alpha}\mu}
+        \le \exp\brackets{-\frac{d}{2}\parens{
+            \braces{\bar{\lambda}_{1}+\cdots+\bar{\lambda}_{r}}-\mu}}
+\end{equation}
+%
+decays exponentially in $d$ when $\mu\in[0,\ln2)$.
+\end{thm}
+
+\begin{proof}
+The proof follows the same argument as that of 
+Thm.~\ref{thm:prob_err_bound}.
+We obtain the results of Thm.~\ref{thm:prob_err_bound}
+when $\alpha=1$, as expected.
+\end{proof}
+
+The above theorem ensures that independent realizations
+of Eq.~\eqref{eq:rand_new_power_error_bound} closely
+match the expected value.
+This will make it possible for us to bound $\norm{\cdot}_{s,p}$
+depending on the power as well as allowing for a relative
+stopping criterion in these norms.
+
+
+

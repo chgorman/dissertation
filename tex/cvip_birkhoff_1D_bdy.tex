@@ -1,0 +1,564 @@
+\section{Proof of 1D Birkhoff Interpolation for polynomials of degree $2n$
+    with Endpoint Interpolation}
+\label{sec:cvip_birkhoff_bdy}
+
+The section here is similar to Sec.~\ref{sec:cvip_birkhoff_pt},
+except that in this case we interpolate function values
+at the endpoints, giving us additional information $f(-1)$ and $f(1)$.
+After a set of Givens rotations, the same from the previous
+section, we see
+%
+\begin{equation}
+    \setcounter{MaxMatrixCols}{20}
+    \begin{bmatrix}
+        0 & \gamma_{2} & \\
+        & & \gamma_{3} & \\
+        & & & \ddots & \\
+        & & & & \gamma_{n-1} \\
+        & & & & & \gamma_{n} \\
+        & & & & & & \gamma_{n+1} \\
+        & \alpha_{2} & & & & \alpha_{n} & & \beta_{n} & &
+            \cdots & & \beta_{2} & \\
+        \alpha_{1} & & \alpha_{3} & & \alpha_{n-1} & & \alpha_{n+1} &
+            & \beta_{n-1} & & \beta_{3} & & \beta_{1} \\
+    \end{bmatrix},
+\end{equation}
+%
+where we are assuming $n$ is even; similar results hold when $n$ is odd.
+In this case, we have
+%
+\begin{align}
+    \gamma_{k} &= \frac{k-1}{c_{k}k^{s}} \qquad k\in\braces{2,\cdots,n}
+        \nonumber\\
+    \gamma_{n+1} &= \frac{n}{\parens{n+1}^{s}} \nonumber\\
+    \alpha_{1} &= 1^{-s} \nonumber\\
+    \alpha_{k} &= c_{k}k^{-s}\brackets{1 +
+        \parens{\frac{k-1}{2n+1-k}}\tau_{k}^{2}} \qquad k\in\braces{2,\cdots,n}
+            \nonumber\\
+    \alpha_{n+1} &= \parens{n+1}^{-s} \nonumber\\
+    \beta_{1} &= \parens{2n+1}^{-s} \nonumber\\
+    \beta_{k} &= 2\parens{\frac{n+1-k}{2n+1-k}}s_{k}k^{-s}
+        \qquad k\in\braces{2,\cdots,n}.
+\end{align}
+%
+It follows
+%
+\begin{align}
+    \gamma_{k}^{-1} &\le \frac{k^{s}}{k-1} \nonumber\\
+        &\le 2^{s}\parens{k-1}^{s-1} \qquad k\in\braces{2,\cdots,n+1}.
+    \label{eq:birkhoff_bdy_gamma_bound}
+\end{align}
+%
+Both inequalities hold but are used in different places.
+When $s\ge1$, we have $c_{k}\ge\frac{1}{\sqrt{5}}$ and
+%
+\begin{align}
+    \abs{\beta_{k}} &\ge \frac{2}{\sqrt{5}n}\parens{2n+2-k}^{-s} \qquad
+        k\in\braces{1,\cdots,n} \nonumber\\
+    \abs{\beta_{k}} &\le 2n\parens{2n+2-k}^{-s} \qquad
+        k\in\braces{1,\cdots,n} \nonumber\\
+    \alpha_{k} &\le 3k^{-s} \qquad k\in\braces{2,\cdots,n+1}.
+    \label{eq:birkhoff_bdy_alpha_beta_bounds}
+\end{align}
+
+
+
+After a column permutation and a pair of Householder reflectors we have
+%
+\begin{equation}
+    \setcounter{MaxMatrixCols}{20}
+    \begin{bmatrix}
+        \gamma_{2} & \\
+        & \gamma_{3} & \\
+        & & \ddots & \\
+        & & & \gamma_{n-1} \\
+        & & & & \gamma_{n} \\
+        & & & & & \gamma_{n+1} \\
+        \alpha_{2} & & \cdots & & \alpha_{n} & & \ell_{1} \\
+        & \alpha_{3} & & \alpha_{n-1} & & \alpha_{n+1} &
+            & \ell_{2} \\
+    \end{bmatrix}
+        = \begin{bmatrix} \Gamma & \\ \widehat{A} & \widehat{L} \end{bmatrix},
+\end{equation}
+%
+where
+%
+\begin{align}
+    \ell_{1}^{2} &= \beta_{2}^{2} + \beta_{4}^{2} + \cdots + \beta_{n}^{2}
+        \nonumber\\
+    \ell_{2}^{2} &= \beta_{1}^{2} + \beta_{3}^{2} + \cdots + \beta_{n-1}^{2}
+            + \alpha_{1}^{2}.
+\end{align}
+%
+Thus, we have finally arrived at our $LQ$ factorization:
+%
+\begin{equation}
+    \begin{bmatrix} UWD \\ A \end{bmatrix} = 
+        \begin{bmatrix} \Gamma & & \\ \widehat{A} & \widehat{L} & 0
+        \end{bmatrix} H\Pi G,
+\end{equation}
+%
+where $G$ is our set of Givens rotations, $\Pi$ is our permutation matrix,
+and $H$ is our Householder reflector's matrix.
+$\Pi$ and $H$ satisfy
+%
+\begin{equation}
+    \Pi^{*} \begin{bmatrix} x_{1} \\ x_{2} \\ \vdots \\ x_{2n} \\ x_{2n+1}
+        \end{bmatrix}
+    = \begin{bmatrix} x_{2n+1} \\ x_{1} \\ \vdots \\ x_{2n-1} \\ x_{2n}
+        \end{bmatrix}
+\end{equation}
+%
+and
+%
+\begin{equation}
+    H = \begin{bmatrix} I_{n} & \\ & I_{n+1} - 2VT^{-1}V^{*} \end{bmatrix}
+\end{equation}
+%
+with
+%
+\begin{align}
+    V^{*} &= \begin{bmatrix}
+        \beta_{n} & & \cdots & & \beta_{2} & & \\
+        & \beta_{n-1} & & \beta_{3} & & \beta_{1} & \alpha_{1} \\
+    \end{bmatrix} \nonumber\\
+    T &= \begin{bmatrix} \ell_{1}^{2} & \\ & \ell_{2}^{2} \end{bmatrix}.
+\end{align}
+
+We have
+%
+\begin{equation}
+\begin{bmatrix} \Gamma & \\ \widehat{A} & \widehat{L}
+        \end{bmatrix}^{-1} \begin{bmatrix} \hat{f}' \\ \tilde{f} \end{bmatrix}
+    = \begin{bmatrix} \Gamma^{-1}\hat{f}' \\
+        \widehat{L}^{-1}(\tilde{f}-\widehat{A}\Gamma^{-1}\hat{f}') \end{bmatrix}
+\end{equation}
+%
+and, following a similar pattern from Sec.~\ref{sec:cvip_interp_1D_bdy}, set
+%
+\begin{align}
+    \hat{g} &= \tilde{f}-\widehat{A}\Gamma^{-1}\hat{f}' \nonumber\\
+    \hat{h} &= \widehat{L}^{-1}\hat{g}.
+\end{align}
+%
+At this point, it is clear we have the MSN solution is
+%
+\begin{align}
+    \tilde{a} &= D_{s}^{-1}G^{*}\Pi^{*}H^{*}
+        \begin{bmatrix} \Gamma^{-1}\hat{f}' \\ \hat{h} \\ 0 \end{bmatrix}
+        \nonumber\\
+    &= \parens{
+        D_{s}^{-1}G^{*} \begin{bmatrix} 0 \\ \Gamma^{-1}\hat{f}' \\ 0
+        \end{bmatrix} + \begin{bmatrix} a_{0} \\ 0 \\ 0 \end{bmatrix}}
+    + \parens{
+        D_{s}^{-1}G^{*}\Pi^{*}H^{*} \begin{bmatrix} 0 \\ \hat{h} \\ 0
+        \end{bmatrix} - \begin{bmatrix} a_{0} \\ 0 \\ 0 \end{bmatrix}}
+        \nonumber\\
+    &= \tilde{a}_{1} + \tilde{a}_{2}.
+\end{align}
+%
+Here, we are adding and subtracting the first true coefficient $a_{0}$
+of the Chebyshev series. Thus, $\tilde{a}_{1}$ is $\tilde{a}$ from
+Sec.~\ref{sec:cvip_birkhoff_pt}.
+We will compute
+%
+\begin{equation}
+    \norm{a_{c} - \tilde{a}}_{p,1} \le \norm{a_{c}-\tilde{a}_{1}}_{p,1} + 
+        \norm{\tilde{a}_{2}}_{p,1}
+\end{equation}
+%
+and focus on bounding $\norm{\tilde{a}_{2}}_{p,1}$.
+
+First, we will need to compute bounds on $\ell_{1}$ and $\ell_{2}$.
+We find
+%
+\begin{align}
+    \ell_{1}^{2} &= \beta_{2}^{2} + \beta_{4}^{2} + \cdots + \beta_{n}^{2}
+        \nonumber\\
+    &\ge \frac{4}{5n^{2}} \sum_{k=1}^{\frac{n}{2}} \brackets{n + 2k}^{-2s}
+        \nonumber\\
+    &\ge \frac{1}{5sn^{2s+1}}.
+\end{align}
+%
+Similarly, we have
+%
+\begin{align}
+    \ell_{1}^{2} &= \beta_{1}^{2} + \beta_{3}^{2} + \cdots + \beta_{n-1}^{2}
+        + \alpha_{1}^{2}
+        \nonumber\\
+    &\ge 1 + \frac{4}{5n^{2}} \sum_{k=1}^{\frac{n}{2}} \brackets{n + 2k}^{-2s}
+        \nonumber\\
+    &\ge 1 + \frac{1}{5sn^{2s+1}}.
+\end{align}
+%
+Clearly, we have
+%
+\begin{equation}
+    \ell_{1}^{-2},\ell_{2}^{-2} \le 5sn^{2s+1},
+\end{equation}
+%
+but we will need the tighter bound of $\ell_{1}^{-1}\le1$.
+
+We can now use these bounds to look at $\tilde{a}_{2}$.
+First, we see
+%
+\begin{align}
+    \alpha_{k}\gamma_{k}^{-1}\hat{f}_{k}'
+        &= c_{k}^{2}a_{k-1} + \frac{c_{k}^{2}}{k-1}\eta_{k-1}
+        + s_{k}^{2}\parens{\frac{k-1}{2n+1-k}}a_{k-1}
+        + \frac{s_{k}^{2}}{2n+1-k}\eta_{k-1} \nonumber\\
+    &\qquad k\in\braces{2,\cdots,n} \nonumber\\
+    \alpha_{n+1}\gamma_{n+1}^{-1}\hat{f}_{n+1}' &= a_{n} + \frac{1}{n}\eta_{n}.
+\end{align}
+%
+Thus, it follows
+%
+\begin{align}
+    a_{k-1} - \alpha_{k}\gamma_{k}^{-1}\hat{f}_{k}' &=
+        2s_{k}^{2}\parens{\frac{n+1-k}{2n+1-k}}a_{k-1}
+        - \brackets{\frac{c_{k}^{2}}{k-1} + \frac{s_{k}^{2}}{2n+1-k}}\eta_{k-1}
+        \nonumber\\
+    &\qquad k\in\braces{2,\cdots,n} \nonumber\\
+    a_{n} - \alpha_{n+1}\gamma_{n+1}^{-1}\hat{f}_{n+1}' &=
+        -\frac{1}{n}\eta_{n}.
+\end{align}
+%
+Thus, we see
+%
+\begin{align}
+    \hat{g}_{1} &= 2\sum_{\substack{k=2\\k\text{ even}}}^{n}
+        s_{k}^{2}\parens{\frac{n+1-k}{2n+1-k}}a_{k-1}
+        - \sum_{\substack{k=2\\k\text{ even}}}^{n}
+        \brackets{\frac{c_{k}^{2}}{k-1} + \frac{s_{k}^{2}}{2n+1-k}}\eta_{k-1}
+        \nonumber\\
+    \hat{g}_{2} &= a_{0} + 2\sum_{\substack{k=2\\k\text{ odd}}}^{n}
+        s_{k}^{2}\parens{\frac{n+1-k}{2n+1-k}}a_{k-1}
+        - \frac{1}{n}\eta_{n} 
+        - \sum_{\substack{k=2\\k\text{ odd}}}^{n} 
+        \brackets{\frac{c_{k}^{2}}{k-1} + \frac{s_{k}^{2}}{2n+1-k}}\eta_{k-1}
+\end{align}
+%
+This implies
+%
+\begin{equation}
+    \abs{\hat{g}_{1}} + \abs{\hat{g}_{2} - a_{0}} \le
+        \sum_{k=2}^{n}s_{k}^{2}\abs{a_{k-1}} + \sum_{k=1}^{n}\abs{\eta_{k}}.
+\end{equation}
+%
+The reason for this bound will be clear shortly. Even so,
+because
+%
+\begin{align}
+    \abs{s_{k}} &\le \abs{\tau_{k}} \nonumber\\
+        &\le 2\parens{\frac{k}{2n+2-k}}^{s-1},
+\end{align}
+%
+we have the bounds
+%
+\begin{equation}
+    \abs{\hat{g}_{1}} + \abs{\hat{g}_{2} - a_{0}} \le
+        4\sqrt{\frac{2}{2s-3}}\frac{\norm{a}_{s}}{n^{s-\frac{1}{2}}}
+        + \frac{1}{\sqrt{2s-3}}\frac{\norm{a}_{s}}{n^{s-\frac{3}{2}}}.
+\end{equation}
+
+Thus, we see
+%
+\begin{align}
+    \hat{h}_{1} &= \ell_{1}^{-1}\hat{g}_{1} \nonumber\\
+    \hat{h}_{2} &= \ell_{2}^{-1}\hat{g}_{2} \nonumber\\
+        &= \ell_{2}^{-1}\brackets{\parens{\hat{g}_{2} - a_{0}} + a_{0}}
+\end{align}
+%
+which implies
+%
+\begin{align}
+    |\hat{h}_{1}| &\le C_{s}\norm{a}_{s}n^{2} \nonumber\\
+    |\hat{h}_{2}| &\le \frac{C_{s}\norm{a}_{s}}{n^{s-\frac{3}{2}}}
+        + \abs{a_{0}} \nonumber\\
+\end{align} 
+
+\clearpage
+
+For this section, we interpolate derivative values on the Chebyshev
+nodes and function values on the boundary points.
+We have the requirements
+%
+\begin{equation}
+    \begin{bmatrix}UWD\\A\end{bmatrix} \parens{a-\tilde{a}} =
+        \begin{bmatrix}\hat{b}\\\hat{c}\end{bmatrix}.
+\end{equation}
+%
+Using ideas from Eq.~\eqref{eq:CS_coefs_powers}, we have the bounds
+%
+\begin{align}
+    |\hat{b}_{k}| &\le \sum_{\ell=1}^{\infty}\parens{2\ell n +k}
+        \abs{a_{2\ell n+k}} + \sum_{\ell=2}^{\infty}\parens{2\ell n-k}
+        \abs{a_{2\ell n-k}} \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}}{2^{\sigma-2}n^{\sigma-1}}\sqrt{
+        \zeta(2\sigma-2)} \nonumber\\
+            &\qquad k\in\braces{1,\cdots,n-1} \nonumber\\
+    |\hat{b}_{n}| &\le \sum_{\ell=1}^{\infty} \brackets{(2\ell+1)n+1}
+        \abs{a_{(2\ell+1)n+1}} \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}}{2^{\sigma-1}n^{\sigma-1}}
+        \sqrt{\zeta(2\sigma-2)}
+        \nonumber\\
+    &\le \frac{\norm{a}_{\sigma}}{2^{\sigma-2}n^{\sigma-1}}
+        \sqrt{\zeta(2\sigma-2)}.
+    \label{eq:birkhoff_bdy_bhat_def}
+\end{align}
+%
+From Eq.~\eqref{eq:interp_bdy_chat_ubounds}, we have
+%
+\begin{equation}
+    |\hat{c}_{1}|, |\hat{c}_{2}| \le
+        \frac{C_{\sigma}}{n^{\sigma-\frac{1}{2}}}\norm{a}_{\sigma}.
+\end{equation}
+
+After a set of Givens rotations, we see
+%
+\begin{equation}
+    \setcounter{MaxMatrixCols}{20}
+    \begin{bmatrix}
+        0 & \gamma_{2} & \\
+        & & \gamma_{3} & \\
+        & & & \ddots & \\
+        & & & & \gamma_{n-1} \\
+        & & & & & \gamma_{n} \\
+        & & & & & & \gamma_{n+1} \\
+        & \alpha_{2} & & & & \alpha_{n} & & \beta_{n} & &
+            \cdots & & \beta_{2} & \\
+        \alpha_{1} & & \alpha_{3} & & \alpha_{n-1} & & \alpha_{n+1} &
+            & \beta_{n-1} & & \beta_{3} & & \beta_{1} \\
+    \end{bmatrix},
+\end{equation}
+%
+where we are assuming $n$ is even; similar results hold when $n$ is odd.
+In this case, we have
+%
+\begin{align}
+    \gamma_{k} &= \parens{k-1}k^{-s}\sqrt{1 + \parens{\frac{2n+1-k}{k-1}}^{2}
+            \parens{\frac{k}{2n+2-k}}^{2s}} \nonumber\\
+        &\qquad k\in\braces{2,\cdots,n} \nonumber\\
+    \gamma_{n+1} &= n\parens{n+1}^{-s} \nonumber\\
+    c_{k} &= \braces{1 + \parens{\frac{2n+1-k}{k-1}}^{2}\parens{
+        \frac{k}{2n+2-k}}^{2s}}^{-1/2} \nonumber\\
+    \alpha_{1} &= 1^{-s} \nonumber\\
+    \alpha_{k} &= c_{k}k^{-s}\brackets{1 + \parens{\frac{2n+1-k}{k-1}}
+        \parens{\frac{k}{2n+2-k}}^{2s}} \qquad k\in\braces{2,\cdots,n}
+            \nonumber\\
+    \alpha_{n+1} &= \parens{n+1}^{-s} \nonumber\\
+    \beta_{1} &= \parens{2n+1}^{-s} \nonumber\\
+    \beta_{k} &= -2c_{k}\parens{2n+2-k}^{-s}\parens{\frac{n+1-k}{k-1}}
+        \qquad k\in\braces{2,\cdots,n}.
+\end{align}
+%
+The $c_{k}$ in the previous equation are the cosine terms from the
+Givens rotations; they should not be confused with
+$\hat{c}_{1}$ and $\hat{c}_{2}$.
+From here, it follows
+%
+\begin{align}
+    \gamma_{k}^{-1} &\le \frac{k^{s}}{k-1} \nonumber\\
+        &\le 2^{s}\parens{k-1}^{s-1} \qquad k\in\braces{2,\cdots,n+1}.
+    \label{eq:birkhoff_bdy_gamma_bound}
+\end{align}
+%
+Both inequalities hold but are used in different places.
+When $s\ge1$, we have $c_{k}\ge\frac{1}{\sqrt{5}}$ and
+%
+\begin{align}
+    \abs{\beta_{k}} &\ge \frac{2}{\sqrt{5}n}\parens{2n+2-k}^{-s} \qquad
+        k\in\braces{1,\cdots,n} \nonumber\\
+    \abs{\beta_{k}} &\le 2n\parens{2n+2-k}^{-s} \qquad
+        k\in\braces{1,\cdots,n} \nonumber\\
+    \alpha_{k} &\le 3k^{-s} \qquad k\in\braces{2,\cdots,n+1}.
+    \label{eq:birkhoff_bdy_alpha_beta_bounds}
+\end{align}
+
+
+
+After a column permutation and a pair of Householder reflectors we have
+%
+\begin{equation}
+    \setcounter{MaxMatrixCols}{20}
+    \begin{bmatrix}
+        \gamma_{2} & \\
+        & \gamma_{3} & \\
+        & & \ddots & \\
+        & & & \gamma_{n-1} \\
+        & & & & \gamma_{n} \\
+        & & & & & \gamma_{n+1} \\
+        \alpha_{2} & & \cdots & & \alpha_{n} & & \ell_{1} \\
+        & \alpha_{3} & & \alpha_{n-1} & & \alpha_{n+1} &
+            & \ell_{2} \\
+    \end{bmatrix}
+        = \begin{bmatrix} \Gamma & \\ \widehat{A} & \widehat{L} \end{bmatrix},
+\end{equation}
+%
+where
+%
+\begin{align}
+    \ell_{1}^{2} &= \beta_{2}^{2} + \beta_{4}^{2} + \cdots + \beta_{n}^{2}
+        \nonumber\\
+    \ell_{2}^{2} &= \beta_{1}^{2} + \beta_{3}^{2} + \cdots + \beta_{n-1}^{2}
+            + \alpha_{1}^{2}.
+\end{align}
+
+We now focus our attention on computing lower bounds for $\ell_{1}$
+and $\ell_{2}$. Using the bounds on $\beta_{k}$ in
+Eq.~\eqref{eq:birkhoff_bdy_alpha_beta_bounds}, we see
+%
+\begin{align}
+    \ell_{1}^{2} &= \beta_{2}^{2} + \beta_{4}^{2} + \cdots + \beta_{n}^{2}
+        \nonumber\\
+    &\ge \frac{4}{5n^{2}}\sum_{k=1}^{\frac{n}{2}}\brackets{n+2k}^{-2s}
+        \nonumber\\
+    &\ge \frac{1}{25s}\frac{1}{n^{2s+1}},
+\end{align}
+%
+where the last inequality follows from Eq.~\eqref{eq:bound_xp_12}.
+Because $\alpha_{1}=1$, $\ell_{2}^{2}\ge1$, and we have
+%
+\begin{equation}
+    \ell_{1}^{-1},\ell_{2}^{-1} \le 5\sqrt{s}n^{s+\frac{1}{2}}.
+\end{equation}
+%
+Furthermore, we have the upper bound
+%
+\begin{align}
+    \ell_{1}^{2},\ell_{2}^{2}
+        &\le \alpha_{1}^{2} + \beta_{1}^{2} + \beta_{2}^{2}
+            + \cdots + \beta_{n}^{2} \nonumber\\
+        &\le 1 + 4n^{2}\sum_{k=1}^{n+1}\brackets{n+k}^{-2s} \nonumber\\
+        &\le \begin{cases} 9n &s\ge1 \\ 9 &s\ge\frac{3}{2} \end{cases},
+\end{align}
+%
+so that
+%
+\begin{equation}
+    \ell_{1},\ell_{2} \le \begin{cases}
+            3\sqrt{n} &s\ge1 \\ 3 &s\ge\frac{3}{2} \end{cases}.
+\end{equation}
+
+We need to compute
+%
+\begin{equation}
+    \norm{\begin{bmatrix} \Gamma &  \\ \widehat{A} & \widehat{L}
+        \end{bmatrix}^{-1}\begin{bmatrix} \hat{b} \\ \hat{c}
+        \end{bmatrix}}_{2}^{2}
+    = ||\Gamma^{-1}\hat{b}||_{2}^{2} + ||\widehat{L}^{-1}
+        (\hat{c} - \widehat{A}\Gamma^{-1}\hat{b})||_{2}^{2}.
+\end{equation}
+%
+Because
+%
+\begin{equation}
+    \gamma_{k}^{-1}\hat{b}_{k} \le \frac{\norm{a}_{\sigma}
+            \sqrt{\zeta(2\sigma-2)}}{2^{\sigma-s-2}n^{\sigma-1}}
+        \parens{k-1}^{s-1}
+\end{equation}
+%
+we have
+%
+\begin{align}
+    ||\Gamma^{-1}\hat{b}||_{2}^{2}
+        &\le \brackets{\frac{\norm{a}_{\sigma}\sqrt{\zeta(2\sigma-2)}}{
+            2^{\sigma-s-2}n^{\sigma-1}}}^{2}
+        \sum_{k=1}^{n}k^{2s-2} \nonumber\\
+    &\le \brackets{\frac{\norm{a}_{\sigma}\sqrt{\zeta(2\sigma-2)}}{
+            2^{\sigma-s-2}n^{\sigma-1}}}^{2}
+        8n^{2s-1},
+\end{align}
+%
+where the first inequality uses Eq.~\eqref{eq:birkhoff_bdy_gamma_bound}
+and the second inequality follows from Eq.~\eqref{eq:bound_xp_01}.
+Therefore, we have
+%
+\begin{equation}
+    ||\Gamma^{-1}\hat{b}||_{2} \le
+        \frac{C_{\sigma,s}}{n^{\sigma-s-\frac{1}{2}}}.
+\end{equation}
+
+
+
+We will now focus on the $||\widehat{L}^{-1}
+(\hat{c} - \widehat{A}\Gamma^{-1}\hat{b})||_{2}^{2}$ term.
+First, we see
+%
+\begin{align}
+    \alpha_{2}\gamma_{2}^{-1} + \alpha_{4}\gamma_{4}^{-1} + \cdots
+            + \alpha_{n}\gamma_{n}^{-1}
+        &\le 3\brackets{1 + \frac{1}{3} + \frac{1}{5} + \cdots + \frac{1}{n-1}}
+            \nonumber\\
+        &\le 6\ln n \nonumber\\
+    \alpha_{3}\gamma_{3}^{-1} + \alpha_{5}\gamma_{5}^{-1} + \cdots
+            + \alpha_{n+1}\gamma_{n+1}^{-1}
+        &\le 3\brackets{\frac{1}{2} + \frac{1}{4} + \frac{1}{6} + \cdots
+            + \frac{1}{n}}
+            \nonumber\\
+        &\le 6\ln n,
+\end{align}
+%
+where we use the bounds from Eqs.~\eqref{eq:bound_xp_01},
+\eqref{eq:birkhoff_bdy_gamma_bound}, and 
+\eqref{eq:birkhoff_bdy_alpha_beta_bounds}.
+
+
+
+Putting this together, we see
+%
+\begin{equation}
+    |\widehat{A}\Gamma^{-1}\hat{b}| \le \frac{3\norm{a}_{\sigma}}{2^{\sigma-3}}
+            \sqrt{\zeta(2\sigma-2)}\frac{\ln n}{n^{\sigma-1}}
+        \begin{bmatrix}1\\1\end{bmatrix},
+\end{equation}
+%
+where the above inequality holds componentwise.
+Furthermore, we have
+%
+\begin{align}
+    |\hat{c} - \widehat{A}\Gamma^{-1}\hat{b}|
+        &\le |\hat{c}| + |\widehat{A}\Gamma^{-1}\hat{b}| \nonumber\\
+    &\le C_{\sigma,s}\norm{a}_{\sigma}\frac{\ln n}{n^{\sigma-1}}
+        \begin{bmatrix}1\\1\end{bmatrix},
+\end{align}
+%
+where the inequalities hold componentwise.
+Finally, we see
+%
+\begin{equation}
+    |\widehat{L}^{-1}(\hat{c} - \widehat{A}\Gamma^{-1}\hat{b})|
+        \le C_{\sigma,s}\norm{a}_{\sigma}
+            \frac{\ln n}{n^{\sigma-s-\frac{3}{2}}}
+        \begin{bmatrix}1\\1\end{bmatrix},
+\end{equation}
+%
+where the inequality is componentwise. Normwise convergence easily follows,
+and to obtain convergence, we require
+$\sigma>\frac{3}{2}$ and $1\le s < \sigma-\frac{3}{2}$.
+
+
+
+We now focus on bounding the condition number $\kappa(L)$.
+We see
+%
+\begin{align}
+    \norm{\begin{bmatrix} \Gamma & \\ \widehat{A} & \widehat{L} \end{bmatrix}
+        \begin{bmatrix}a\\b\end{bmatrix}}_{2}^{2}
+        &= \norm{\Gamma a}_{2}^{2} + ||\widehat{A}a + \widehat{L}b||_{2}^{2}
+            \nonumber\\
+        &\le 2 + \norm{\begin{bmatrix}
+            2\braces{1^{-s}+3^{-s}+\cdots+(n-1)^{-s}}+ \ell_{1} \\
+            2\braces{2^{-s} + 4^{-s} + \cdots + n^{-s}} + \ell_{2}
+            \end{bmatrix}}_{2}^{2} \nonumber\\
+        &\le \begin{cases}
+            256n &s\ge1 \\
+            1024 &s\ge2
+        \end{cases}.
+\end{align}
+%
+Therefore, we have $\norm{L}_{2}\le 16\sqrt{n}$ for $s\ge1$
+while $\norm{L}_{2}\le32$ for $s\ge\frac{3}{2}$.
+
+
+

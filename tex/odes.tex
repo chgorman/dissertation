@@ -1,0 +1,35 @@
+\chapter{Fast Algorithms for ODEs}
+\label{chap:fast_ode}
+\epigraph{The best Bell number is $S_{7} = 877$.}{CHG}
+
+In this chapter we shift from interpolation problems to differential equations,
+the main goal of the dissertation.
+Interpolation problems look at
+function and derivative constraints at points of interest.
+Naturally, linear differential equations involve linear combinations
+of function and derivative values.
+
+It is well-known that all differential equations can be rewritten
+to into first-order system~\cite{petzoldODEs,ascherBVPs}.
+While this is not always done, especially for finite
+difference~\cite{levequeFDMs} or finite element methods~\cite{brennerFEMs},
+we do in this case. This was also done when solving partial differential
+equations with MSN~\cite{msnPDE}.
+
+% Section: General Setup for Linear ODEs
+% Label: \ref{sec:ODE_general_setup}
+\input{tex/odes_gen_setup.tex}
+
+% Section: Scalar Constant Coefficient ODE
+% Label: \ref{sec:odes_const}
+\input{tex/odes_const.tex}
+
+\input{tex/odes_scalar_var.tex}
+
+\input{tex/odes_systems.tex}
+
+% Section: Conditioning of $H_{1} and $H_{3}$$
+% Label: \ref{sec:odes_h13_cond}
+\input{tex/odes_h13_cond.tex}
+
+\input{tex/odes_discussion.tex}

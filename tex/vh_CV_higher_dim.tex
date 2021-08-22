@@ -1,0 +1,96 @@
+\section{\CV{} Matrices in Higher Dimensions}
+\label{sec:CV_higher}
+
+One difficulty going from 1D to 2D interpolation, as noted in
+Chapter~\ref{chap:intro}, is how
+to chose the correct set of basis functions~\cite{gasca2000polynomial}.
+Because we are not constrained by matching the number
+of interpolation requirements with basis functions, our work is easier.
+We let $\overline{V} = V^{y} \otimes V^{x}$ be our 2D \CV{}
+matrix. Here, $V^{x}\in\R^{n\times(2n+1)}$
+is our 1D \CV{} matrix in $x$
+and $V^{y}\in\R^{m\times(2m+1)}$ is our 1D \CV{} matrix in $y$.
+We similarly define $\overline{C} = C^{y}\otimes C^{x}$ and
+$\overline{G} = G^{y}\otimes G^{x}$.
+Due to the nature of the Kronecker product, many of the properties
+from 1D interpolation are kept but the method for computing them
+must be modified.
+
+For interpolation on the Chebyshev nodes in 2D, we want to solve
+the following system:
+%
+\begin{equation}
+    \min_{\overline{V}a=f}\norm{\overline{D}_{s}a}_{2}.
+\end{equation}
+%
+The solution will be of the form
+%
+\begin{equation}
+    p(x,y) = \sum_{k=0}^{2n}\sum_{\ell=0}^{2m} a_{k,\ell}T_{k}(x)T_{\ell}(y).
+\end{equation}
+%
+Because of how $\overline{V}$ is defined, the coefficients are ordered
+%
+\begin{equation}
+    a^{*} = \begin{bmatrix} a_{0,0} & a_{1,0} & \cdots &
+                        a_{2n,0} & a_{0,1} & a_{1,1} & \cdots &
+                        a_{2n,1} & \cdots &
+                        a_{0,2m} & a_{1,2m} & \cdots & a_{2n,2m}
+        \end{bmatrix}.
+\end{equation}
+%
+Furthermore, our interpolation points are ordered
+%
+\begin{equation}
+    \parens{x_{1},y_{1}},\parens{x_{2},y_{1}},\cdots,\parens{x_{n},y_{1}},
+    \parens{x_{1},y_{2}},\cdots.
+\end{equation}
+%
+Thus, if $x = \overline{D}_{s}a$ where
+then we need to compute
+%
+\begin{equation}
+    \min_{\overline{V}\overline{D}_{s}^{-1}x = f}\norm{x}_{2}.
+\end{equation}
+%
+Our work reduces to computing the LQ factorization of
+$\overline{V}\overline{D}_{s}^{-1}$.
+
+Now, we know
+%
+\begin{equation}
+    \overline{C}^{-1}\overline{V}\overline{D}_{s}^{-1}\overline{G}
+        = \begin{bmatrix} Y^{y} & 0 \end{bmatrix}
+            \otimes \begin{bmatrix} Y^{x} & 0 \end{bmatrix}
+\end{equation}
+%
+This is \emph{not} the $LQ$ factorization, but it is after
+a permutation of the columns.
+
+We now assume $m=n$.
+Let
+%
+\begin{equation}
+    I = \bigcup_{k=1}^{n}
+        \brackets{\parens{k-1}\parens{2n+1}+1\!:\!\parens{k-1}\parens{2n+1}+n},
+\end{equation}
+%
+so that
+%
+\begin{equation}
+    \parens{Y^{y}\otimes Y^{x}}y\parens{I} = f,
+\end{equation}
+%
+where we initialize the remaining elements of $y$ to zero.
+At this point, we compute
+%
+\begin{equation}
+    a = \overline{D}_{s}^{-1}\overline{G}y.
+\end{equation}
+%
+Similar results can be extended to higher dimensions.
+While it is not necessary to require $m=n$, we will in the future
+because it simplifies matters.
+
+
+

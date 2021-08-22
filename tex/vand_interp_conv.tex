@@ -1,0 +1,53 @@
+\chapter{Interpolation Convergence Proofs}
+\label{chap:cvip_converge}
+\epigraph{The proof of Fubini's Theorem is long, tedious, and painful.
+    Let us begin.}{Gustavo Ponce, Math 201A, Fall 2013}
+
+This chapter works through the convergence proofs for MSN interpolation on
+Chebyshev nodes. We focus on interpolating up to degree $2n$.
+
+% Section: Main Idea
+% Label: \ref{sec:cvip_main}
+\input{tex/cvip_main.tex}
+
+% Section: IDCT Coefficients
+% Label: \ref{sec:cvip_idct}
+\input{tex/cvip_idct.tex}
+
+% Section: Approximating the Riemann Zeta Function
+% Label: \ref{sec:CVC_approx_RZ}
+% Section: Important Summation Bounds
+% Label: \ref{sec:cvip_sum_bounds}
+\input{tex/cvip_approx_results.tex}
+
+% Section: Sobolev Embedding Theorems and Related Work
+% Label: \ref{sec:cvip_sobolev}
+\input{tex/cvip_sobolev.tex}
+
+% Section: Proof for 1D Interpolation of polynomial of degree $2n$
+% Label: \ref{sec:cvip_interp_1D}
+\input{tex/cvip_interp_1D.tex}
+
+% Section: Proof for 1D Interpolation on Chebynodes and Boundary Points of
+%          degree $2n$
+% Label: \ref{sec:cvip_interp_1D_bdy}
+\input{tex/cvip_interp_1D_bdy.tex}
+
+% Section: Proof of 1D Birkhoff Interpolation with Center Point for $2n$
+% Label: \ref{sec:cvip_birkhoff_pt}
+\input{tex/cvip_birkhoff_1D_pt.tex}
+
+% Section: Proof of 1D Full Birkhoff Interpolation problem for $2n$
+% Label: \ref{sec:cvip_birkhoff_full_1D}
+\input{tex/cvip_birkhoff_1D_full.tex}
+
+\input{tex/cvip_interp_1D_2Ln.tex} % Not right now
+
+% Section: Proof of Norm Convergence for 1D Interpolation of polynomial
+%   of degree $2n$
+% Label: \ref{sec:cvip_interp_1D_norm}
+\input{tex/cvip_interp_1D_norm.tex}
+
+
+\input{tex/cvip_ext.tex}
+

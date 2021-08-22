@@ -1,0 +1,320 @@
+\section{1D \CV{} Derivative Matrix: $2n+1$ Columns; First Factorization}
+\label{sec:CV_D_1D_2n_F2}
+
+We now look at computing a factorization for $V' = VD$.
+From our work in Sec.~\ref{sec:CV_diff}, we know that $UWD$ is highly
+structured and similar to $W$ in that it only has one ``diagonal''.
+If we include the diagonal scaling $D_{s}^{-1}$, we see
+%
+\begin{equation}
+    UWDD_{s}^{-1} =
+    \begin{bmatrix}
+    0 & \frac{1}{2^{s}} & & & & & & & \frac{2n-1}{\parens{2n}^{s}} & 0 \\
+      & & \ddots & & & & \iddots & \\
+      & & & \frac{n-1}{n^{s}} & & \frac{n+1}{\parens{n+2}^{s}} \\
+      & & & & \frac{n}{\parens{n+1}^{s}} \\
+    \end{bmatrix},
+\end{equation}
+%
+We now want zero out the right half of the $UWDD_{s}^{-1}$.
+We let
+%
+\begin{align}
+    \tau_{k} &= -\parens{\frac{2n+1-k}{k-1}}\parens{\frac{k}{2n+2-k}}^{s}
+        \quad k\in\braces{2,\cdots,n} \nonumber\\
+    c_{k} &= \frac{1}{\sqrt{1 + \tau_{k}^{2}}} \nonumber\\
+    s_{k} &= \tau_{k}c_{k}.
+    \label{eq:v1_D_2n_Givens_cs_def}
+\end{align}
+%
+Using these $c$ and $s$ values, our full set of Givens rotations is
+%
+\begin{equation}
+    G = \begin{bmatrix}
+        1     &       &        &       &      &       &        &       &      \\
+              & c_{2} &        &       &      &       &        & s_{2} &      \\
+              &       & \ddots &       &      &       & \iddots&       &      \\
+              &       &        & c_{n} &      & s_{n} &        &       &      \\
+              &       &        &       &    1 &       &        &       &      \\
+              &       &        & -s_{n}&      & c_{n} &        &       &      \\
+              &       & \iddots&       &      &       & \ddots &       &      \\
+              &-s_{2} &        &       &      &       &        & c_{2} &      \\
+              &       &        &       &      &       &        &       & 1    \\
+        \end{bmatrix},
+    \label{eq:vand_D_Givens}
+\end{equation}
+%
+and we set
+%
+\begin{align}
+    \gamma_{k} &= \parens{k-1}k^{-s}\sqrt{1 + \parens{\frac{2n+1-k}{k-1}}^{2}
+        \parens{\frac{k}{2n+2-k}}^{2s}} \quad k\in\braces{2,\cdots,n}
+            \nonumber\\
+    \gamma_{n+1} &= n\parens{n+1}^{-s}.
+    \label{eq:v1_I_2n_Givens_gamma_def}
+\end{align}
+%
+Using all of the above information, we see
+%
+\begin{align}
+    UWDD_{s}^{-1}G &= \begin{bmatrix} 0 & \Gamma & 0 \end{bmatrix} \nonumber\\
+    \Gamma &= \diag\parens{\gamma_{2},\gamma_{3}\cdots,\gamma_{n+1}}.
+\end{align}
+%
+If $\Pi$ is the circular downshift permutation matrix, then
+%
+\begin{equation}
+    UWDD_{s}^{-1}G\Pi = \begin{bmatrix} \Gamma & 0 \end{bmatrix}
+\end{equation}
+%
+is the desired LQ factorization.
+
+
+
+\section{1D \CV{} Derivative Matrix: $2n+1$ Columns; Second Factorization}
+\label{sec:CV_D_1D_2n_F1}
+
+In this section we will look at another method for factorizing $V'$.
+This method was developed first but we think the ``First Factorization''
+is more useful in practice;
+this factorization is recorded here on the chance
+it may be beneficial in the future.
+
+From pervious work, we see
+%
+\begin{align}
+    &WDD_{s}^{-1}\parens{1,:} = \nonumber\\
+        &\quad\begin{bmatrix}
+            0 & 1\cdot2^{-s} & 0 & 3\cdot4^{-s} & 0 &
+            5\cdot6^{-s} & \cdots &
+            \parens{2n-3}\parens{2n-2}^{-s} & 0 &
+            \parens{2n-1}\parens{2n}^{-s} & 0
+        \end{bmatrix} \nonumber\\
+    &WDD_{s}^{-1}\parens{k,k+1\!:\!2n+1-k} = \nonumber\\
+        &\quad\begin{bmatrix}
+            2k\parens{k+1}^{-s} & 0 &
+            2\parens{k+2}\parens{k+3}^{-s} & 0 & \cdots & 0 & 
+            2\parens{2n-k}\parens{2n+1-k}^{-s} \end{bmatrix}
+            \nonumber\\
+    &\quad k\ge2.
+\end{align}
+%
+The nonzero entries are (essentially) constant along the columns;
+the first row is off by a factor of $\frac{1}{2}$.
+To fix this, we define
+%
+\begin{equation}
+    \widehat{D} = \diag\parens{1,\frac{1}{2},\cdots,\frac{1}{2}}.
+\end{equation}
+%
+Now, we look at the case when $n=5$ to clearly see the structure:
+%
+\begin{align}
+    &\widehat{D}WDD_{s}^{-1} = \nonumber\\
+        &\begin{bmatrix}
+            0 & 1\cdot2^{-s} & & 3\cdot4^{-s} & &
+            5\cdot6^{-s} & & 7\cdot8^{-s} & &
+            9\cdot10^{-s} & 0 \\
+            & & 2\cdot3^{-s} & & 4\cdot5^{-s} & & 6\cdot7^{-s} & &
+            8\cdot9^{-s} & \\
+            & & & 3\cdot4^{-s} & & 5\cdot6^{-s} & & 7\cdot8^{-s} & 
+            & & & \\
+            & & & & 4\cdot5^{-s} & & 6\cdot7^{-s} & & & & & \\
+            & & & & & 5\cdot6^{-s} & & & & & & \\
+        \end{bmatrix}.
+\end{align}
+
+
+We begin by applying the same set of Givens rotations $G$
+from Eq.~\eqref{eq:vand_D_Givens}.
+When $n$ is even, then
+%
+\begin{equation}
+    \widehat{D}WDD_{s}^{-1}G = \begin{bmatrix}
+        0 & \gamma_{2} & 0 & \gamma_{4} & 0 & \gamma_{6} &
+            \cdots & \gamma_{n-2} & 0 & \gamma_{n} &
+            0 & 0 & \cdots & 0 \\
+        & & \gamma_{3} & 0 & \gamma_{5} & 0 &
+            \cdots & 0 & \gamma_{n-1} & 0 & \gamma_{n+1} & 0 & \cdots & 0 \\
+        & & & \gamma_{4} & 0 & \gamma_{6} &
+            \cdots & \gamma_{n-2} & 0 & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & & \gamma_{5} & 0 & 
+            \cdots & 0 & \gamma_{n-1} & 0 & \gamma_{n+1} & 0 & \cdots & 0 \\
+        & & & & & \gamma_{6} &
+            \cdots & \gamma_{n-2} & 0 & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & & & & \ddots & & \vdots & & \vdots \\
+        & & & & & & & \gamma_{n-2} & 0 & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & & & & & & \gamma_{n-1} & 0 & \gamma_{n+1} & 0 & \cdots & 0 \\
+        & & & & & & & & & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & & & & & & & & \gamma_{n+1} & 0 & \cdots & 0 \\
+        \end{bmatrix}.
+\end{equation}
+%
+If $n$ is odd, then
+%
+\begin{equation}
+    \widehat{D}WDD_{s}^{-1}G = \begin{bmatrix}
+        0 & \gamma_{2} & 0 & \gamma_{4} & 0 & \gamma_{6} &
+            \cdots & 0 & \gamma_{n-1} & 0 & \gamma_{n+1} &
+            0 & \cdots & 0 \\
+        & & \gamma_{3} & 0 & \gamma_{5} & 0 &
+            \cdots & \gamma_{n-2} & 0 & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & \gamma_{4} & 0 & \gamma_{6} &
+            \cdots & 0 & \gamma_{n-1} & 0 & \gamma_{n+1} & 0 & \cdots & 0 \\
+        & & & & \gamma_{5} & 0 & 
+            \cdots & \gamma_{n-2} & 0 & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & & & \gamma_{6} &
+            \cdots & 0 & \gamma_{n-1} & 0 & \gamma_{n+1} & 0 & \cdots & 0 \\
+        & & & & & & \ddots & & \vdots & & \vdots \\
+        & & & & & & & \gamma_{n-2} & 0 & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & & & & & & \gamma_{n-1} & 0 & \gamma_{n+1} & 0 & \cdots & 0 \\
+        & & & & & & & & & \gamma_{n} & 0 & 0 & \cdots & 0 \\
+        & & & & & & & & & & \gamma_{n+1} & 0 & \cdots & 0 \\
+        \end{bmatrix}.
+\end{equation}
+
+In both cases, we see that the matrix is upper triangular,
+and we wish to put it in lower triangular form.
+Because of the similarities between the two cases ($n$ even or odd),
+we will focus on the case when $n$ is even. This is solely
+a choice of convenience and will not affect the results.
+
+To convert this into a lower triangular matrix, we see that nonzero
+even and odd column pairs have nonzero terms following the form
+%
+\begin{equation}
+    \begin{bmatrix}
+        \gamma & \del \\
+        \gamma & \del \\
+        \vdots & \vdots \\
+        \gamma & \del \\
+        0 & \del \\
+    \end{bmatrix}.
+\end{equation}
+%
+In both cases we can use Givens rotations to zero out of the second
+column. We will repeatedly do this and work backward to obtain the
+LQ factorization.
+After a permutation of the columns,
+the matrix will be in lower triangular form.
+
+We define
+%
+\begin{align}
+    \del_{n+1} &= \gamma_{n+1} \nonumber\\
+    \del_{n} &= \gamma_{n} \nonumber\\
+    \del_{k} &= \gamma_{k}\sqrt{1 + \parens{\frac{\del_{k+2}}{\gamma_{k}}}^{2}}
+        \quad k\in\braces{2,\cdots,n-1} \nonumber\\
+    \xi_{k} &= -\frac{\del_{k+2}}{\gamma_{k}} \quad k\in\braces{2,\cdots,n-1}
+        \nonumber\\
+    \mu_{k} &= \frac{1}{\sqrt{1 + \xi_{k}^{2}}}
+        \nonumber\\
+    \nu_{k} &= \xi_{k}\mu_{k}.
+\end{align}
+
+\noindent
+Letting
+%
+\begin{align}
+    H_{k} &=
+        \begin{bmatrix}
+            I_{k-1} \\
+            & \mu_{k} & & \nu_{k} \\
+            & & 1 & \\
+            & -\nu_{k} & & \mu_{k} \\
+            & & & & I_{2n-1-k} \\
+        \end{bmatrix} \nonumber\\
+    H &= H_{n-1}H_{n-2}\cdots H_{3}H_{2},
+\end{align}
+%
+we see
+%
+\begin{equation}
+    \widehat{D}WDD_{s}^{-1}GH\Pi = \begin{bmatrix} L & 0 \end{bmatrix},
+\end{equation}
+%
+where $\Pi$ is the circular downshift permutation matrix as before, $0$ is
+an $n\times n+1$ matrix of zeros, and $L$ is a lower triangular matrix
+with
+%
+\begin{align}
+    L(2k+\ell,\ell) &= \parens{-1}^{k}\del_{2k+\ell}\nu_{2k+\ell-2}
+        \nu_{2k+\ell-4}\cdots\nu_{\ell} \quad \ell\in\braces{2,3},k\ge0,
+        2k+\ell\le n
+        \nonumber\\
+    L(2k+\ell,\ell) &= \parens{-1}^{k}\del_{2k+\ell}\nu_{2k+\ell-2}
+        \nu_{2k+\ell-4}\cdots\nu_{\ell}\mu_{\ell-2} \quad \ell\ge4,k\ge0,
+        2k+\ell\le n.
+\end{align}
+%
+As an example, we show the case when $n=8$:
+%
+\begin{equation}
+    L = \begin{bmatrix}
+        \del_{2} \\
+        & \del_{3} \\
+        -\del_{4}\nu_{2} & & \del_{4}\mu_{2} \\
+        & -\del_{5}\nu_{3} & & \del_{5}\mu_{3} \\
+        \del_{6}\nu_{4}\nu_{2} & & -\del_{6}\nu_{4}\mu_{2} & & \del_{6}\mu_{4}\\
+        & \del_{7}\nu_{5}\nu_{3}& & -\del_{7}\nu_{5}\mu_{3} & &\del_{7}\mu_{5}\\
+        -\del_{8}\nu_{6}\nu_{4}\nu_{2} & & \del_{8}\nu_{6}\nu_{4}\mu_{2} & &
+        -\del_{8}\nu_{6}\mu_{4} & & \del_{8}\mu_{6} \\
+        & -\del_{9}\nu_{7}\nu_{5}\nu_{3} & & \del_{9}\nu_{7}\nu_{5}\mu_{3} & &
+        -\del_{9}\nu_{7}\mu_{5} & & \del_{9}\mu_{7} \\
+    \end{bmatrix}.
+\end{equation}
+
+\noindent
+A direct computation will show us
+%
+\begin{align}
+    \del_{k} &= ||\widehat{D}WDD_{s}^{-1}\parens{k-1,:}||_{2}
+        \quad k\in\braces{2,\cdots,n+1},
+\end{align}
+%
+but it is easier to see that the only nonzero entry of the $k$th row
+of $\widehat{D}WDD_{s}^{-1}GH_{n}\cdots H_{k+1}$ is $\del_{k}$, and
+the 2-norm is rotationally invariant.
+
+Working through some calculations we find that $L^{-1}$ has a very simple
+form: bidiagonal matrix with nonzero entries on the second sub-diagonal.
+%
+\begin{align}
+    &L^{-1} = \nonumber\\
+    &\begin{bmatrix}
+        \del_{2}^{-1} & & & & & & & & \\
+        0 & \del_{3}^{-1}& & & & & & & \\
+        \del_{2}^{-1}\xi_{2} & 0 & \parens{\del_{4}\mu_{2}}^{-1} 
+            & & & & & \\
+        & \del_{3}^{-1}\xi_{3} & 0 & \parens{\del_{5}\mu_{3}}^{-1}
+            & & & & & \\
+        & & \ddots & & \ddots & & & & \\
+        & & & & & \parens{\del_{n-1}\mu_{n-3}}^{-1} & & \\
+        & & & & \ddots & 0 & 
+            \parens{\del_{n}\mu_{n-2}}^{-1} & \\
+        & & & & & \del_{n-1}^{-1}\xi_{n-1} & 0 &
+            \parens{\del_{n+1}\mu_{n-1}}^{-1} \\
+    \end{bmatrix}
+\end{align}
+%
+Because of its simpler form, it will be easier to work with $L^{-1}$ directly
+rather than $L$.
+If we $P$ is the permutation matrix which permutes the even and odd
+rows together in increasing order, then it is clear
+%
+\begin{equation}
+    PL^{-1}P = \diag(L_{1},L_{2}),
+\end{equation}
+%
+where $L_{1}$ and $L_{2}$ are lower triangular matrices
+with nonzeros only on the sub-diagonal, implying they are
+semiseparable~\cite[Chapter 12]{gvl4}.
+
+The methods we applied here could also be applied when $V'$
+has $3n+1$ or $4n+1$ columns, but we will not pursue those factorizations
+ at this time.
+Left multiplying by $U$ greatly simplifies matters because
+then $UWD$ and $UWDD_{s}^{-1}$ have orthogonal rows;
+this is our reasoning for preferring the other factorization.
+
+

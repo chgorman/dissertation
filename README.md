@@ -28,3 +28,8 @@ One chapter is devoted to analyzing a stochastic norm
 estimate which is useful when computing low-rank approximations of matrices.
 This estimate allows us to compute approximations with
 relative error close to machine precision, which previously was not possible.
+
+## Dissertation and Thesis Template
+
+A template for UC Santa Barbara dissertations and theses may be found
+[here](https://github.com/chgorman/ucsb-dissertation-template).
